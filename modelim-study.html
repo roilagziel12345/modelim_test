@@ -1,0 +1,1739 @@
+<title>מודלים חישוביים – מסלול שבוע</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=IBM+Plex+Sans+Hebrew:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a study notebook — brand row + scrollable topic tab strip, one reading column (~70ch), worked examples as fold-out cards, highlighter marks on repeated exam items */
+:root{
+  --bg:#F3F4F0; --surface:#FFFFFF; --ink:#17201C; --muted:#5A6862; --line:#D8DDD8;
+  --accent:#1E58B8; --accent-soft:#E3ECFA; --mark:#FFE16B; --mark-ink:#17201C;
+  --ok:#23784A; --ok-soft:#E1F2E7; --bad:#B2291F; --bad-soft:#FBE6E3; --u:#E6E9E5;
+  --f-display:"Frank Ruhl Libre","David","Times New Roman",serif;
+  --f-body:"IBM Plex Sans Hebrew","Arial Hebrew","Segoe UI",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",Consolas,"Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111513; --surface:#1A201D; --ink:#E5EBE7; --muted:#9AA8A1; --line:#2D3632;
+  --accent:#86ABF0; --accent-soft:#1E2A40; --mark:#8A7414; --mark-ink:#FFF6CF;
+  --ok:#72C793; --ok-soft:#18301F; --bad:#F2897E; --bad-soft:#3A1C19; --u:#28302C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111513; --surface:#1A201D; --ink:#E5EBE7; --muted:#9AA8A1; --line:#2D3632;
+  --accent:#86ABF0; --accent-soft:#1E2A40; --mark:#8A7414; --mark-ink:#FFF6CF;
+  --ok:#72C793; --ok-soft:#18301F; --bad:#F2897E; --bad-soft:#3A1C19; --u:#28302C; color-scheme:dark}
+*{box-sizing:border-box}
+html{direction:rtl}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.brandrow{display:flex;align-items:baseline;gap:10px;padding-block:10px 4px}
+.brand{font-family:var(--f-display);font-weight:900;font-size:20px;white-space:nowrap}
+.brand small{font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--muted);margin-inline-start:6px}
+nav.tabs{display:flex;gap:2px;overflow-x:auto;padding-block:4px 8px;scrollbar-width:thin}
+nav.tabs a{flex:0 0 auto;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px;white-space:nowrap}
+nav.tabs a .num{font-family:var(--f-mono);font-size:12px;opacity:.7;margin-inline-end:4px}
+nav.tabs a:hover{color:var(--ink);background:var(--bg)}
+nav.tabs a.on{color:var(--accent);background:var(--accent-soft)}
+nav.tabs .sep{flex:0 0 1px;background:var(--line);margin:6px 4px}
+a{color:var(--accent)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding-block:28px 90px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:clamp(30px,5vw,44px);font-weight:900}
+h2{font-size:27px;font-weight:700;margin-top:44px;margin-bottom:12px;padding-top:8px;border-top:1px solid var(--line)}
+h3{font-size:19px;font-weight:700;margin-top:26px;margin-bottom:8px}
+h4{font-size:16px;margin:16px 0 6px}
+p{margin:0 0 12px;max-width:70ch}
+.lead{font-size:18px;color:var(--muted);max-width:62ch;margin-top:10px}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+.m{font-family:var(--f-mono);font-size:.92em;unicode-bidi:isolate;white-space:nowrap}
+.m.wrapok{white-space:normal}
+.ov{text-decoration:overline}
+sup,sub{font-size:.72em;line-height:0}
+mark{background:linear-gradient(transparent 35%,var(--mark) 35%,var(--mark) 88%,transparent 88%);color:inherit;padding:0 2px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;min-width:0;margin-bottom:12px}
+.box h3{margin-top:0}
+ul,ol{margin:0 0 12px;padding-inline-start:22px;max-width:70ch}
+li{margin-bottom:5px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+.tscroll{overflow-x:auto;margin-bottom:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+th,td{text-align:right;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+.callout{border-inline-start:4px solid var(--mark);background:var(--surface);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;max-width:74ch}
+.callout.warn{border-inline-start-color:var(--bad)}
+.callout.idea{border-inline-start-color:var(--accent)}
+.pre{font-family:var(--f-mono);font-size:14px;direction:ltr;text-align:left;background:var(--bg);border-radius:6px;padding:8px 12px;overflow-x:auto;white-space:pre;margin:6px 0 10px;line-height:1.55}
+/* worked examples */
+details.wex{background:var(--surface);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
+details.wex>summary{cursor:pointer;padding:12px 16px;list-style:none;display:flex;gap:10px;align-items:baseline}
+details.wex>summary::-webkit-details-marker{display:none}
+details.wex>summary .wl{flex:0 0 auto;font-size:12px;font-weight:700;color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:0 6px}
+details.wex>summary .wq{flex:1;min-width:0}
+details.wex>summary::after{content:"פתרון ▾";flex:0 0 auto;font-size:13px;color:var(--muted)}
+details.wex[open]>summary::after{content:"סגור ▴"}
+details.wex>div{padding:4px 16px 14px;border-top:1px dashed var(--line)}
+details.wex ol{margin-top:10px}
+/* toc */
+.toc{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 6px}
+.toc button{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 11px;border-radius:999px;cursor:pointer}
+.toc button:hover{border-color:var(--accent);color:var(--accent)}
+/* stats */
+.stats{display:flex;gap:28px;flex-wrap:wrap;margin:22px 0 6px}
+.stat b{display:block;font-family:var(--f-display);font-size:34px;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.freq{display:flex;flex-direction:column;gap:8px}
+.frow{display:grid;grid-template-columns:minmax(120px,200px) 1fr 42px;gap:10px;align-items:center;font-size:14px;text-decoration:none;color:inherit}
+.frow:hover .fname{color:var(--accent)}
+.ftrack{height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+.ffill{display:block;height:100%;background:var(--accent);border-radius:3px}
+.frow .fnum{font-variant-numeric:tabular-nums;color:var(--muted);text-align:left}
+.fname{font-weight:600}
+/* chips & buttons */
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:13px;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:5px 11px;border-radius:999px;cursor:pointer}
+.chip.on{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip:hover:not(.on){border-color:var(--muted)}
+.btn{font:inherit;font-size:14px;font-weight:600;border:1px solid var(--accent);background:var(--accent);color:var(--surface);padding:7px 14px;border-radius:7px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.okb{border-color:var(--ok);background:var(--ok);color:var(--surface)}
+.btn.badb{border-color:var(--bad);background:transparent;color:var(--bad)}
+.btn[disabled]{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+/* question cards */
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.qhead{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px;font-size:12px}
+.tag{font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:4px;padding:1px 7px}
+.tag.rep{background:var(--mark);color:var(--mark-ink);border-color:transparent}
+.tag.open{color:var(--accent);border-color:var(--accent)}
+.tag.prac{color:var(--ink);background:var(--u);border-color:transparent}
+.tag.done-ok{color:var(--ok);border-color:var(--ok)}
+.tag.done-bad{color:var(--bad);border-color:var(--bad)}
+.qtext{font-size:16.5px;margin-bottom:12px}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{font:inherit;text-align:right;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px;cursor:pointer;color:var(--ink);display:flex;gap:10px;align-items:baseline}
+.opt:hover:not([disabled]){border-color:var(--accent)}
+.opt .k{font-weight:700;color:var(--muted);min-width:1.2em}
+.opt.ok{background:var(--ok-soft);border-color:var(--ok)}
+.opt.bad{background:var(--bad-soft);border-color:var(--bad)}
+.opt[disabled]{cursor:default}
+.expl{margin-top:12px;padding:12px 14px;border-radius:8px;background:var(--accent-soft);font-size:15px}
+.expl b.v-ok{color:var(--ok)} .expl b.v-bad{color:var(--bad)}
+.sol{margin-top:12px;padding:12px 14px;border-radius:8px;background:var(--bg);border:1px dashed var(--line);font-size:15px}
+.drillbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.counter{font-size:14px;color:var(--muted);font-variant-numeric:tabular-nums}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px}
+.prog i{display:block;height:100%;background:var(--ok)}
+.topiccards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.tcard{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.tcard:hover{border-color:var(--accent)}
+.tcard .tn{font-family:var(--f-display);font-weight:700;font-size:18px}
+.tcard .ts{font-size:14px;color:var(--muted);margin:4px 0 8px}
+.tcard .tm{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+details.exam{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:0 16px}
+details.exam summary{cursor:pointer;padding:12px 0;font-weight:600;display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+details.exam summary span{color:var(--muted);font-weight:400;font-size:14px}
+details.exam[open]{padding-bottom:16px}
+.trick{display:grid;grid-template-columns:auto 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.trick:last-child{border-bottom:0}
+.trick .n{font-family:var(--f-display);font-weight:900;font-size:22px;color:var(--accent);min-width:1.6em;font-variant-numeric:tabular-nums}
+.trick .s{font-size:13px;color:var(--muted)}
+.svgbox{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;margin:10px 0 14px;overflow-x:auto}
+.svgbox svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.svgbox .cap{font-size:13px;color:var(--muted);text-align:center;margin-top:4px}
+/* tools */
+.tool{background:var(--surface);border:2px solid var(--accent);border-radius:12px;padding:16px 18px;margin:12px 0}
+.tool .tt{font-family:var(--f-display);font-weight:700;font-size:19px;margin-bottom:4px}
+.tool .td{font-size:14px;color:var(--muted);margin-bottom:12px}
+.tool label{font-size:13px;font-weight:600;color:var(--muted);display:block;margin-bottom:3px}
+.tool input[type=text],.tool select,.tool textarea{font:inherit;font-family:var(--f-mono);font-size:15px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 10px;width:100%;direction:ltr;text-align:left}
+.tool select{font-family:var(--f-body);direction:rtl;text-align:right}
+.tool textarea{min-height:110px;resize:vertical}
+.tool .fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-bottom:10px}
+.tool .out{margin-top:12px;font-size:15px}
+.wordlist{font-family:var(--f-mono);font-size:14px;direction:ltr;text-align:left;background:var(--bg);border-radius:7px;padding:10px;line-height:1.9;word-break:break-all;max-height:240px;overflow:auto}
+.wordlist span{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:0 6px;margin:2px}
+.verdict{font-weight:700}
+.verdict.y{color:var(--ok)} .verdict.n{color:var(--bad)}
+.ttab{direction:ltr}
+.ttab td,.ttab th{text-align:center;font-family:var(--f-mono)}
+.ttab tr.cur td{background:var(--accent-soft)}
+.ttab td.hit{background:var(--mark);color:var(--mark-ink);font-weight:700}
+.path{font-family:var(--f-mono);direction:ltr;text-align:left;background:var(--bg);border-radius:7px;padding:8px 10px;overflow-x:auto;white-space:nowrap;margin:8px 0}
+.path b{color:var(--accent)}
+.zword{font-family:var(--f-mono);font-size:20px;direction:ltr;text-align:left;letter-spacing:.06em;overflow-x:auto;white-space:nowrap;padding:6px 0}
+.zword .u{background:var(--u)} .zword .v{background:var(--mark);color:var(--mark-ink)} .zword .w{background:var(--accent-soft)}
+.range{display:flex;align-items:center;gap:8px}
+.range input{flex:1;accent-color:var(--accent)}
+.range output{font-family:var(--f-mono);min-width:2ch}
+.stackviz{display:flex;gap:2px;direction:ltr;font-family:var(--f-mono)}
+.stackviz span{border:1px solid var(--line);background:var(--bg);padding:0 5px;border-radius:3px}
+@media (max-width:520px){.frow{grid-template-columns:110px 1fr 34px}.brand small{display:none}h2{font-size:23px}}
+@media (prefers-reduced-motion:no-preference){.q,.box,.tcard{transition:border-color .15s}}
+</style>
+
+<header class="bar"><div class="wrap">
+  <div class="brandrow"><div class="brand">מודלים חישוביים<small>הסבר מאפס · 15 מבחנים</small></div></div>
+  <nav class="tabs" id="tabs"></nav>
+</div></header>
+<main class="wrap" id="app"></main>
+
+<script>
+/* =====================================================================
+   TOPICS — each topic: sections (title + html), tool id
+   Math inside «…» is rendered LTR in mono; ^{..} sup, _{..} sub, !{..} overline
+   ===================================================================== */
+const TOPICS = [
+/* ------------------------------------------------------------------ 1 */
+{id:'lang', name:'שפות ופעולות', short:'מילים, שרשור, «L^*», «L^+», היפוך', tool:'lang',
+sections:[
+{t:'למה זה בכלל הקורס', h:`
+<p>כל הקורס עוסק בשאלה אחת: <b>איזו "מכונה" מסוגלת לזהות איזו קבוצת מילים?</b></p>
+<p>נניח שיש בעיה כמו "האם במילה יש מספר זוגי של a-ים?". אוספים את כל המילים שהתשובה עליהן "כן", וקוראים לאוסף הזה <b>שפה</b>. אחר כך שואלים: האם מכונה עם זיכרון סופי (אוטומט) יכולה להכריע את זה? האם צריך מחסנית? האם אפילו מחסנית לא מספיקה?</p>
+<p>לכן כמעט כל שאלה במבחן היא אחת מאלה:</p>
+<ul>
+<li><b>לבנות</b> מכונה, ביטוי או דקדוק לשפה נתונה.</li>
+<li><b>לזהות</b> איזו שפה מכונה, ביטוי או דקדוק נתונים מקבלים.</li>
+<li><b>להוכיח</b> ששפה <i>אינה</i> במחלקה מסוימת (לא רגולרית, לא ח״ה).</li>
+<li><b>לסווג</b>: מה קורה לשפה אחרי פעולה (איחוד, משלים, «*»).</li>
+</ul>`},
+{t:'מילים: המושגים הבסיסיים', h:`
+<div class="tscroll"><table>
+<tr><th>מושג</th><th>הגדרה</th><th>דוגמה</th></tr>
+<tr><td>א״ב «Σ»</td><td>קבוצה סופית של סימנים</td><td>«Σ={a,b}»</td></tr>
+<tr><td>מילה</td><td>רצף סופי של סימנים מ-«Σ»</td><td>«abba», «b»</td></tr>
+<tr><td>«ε»</td><td>המילה הריקה, באורך 0</td><td>«|ε|=0»</td></tr>
+<tr><td>«|w|»</td><td>אורך המילה</td><td>«|abba|=4»</td></tr>
+<tr><td>«#_a(w)»</td><td>מספר ההופעות של a ב-w</td><td>«#_a(abba)=2»</td></tr>
+<tr><td>«w^R»</td><td>המילה בסדר הפוך</td><td>«(aab)^R=baa»</td></tr>
+<tr><td>«Σ^*»</td><td>כל המילים מעל «Σ», כולל «ε»</td><td>«{ε,a,b,aa,ab,…}»</td></tr>
+<tr><td>«Σ^+»</td><td>כל המילים חוץ מ-«ε»</td><td></td></tr>
+<tr><td>«Σ^n»</td><td>המילים באורך n בדיוק</td><td>«|{a,b}^3|=8»</td></tr>
+</table></div>
+<h3>רישא, סיפא, תת-מילה</h3>
+<p>עבור «w=abc»:</p>
+<ul>
+<li><b>רישות</b> (התחלות): «ε, a, ab, abc».</li>
+<li><b>סיפות</b> (סופים): «ε, c, bc, abc».</li>
+<li><b>תתי-מילים</b> (רצף רציף מכל מקום): «ε, a, b, c, ab, bc, abc». המילה ac <i>אינה</i> תת-מילה, כי היא לא רציפה.</li>
+</ul>
+<p>רישא <b>אמיתית</b> היא רישא שאינה המילה כולה.</p>
+<h3>שפה</h3>
+<p>שפה היא <b>כל</b> תת-קבוצה של «Σ^*», סופית או אינסופית. דוגמאות:</p>
+<ul>
+<li>«∅»: השפה הריקה, שאין בה אף מילה.</li>
+<li>«{ε}»: שפה עם מילה אחת, המילה הריקה. <mark>זה לא אותו דבר כמו «∅»!</mark></li>
+<li>«{a^nb^n | n≥0} = {ε, ab, aabb, aaabbb, …}».</li>
+<li>«{w∈{a,b}^* | #_a(w)=#_b(w)}»: גם abab וגם ba נמצאות בה. הסדר לא משנה, רק הכמויות.</li>
+</ul>
+<p>על הסימון: «a^n» הוא a שחוזרת n פעמים. למשל «a^3=aaa», «a^0=ε». גם «(ab)^2=abab».</p>`},
+{t:'פעולות על שפות', h:`
+<h3>פעולות של קבוצות</h3>
+<p>איחוד «∪», חיתוך «∩», הפרש «−», משלים «!{L}=Σ^*−L», והפרש סימטרי «AΔB» (מילים שנמצאות בדיוק באחת מהשתיים).</p>
+<h3>שרשור</h3>
+<p>«L_1·L_2={xy | x∈L_1, y∈L_2}»: לוקחים מילה מהראשונה ומדביקים אחריה מילה מהשנייה, <b>בכל הצירופים</b>.</p>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">חשבו את «{a,ab}·{b,ε}»</span></summary><div>
+<p>עוברים על כל הזוגות:</p>
+<ul><li>«a·b=ab», «a·ε=a»</li><li>«ab·b=abb», «ab·ε=ab»</li></ul>
+<p>התוצאה: «{a, ab, abb}». המילה ab הופיעה פעמיים, אבל בקבוצה היא נספרת פעם אחת.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">מה זה «∅·L»? ומה זה «{ε}·L»?</span></summary><div>
+<p>«∅·L=∅»: אין מילה ראשונה לבחור, ולכן אין אף צירוף.</p>
+<p>«{ε}·L=L»: מדביקים «ε» לפני כל מילה, וזה לא משנה כלום.</p>
+<p>כלומר «∅» מתנהג כמו 0 בכפל, ו-«{ε}» מתנהג כמו 1.</p></div></details>
+<h3>חזקה וסגור קליני</h3>
+<ul>
+<li>«L^0={ε}», «L^1=L», «L^2=L·L», «L^3=L·L·L»…</li>
+<li>«L^*=L^0∪L^1∪L^2∪…»: שרשור של <b>0 או יותר</b> מילים מ-L. לכן תמיד «ε∈L^*».</li>
+<li>«L^+=L^1∪L^2∪…»: שרשור של <b>1 או יותר</b> מילים.</li>
+</ul>
+<div class="callout warn"><b>טעות נפוצה:</b> «L^2» <i>אינה</i> «{ww | w∈L}». בשרשור אפשר לבחור שתי מילים <b>שונות</b>. עבור «L={a,b}»: «L^2={aa,ab,ba,bb}», אבל «{ww}={aa,bb}».</div>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">חשבו את «{a,ab}^2»</span></summary><div>
+<p>«a·a=aa», «a·ab=aab», «ab·a=aba», «ab·ab=abab». התוצאה היא 4 מילים שונות.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">מה זה «{a^2,a^3}^+»? (שאלת מבחן 2017)</span></summary><div>
+<ol><li>כל מילה ב-«L^+» היא «a^k», כאשר k הוא סכום של 2-ים ו-3-ים (לפחות מחובר אחד).</li>
+<li>אילו סכומים אפשר לקבל? 2, 3, 4=2+2, 5=2+3, 6=3+3, 7=2+2+3… כל מספר שהוא לפחות 2.</li>
+<li>1 אי אפשר לקבל, ו-0 לא, כי זה «+» ולא «*».</li></ol>
+<p>התשובה: «{a^n | n≥2}». (עבור «L^*» התשובה הייתה «{a^n | n≠1}».)</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">מה זה «∅^*»?</span></summary><div>
+<p>«∅^0={ε}», ו-«∅^1=∅^2=…=∅». לכן «∅^*={ε}». זו הדרך היחידה לקבל שפה סופית לא ריקה מ-«*».</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">«L={ab}». מה זה «L^*»?</span></summary><div>
+<p>«{ε, ab, abab, ababab, …}={(ab)^n | n≥0}». שימו לב ש-aabb <i>לא</i> בשפה.</p></div></details>
+<h3>היפוך</h3>
+<p>«L^R={w^R | w∈L}». למשל «{ab, aab}^R={ba, baa}». גם «(L^*)^R=(L^R)^*».</p>`},
+{t:'הכללים שנשאלים במבחן', h:`
+<div class="callout"><b>כלל 1, שהופיע ב-7 מבחנים:</b> «L^+=L^*» אם ורק אם «ε∈L».<br>
+<b>למה?</b> ההבדל היחיד בין השתיים הוא «L^0={ε}». אם «ε∈L», אז «ε» כבר נמצאת ב-«L^+» ואין הבדל. אם «ε∉L», אז אי אפשר לקבל את «ε» משרשור של מילה אחת או יותר, כי כל מילה כזו לא ריקה.</div>
+<details class="wex"><summary><span class="wl">תרגול</span><span class="wq">לאילו מהשפות «L^+=L^*»? «#_a mod 3=0» · «#_a>0» · אורך אי-זוגי · פלינדרומים</span></summary><div>
+<ul>
+<li>«#_a mod 3=0»: המילה «ε» מכילה 0 a-ים, ו-«0 mod 3=0». לכן «ε∈L» והשוויון מתקיים.</li>
+<li>«#_a>0»: ב-«ε» אין a-ים, לכן «ε∉L», ולא מתקיים.</li>
+<li>אורך אי-זוגי: «|ε|=0» זוגי, לכן לא מתקיים.</li>
+<li>פלינדרומים: «ε^R=ε», לכן «ε» היא פלינדרום, ומתקיים.</li>
+</ul>
+<p>השיטה: <b>בודקים רק אם «ε» בשפה.</b></p></div></details>
+<div class="callout"><b>כלל 2:</b> אם «S·R=S» ו-«S≠∅», אז «ε∈R».<br>
+<b>למה?</b> ניקח את המילה <i>הקצרה ביותר</i> s ב-S. מאחר ש-«s∈S·R», יש «x∈S», «r∈R» עם «s=xr». אבל «|x|≥|s|», כי s הכי קצרה, ולכן «|r|=0», כלומר «r=ε».</div>
+<div class="callout"><b>כלל 3:</b> «L^*=L» ⟺ «ε∈L» וגם L סגורה לשרשור (אם «x,y∈L», אז «xy∈L»).<br>
+דוגמאות: «Σ^*», «{#_a=#_b}» (שתי מילים מאוזנות נותנות יחד מילה מאוזנת), «a^*».</div>
+<h3>זהויות שימושיות</h3>
+<ul>
+<li>«(L^*)^*=L^*», «L^*L^*=L^*», «(L^+)^*=L^*».</li>
+<li>«L·(M∪N)=LM∪LN» (חוק הפילוג).</li>
+<li><b>לא</b> נכון בהכרח: «(L∪M)^*=L^*∪M^*». עבור «{a},{b}», המילה ab נמצאת רק בצד שמאל.</li>
+<li><b>לא</b> נכון בהכרח: «(L∩M)^*=L^*∩M^*». עבור «{a},{aa}», החיתוך הוא «∅», ולכן צד שמאל הוא «{ε}», אבל aa נמצאת בצד ימין.</li>
+</ul>`},
+{t:'יחסים (רפלקסיבי, סימטרי, שקילות)', h:`
+<p>זה רלוונטי למשפט נרוד ולשאלה מ-2024. יחס R הוא קבוצה של זוגות «(x,y)».</p>
+<ul>
+<li><b>רפלקסיבי:</b> לכל x, «(x,x)∈R».</li>
+<li><b>סימטרי:</b> אם «(x,y)∈R», אז גם «(y,x)∈R».</li>
+<li><b>טרנזיטיבי:</b> אם «(x,y)» ו-«(y,z)» ב-R, אז גם «(x,z)».</li>
+<li><b>יחס שקילות</b> = כל השלוש. יחס שקילות מחלק את הקבוצה ל<b>מחלקות</b>: קבוצות זרות שבכל אחת כל האיברים "שקולים" זה לזה.</li>
+</ul>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">«R={(x,y) | x היא סיפא של y, או y היא רישא של x}». רפלקסיבי? סימטרי?</span></summary><div>
+<p><b>רפלקסיבי:</b> כל מילה היא סיפא של עצמה, ולכן כן.</p>
+<p><b>סימטרי:</b> כדי להפריך מספיק זוג אחד. ניקח «(b,ab)»: b היא סיפא של ab, ולכן «(b,ab)∈R».<br>
+ההפוך «(ab,b)»: האם ab סיפא של b? לא. האם b רישא של ab? לא (הרישא באורך 1 היא a). לכן «(ab,b)∉R», ו-R לא סימטרי.</p>
+<p><b>השיטה:</b> כדי להוכיח "לכל" צריך טיעון כללי. כדי להפריך מספיקה דוגמה אחת.</p></div></details>`}
+]},
+/* ------------------------------------------------------------------ 2 */
+{id:'fa', name:'אוטומטים סופיים', short:'אס״ד, אסל״ד, אוטומט חזקה ואוטומט מכפלה', tool:'dfa',
+sections:[
+{t:'האינטואיציה: מכונה עם זיכרון סופי', h:`
+<p>דמיינו שקוראים מילה ארוכה אות אחרי אות, ומותר לזכור רק מספר סופי של "מצבי רוח". למשל, כדי לדעת אם מספר ה-b-ים זוגי, מספיק לזכור "זוגי" או "אי-זוגי". לא צריך לספור כמה b-ים היו בדיוק.</p>
+<p>זה בדיוק <b>אוטומט סופי</b>: כל <b>מצב</b> הוא "מה אני זוכר", וכל <b>מעבר</b> אומר איך הזיכרון מתעדכן כשקוראים אות.</p>
+<div class="svgbox">
+<svg viewBox="0 0 420 150" width="420" role="img" aria-label="אס״ד לזוגיות מספר ה-b">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--ink)"/></marker></defs>
+<line x1="40" y1="80" x2="92" y2="80" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<circle cx="125" cy="80" r="30" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+<circle cx="125" cy="80" r="25" fill="none" stroke="var(--ink)" stroke-width="1.6"/>
+<text x="125" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="var(--ink)">E</text>
+<circle cx="305" cy="80" r="30" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.6"/>
+<text x="305" y="86" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="16" fill="var(--ink)">O</text>
+<path d="M152,66 Q215,30 278,66" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="215" y="40" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" fill="var(--accent)">b</text>
+<path d="M278,94 Q215,130 152,94" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="215" y="132" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" fill="var(--accent)">b</text>
+<path d="M110,53 C100,18 150,18 140,53" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="125" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" fill="var(--accent)">a</text>
+<path d="M290,53 C280,18 330,18 320,53" fill="none" stroke="var(--ink)" stroke-width="1.6" marker-end="url(#ar)"/>
+<text x="305" y="20" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="15" fill="var(--accent)">a</text>
+</svg>
+<div class="cap">E = "ראיתי מספר זוגי של b-ים", O = "אי-זוגי". החץ מבחוץ מסמן את מצב ההתחלה, והעיגול הכפול מסמן מצב מקבל.</div>
+</div>
+<p><b>הרצה על «abba»:</b> מתחילים ב-E. a משאירה ב-E. b מעבירה ל-O. b מחזירה ל-E. a משאירה ב-E. סיימנו ב-E, שהוא מקבל, ולכן המילה <b>מתקבלת</b>.</p>`},
+{t:'אס״ד: ההגדרה הפורמלית', h:`
+<p>אס״ד (אוטומט סופי דטרמיניסטי, DFA) הוא חמישייה «A=<Q,Σ,q_0,δ,F>»:</p>
+<ul>
+<li>«Q»: קבוצה סופית של מצבים.</li>
+<li>«Σ»: הא״ב.</li>
+<li>«q_0∈Q»: מצב ההתחלה.</li>
+<li>«δ: Q×Σ→Q»: פונקציית המעברים. <b>לכל מצב ולכל אות יש בדיוק מעבר אחד.</b></li>
+<li>«F⊆Q»: המצבים המקבלים.</li>
+</ul>
+<p>«L(A)» היא קבוצת המילים שהריצה עליהן מסתיימת במצב מ-F. שפה נקראת <b>רגולרית</b> אם יש אס״ד שמקבל אותה.</p>
+<h3>טבלת מעברים</h3>
+<p>אותו אוטומט אפשר לכתוב כטבלה. זה נוח יותר מציור ומקובל במבחן:</p>
+<div class="pre">      a    b
+→*E   E    O
+  O   O    E</div>
+<p>הסימן «→» מסמן התחלה, והסימן «*» מסמן מצב מקבל.</p>
+<h3>מצב מלכודת (בור)</h3>
+<p>מצב לא מקבל שכל המעברים ממנו חוזרים אליו. נכנסים אליו כשהמילה כבר "נפסלה סופית". למשל בשפה «a^*b^*», אם קראנו a אחרי b, אין תקנה. בציורים נהוג לפעמים להשמיט את המלכודת ("חץ חסר = מלכודת"), <mark>אבל כשסופרים מצבים בודקים אם כתוב "כולל מלכודת"</mark>.</p>`},
+{t:'איך מתכננים אס״ד: השיטה', h:`
+<div class="callout idea"><b>השאלה המרכזית:</b> "מה אני חייב לזכור על מה שקראתי עד עכשיו, כדי להחליט על ההמשך?" כל תשובה אפשרית היא מצב.</div>
+<details class="wex"><summary><span class="wl">דוגמה 1</span><span class="wq">אס״ד למילים מעל «{a,b}» שמסתיימות ב-ab</span></summary><div>
+<ol>
+<li><b>מה צריך לזכור?</b> רק את הסוף של מה שקראנו, וכמה ממנו מתאים להתחלה של "ab".</li>
+<li>מצבים: «q_0» = אין התאמה. «q_1» = האות האחרונה היא a (התחלנו ab). «q_2» = שתי האותיות האחרונות הן ab (מקבל).</li>
+<li>מעברים:
+<div class="pre">       a    b
+→q0    q1   q0
+ q1    q1   q2
+*q2    q1   q0</div></li>
+<li>שימו לב: מ-«q_1» עם a נשארים ב-«q_1», כי "aa" עדיין מסתיים ב-a. מ-«q_2» עם b חוזרים ל-«q_0», כי "abb" לא מסתיים ב-a.</li>
+</ol>
+<p>אפשר לבדוק את זה בכלי האינטראקטיבי למטה.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 2</span><span class="wq">מילים שמכילות את תת-המילה aa</span></summary><div>
+<ol>
+<li>זוכרים כמה מ-"aa" כבר מצאנו ברצף: 0, 1 או 2 (נמצא).</li>
+<li>«q_0 –a→ q_1», «q_0 –b→ q_0». «q_1 –a→ q_2», «q_1 –b→ q_0». «q_2» מקבל ונשאר בו לתמיד (מצב "ניצחון").</li>
+</ol>
+<p>3 מצבים. ההבדל מדוגמה 1: כאן אחרי שמוצאים aa זה נשאר לתמיד, ושם רק הסוף חשוב.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 3</span><span class="wq">«#_a(w) mod 3 = 0»</span></summary><div>
+<p>זוכרים את השארית 0, 1 או 2. ‏a מקדמת: «0→1→2→0». ‏b לא משנה (לולאה). מקבל: 0. סה״כ 3 מצבים.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 4</span><span class="wq">«{a^mb^k | (m+k) mod 3 = 0}» (שאלת מבחן 2025)</span></summary><div>
+<ol>
+<li>צריך לזכור: (א) האם כבר ראינו b, כי אחרי b אסור לראות a; (ב) את האורך mod 3.</li>
+<li>שלב a: «A_0, A_1, A_2». שלב b: «B_0, B_1, B_2». ועוד מלכודת.</li>
+<li>«A_i –a→ A_{i+1}», «A_i –b→ B_{i+1}», «B_i –b→ B_{i+1}», «B_i –a→ מלכודת».</li>
+<li>מקבלים: «A_0, B_0».</li>
+</ol>
+<p>סה״כ <b>7</b> מצבים. אפשר לשאול אם אפשר לאחד את «A_0» עם «B_0». לא: «A_0·a» יכולה עוד להתקבל (aaa), אבל «B_0·a» כבר נפסלה.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 5</span><span class="wq">כל רישא מקיימת «|#_a−#_b|≤1»</span></summary><div>
+<p>זוכרים את ההפרש הנוכחי «#_a−#_b»: ‎−1, 0 או ‎+1. אם הוא יוצא מהטווח, עוברים למלכודת. a מוסיפה 1 ו-b מחסירה 1. כל המצבים בטווח מקבלים. סה״כ 4 מצבים.</p></div></details>`},
+{t:'אסל״ד: אוטומט לא דטרמיניסטי', h:`
+<p>באסל״ד (NFA) מותר:</p>
+<ul><li>לצאת מאותו מצב עם אותה אות ל<b>כמה</b> מצבים, או לאף מצב.</li><li>מסעי «ε»: לעבור בין מצבים <b>בלי לקרוא אות</b>.</li></ul>
+<p><b>מילה מתקבלת אם קיים לפחות מסלול אחד שמסתיים במצב מקבל.</b> אפשר לחשוב על זה כך שהאוטומט "מנחש" נכון.</p>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">אסל״ד למילים שהאות <b>השנייה מהסוף</b> בהן היא a</span></summary><div>
+<p>«q_0» עם לולאה על a ו-b ("עוד לא הגענו"). «q_0 –a→ q_1» ("ניחשתי שזו האות השנייה מהסוף"). «q_1 –a,b→ q_2». «q_2» מקבל, ואין ממנו מעברים.</p>
+<p>3 מצבים. לאס״ד מינימלי לאותה שפה צריך 4 מצבים, כי הוא חייב לזכור את שתי האותיות האחרונות. במקרה הכללי, לזהות "האות ה-k מהסוף" עולה «2^k» מצבים באס״ד.</p></div></details>
+<h3>«CL_ε(q)»: סגור אפסילון</h3>
+<p>כל המצבים שאפשר להגיע אליהם מ-q <b>רק במסעי «ε»</b> (אפס או יותר), כולל q עצמו.</p>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">«q_0 –ε→ q_1 –ε→ q_2», ו-«q_2 –a→ q_0». מה זה «CL_ε(q_0)» ו-«CL_ε(q_2)»?</span></summary><div>
+<p>«CL_ε(q_0)={q_0,q_1,q_2}». «CL_ε(q_2)={q_2}», כי המעבר מ-«q_2» הוא על a ולא על «ε».</p></div></details>
+<h3>אוטומט החזקה: מאסל״ד לאס״ד</h3>
+<p><b>משפט:</b> לכל אסל״ד יש אס״ד שקול. לכן שני הסוגים מקבלים בדיוק את אותן שפות, השפות הרגולריות.</p>
+<p><b>הבנייה:</b> כל מצב באס״ד הוא <i>קבוצה</i> של מצבי האסל״ד, "כל המקומות שהאסל״ד יכול להיות בהם עכשיו". מצב כזה מקבל אם יש בו מצב מקבל אחד לפחות. ייתכנו עד «2^n» מצבים.</p>
+<details class="wex"><summary><span class="wl">דוגמה פתורה</span><span class="wq">אסל״ד ל"מסתיימת ב-ab": «q_0» (לולאה a,b), «q_0 –a→ q_1», «q_1 –b→ q_2». המירו לאס״ד.</span></summary><div>
+<ol>
+<li>התחלה: «{q_0}».</li>
+<li>«{q_0}» עם a: «{q_0,q_1}». עם b: «{q_0}».</li>
+<li>«{q_0,q_1}» עם a: «{q_0,q_1}». עם b: «{q_0,q_2}».</li>
+<li>«{q_0,q_2}» עם a: «{q_0,q_1}». עם b: «{q_0}».</li>
+<li>אין מצבים חדשים, ולכן עוצרים. מקבל: «{q_0,q_2}» (מכיל את «q_2»).</li>
+</ol>
+<p>קיבלנו 3 מצבים ישיגים, בדיוק האס״ד מדוגמה 1. רק מצבים <b>ישיגים</b> מהתחלה נכנסים (בשאלות מבחן מבקשים לפעמים לספור אותם).</p></div></details>`},
+{t:'אוטומט מכפלה ומשלים', h:`
+<p>כדי לבדוק שני תנאים יחד מריצים את שני האוטומטים <b>במקביל</b>. מצב באוטומט המכפלה הוא זוג «(p,q)», ש-p מצב ב-«A_1» ו-q מצב ב-«A_2». מעבר: «δ((p,q),σ)=(δ_1(p,σ),δ_2(q,σ))».</p>
+<p>רק קבוצת המצבים המקבלים משתנה לפי הפעולה. <mark>זו שאלה שחוזרת:</mark></p>
+<div class="tscroll"><table>
+<tr><th>שפה</th><th>מצבים מקבלים</th><th>במילים</th></tr>
+<tr><td>«L_1∩L_2»</td><td>«F_1×F_2»</td><td>שניהם מקבלים</td></tr>
+<tr><td>«L_1∪L_2»</td><td>«(F_1×Q_2)∪(Q_1×F_2)»</td><td>לפחות אחד מקבל</td></tr>
+<tr><td>«L_1−L_2»</td><td>«F_1×(Q_2−F_2)»</td><td>הראשון מקבל והשני לא</td></tr>
+<tr><td>«L_1ΔL_2»</td><td>«(F_1×!{F_2})∪(!{F_1}×F_2)»</td><td>בדיוק אחד מקבל</td></tr>
+</table></div>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">אס״ד ל"מספר זוגי של a-ים <b>וגם</b> מסתיימת ב-b"</span></summary><div>
+<p>«A_1»: זוגיות של a (מצבים E, O). «A_2»: האות האחרונה b? (מצבים N, Y). המכפלה: «(E,N),(E,Y),(O,N),(O,Y)». ‏a: מחליפה E↔O ועוברת ל-N. ‏b: שומרת על הזוגיות ועוברת ל-Y. מקבל: «(E,Y)». סה״כ 4 מצבים.</p></div></details>
+<h3>משלים</h3>
+<p>ב<b>אס״ד שלם</b> (מכל מצב יש מעבר לכל אות) מחליפים מקבלים ולא מקבלים, ומקבלים בדיוק את «!{L}». <b>אם חסרים מעברים, קודם מוסיפים מלכודת.</b></p>
+<div class="callout warn"><b>באסל״ד זה לא עובד.</b> החלפת מקבלים נותנת רק «L(B)⊇!{L(A)}».<br>
+<b>דוגמה:</b> אסל״ד A ל"מכילה a": «q_0» עם לולאה a,b, «q_0 –a→ q_1», ו-«q_1» מקבל עם לולאה a,b. אחרי ההחלפה «q_0» מקבל, ולכן B מקבל <b>כל</b> מילה (נשארים ב-«q_0»). למשל a ב-«L(A)» וגם ב-«L(B)».<br>
+<b>הסיבה:</b> מילה שנדחתה ב-A, כל המסלולים שלה נכשלו, ולכן ב-B כולם מצליחים. אבל מילה שהתקבלה ב-A יכולה שיהיה לה גם מסלול שנכשל, ומסלול כזה מצליח ב-B.</div>
+<p>מאותה סיבה, אוטומט מכפלה של אסל״דים עם «F_1×F_2» <b>כן</b> נותן חיתוך, אבל «F_1×!{F_2}» <b>לא</b> נותן הפרש.</p>`},
+{t:'בניות נוספות ושפות סופיות', h:`
+<h3>הוספת «a^*» בהתחלה («{a}^*·L»)</h3>
+<p>נכון: מוסיפים מצב התחלה <b>חדש</b> עם לולאת a, ומסע «ε» ממנו למצב ההתחלה הישן.</p>
+<p>לא נכון: לולאת a על מצב ההתחלה הישן. אם חוזרים אליו באמצע המילה, ה-a-ים ייכנסו באמצע ולא רק בהתחלה.</p>
+<h3>איחוד, שרשור, כוכב (באסל״ד)</h3>
+<ul>
+<li><b>איחוד:</b> מצב התחלה חדש עם «ε» לשני מצבי ההתחלה.</li>
+<li><b>שרשור:</b> «ε» מכל מקבל של «A_1» להתחלה של «A_2». רק המקבלים של «A_2» נשארים מקבלים.</li>
+<li><b>כוכב:</b> התחלה חדשה ומקבלת, עם «ε» להתחלה הישנה, ומכל מקבל «ε» חזרה להתחלה הישנה.</li>
+<li><b>היפוך:</b> הופכים את כל החצים, המקבלים הופכים להתחלה (דרך מצב חדש עם «ε»), וההתחלה הופכת למקבל.</li>
+</ul>
+<details class="wex"><summary><span class="wl">מטלה 2017</span><span class="wq">מאס״ד A בנו אס״ד ל-«(L(A)∪{b})−{ε}» בלי מכפלה</span></summary><div>
+<p>מצב התחלה חדש «q_{00}», לא מקבל, כדי לפסול את «ε». ממנו: על כל אות σ≠b הולכים ל-«δ(q_0,σ)». על b הולכים למצב חדש «q_b», שהוא מקבל ובכל השאר מתנהג כמו «δ(q_0,b)»: «δ(q_b,σ)=δ(δ(q_0,b),σ)».</p></div></details>
+<h3>שפות סופיות ומספר המצבים</h3>
+<div class="callout"><b>עובדה:</b> אם אס״ד בעל n מצבים מקבל מילה באורך n או יותר, השפה <b>אינסופית</b>.<br>
+<b>למה?</b> מילה באורך n עוברת דרך «n+1» מצבים, ולכן יש מצב שחוזר (שובך היונים). החלק שבין שתי ההופעות הוא מעגל, ואפשר לחזור עליו כמה פעמים שרוצים.</div>
+<p>מסקנות שנשאלו:</p>
+<ul>
+<li>בשפה סופית <b>המילה הארוכה ביותר קצרה ממספר המצבים</b> («n>l»).</li>
+<li>שפה סופית עם מילה באורך 13 צריכה לפחות 14 מצבים (בלי מלכודת).</li>
+<li>אס״ד עם 5 מצבים שמקבל מילה באורך 6 מקבל שפה אינסופית, וגם יש בה מילה באורך קטן מ-5 (מקצרים את המעגל).</li>
+</ul>`}
+]},
+/* ------------------------------------------------------------------ 3 */
+{id:'nerode', name:'אס״ד מינימלי ומשפט נרוד', short:'ספירת מצבים, מחלקות שקילות, הוכחת אי-רגולריות', tool:'nerode',
+sections:[
+{t:'האינטואיציה: "העתיד מתייחס אליהן אותו דבר"', h:`
+<p class="callout"><b>הנושא שהופיע הכי הרבה פעמים.</b> כמעט בכל מבחן יש שאלת "כמה מצבים יש באס״ד המינימלי", ובחצי מהמבחנים יש שאלה פתוחה של "הוכיחו בנרוד".</p>
+<p>נניח שקראנו את המילה x, וחבר קרא את המילה y. אם <b>לכל המשך z</b> שנקרא מעכשיו התשובה תהיה זהה (שנינו נקבל או שנינו נדחה), אין סיבה לזכור במה x שונה מ-y. האוטומט יכול להיות באותו מצב אחרי שתיהן.</p>
+<p>אם יש <b>המשך אחד</b> z שבו «xz∈L» אבל «yz∉L», האוטומט <b>חייב</b> להבדיל ביניהן, כלומר להיות במצבים שונים. z כזו נקראת <b>מילה מפרידה</b>.</p>
+<h3>ההגדרה</h3>
+<div class="box">«x R_L y» ⟺ לכל «z∈Σ^*»: «xz∈L ⟺ yz∈L».</div>
+<p>«R_L» הוא יחס שקילות (ראו נושא 1), ולכן מחלק את «Σ^*» ל<b>מחלקות</b>.</p>`},
+{t:'משפט מייהיל–נרוד', h:`
+<div class="callout idea"><b>המשפט:</b>
+<ol><li>L רגולרית ⟺ ל-«R_L» יש מספר <b>סופי</b> של מחלקות.</li>
+<li>מספר המחלקות = מספר המצבים ב<b>אס״ד המינימלי</b> (כולל מלכודת, אם יש).</li></ol></div>
+<p><b>למה זה נכון (בקצרה):</b> שתי מילים שמובילות לאותו מצב באס״ד הן בהכרח שקולות, כי מאותו מצב ההמשך זהה. לכן מספר המחלקות קטן או שווה למספר המצבים בכל אס״ד. בכיוון השני, אפשר לבנות אס״ד שהמצבים שלו הם המחלקות עצמן.</p>
+<h3>עובדות שנשאלו כשאלות אמריקאיות</h3>
+<ul>
+<li>«R_L=R_{!{L}}» <b>לכל</b> שפה: אם z מפרידה עבור L, היא מפרידה גם עבור המשלים.</li>
+<li><b>לא ייתכן</b> מספר סופי של מחלקות שכל אחת מהן סופית, כי אז «Σ^*» הייתה סופית.</li>
+<li>כל השאר ייתכן: מספר סופי של מחלקות אינסופיות (שפה רגולרית), או אינסוף מחלקות סופיות (למשל «{a^{n²}}»: כל מילה במחלקה משלה).</li>
+<li>שפה סופית: לא ניתן לדעת על מספר המחלקות של «L_1∩L_2» רק מכמה מחלקות יש לכל אחת.</li>
+</ul>`},
+{t:'חישוב מחלקות: דוגמאות פתורות', h:`
+<p><b>השיטה:</b> עוברים על מילים קצרות לפי הסדר («ε, a, b, aa, ab, …»). לכל מילה שואלים: "האם היא שקולה למילה שכבר ראיתי?" אם לא, נפתחת מחלקה חדשה. עוצרים כשכל ההמשכים של המחלקות כבר חוזרים למחלקות קיימות.</p>
+<details class="wex"><summary><span class="wl">דוגמה 1</span><span class="wq">מחלקות של "מסתיימת ב-ab"</span></summary><div>
+<ol>
+<li>«ε»: מחלקה 1.</li>
+<li>a: האם שקולה ל-«ε»? «z=b»: «ab∈L», ‏«b∉L». לא שקולה, ולכן זו מחלקה 2.</li>
+<li>b: שקולה ל-«ε»? מה שקובע את העתיד הוא רק "כמה מ-ab כבר התחלתי", וב-b כמו ב-«ε» לא התחלנו כלום. לכן שקולה (מחלקה 1).</li>
+<li>aa: שקולה ל-a (שתיהן מסתיימות ב-a).</li>
+<li>ab: היא עצמה בשפה, וזה מפריד אותה מכל האחרות («z=ε»). זו מחלקה 3.</li>
+<li>aba ⟵ כמו a. abb ⟵ כמו «ε». כל ההמשכים מכוסים.</li>
+</ol>
+<p>3 מחלקות, ולכן אס״ד מינימלי עם 3 מצבים.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 2</span><span class="wq">«{a^mb^k | m>k}»: האם «a^5» ו-«a^6b» שקולות? האם b ו-«ab^2» שקולות?</span></summary><div>
+<p><b>«a^5» מול «a^6b»:</b> מנסים «z=a»: «a^6∈L», אבל «a^6ba∉L», כי a אחרי b אסור. כלומר z=a מפרידה, והן <b>לא</b> שקולות.</p>
+<p><b>b מול «ab^2»:</b> ב-b כבר «m=0» ואי אפשר להוסיף a-ים, ולכן אין המשך שיכניס אותה לשפה. ב-«ab^2» ‏«m=1<2=k», ובשום המשך לא נקבל «m>k». שתיהן "מתות", ולכן <b>שקולות</b> (שתיהן במחלקת המלכודת).</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 3</span><span class="wq">«L=Σ^+abΣ» (שאלה פתוחה 2023): כמה מחלקות?</span></summary><div>
+<p>מילים בשפה: לפחות אות אחת, אחריה ab, ואחריה בדיוק אות אחת. כלומר המילה מסתיימת בתבנית "ab?" ואורכה לפחות 4.</p>
+<p>מה צריך לזכור? אם כבר קראנו אות "פותחת", ואיך הסוף של מה שקראנו מתאים לתבנית ab?.</p>
+<ul>
+<li>«ε»: עוד לא קראנו אות פותחת.</li>
+<li>a: יש פותחת, והאחרונה היא a (התחלה של ab).</li>
+<li>aa: נציג למצב "יש פותחת, והאחרונה a". בשונה מ-a, כאן ה-a הראשונה יכולה להיות הפותחת.</li>
+<li>aab: הסוף "ab", חסרה עוד אות אחת.</li>
+<li>aaba: מקבל, והאחרונה a.</li>
+<li>aabb: מקבל, והאחרונה לא a.</li>
+</ul>
+<p>סה״כ 6 מחלקות.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 4</span><span class="wq">«{a^{3k+5t} | k,t≥0}» מעל «{a}»: כמה מחלקות?</span></summary><div>
+<ol>
+<li>אילו אורכים אפשר להרכיב מ-3 ו-5? 0, 3, 5, 6, 8, 9, 10, 11, 12…</li>
+<li>אי אפשר להרכיב: 1, 2, 4, 7. מ-8 והלאה הכל אפשרי (8=3+5, 9=3+3+3, 10=5+5, ומשם מוסיפים 3).</li>
+<li>לכן מילים באורכים 0 עד 7 נבדלות זו מזו, וכל המילים באורך 8 ומעלה שקולות זו לזו (כל המשך שלהן בשפה).</li>
+<li>מחלקות: «a^0,…,a^7» ועוד מחלקה של «a^{≥8}», כלומר 9.</li>
+</ol>
+<p>אין צורך במלכודת, כי כל מילה יכולה עוד להיכנס לשפה.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 5</span><span class="wq">«#_a>1» וגם «#_b<2» (2026): כמה מצבים?</span></summary><div>
+<p>זוכרים את #a כ-0, 1 או "2 ומעלה" (3 ערכים), ואת #b כ-0 או 1 (2 ערכים). זה «3×2=6» מצבים, ועוד מלכודת כשמגיעים ל-«#_b=2». סה״כ <b>7</b>.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה 6</span><span class="wq">«#_a mod 2 ≠ #_b mod 2» מעל «{a,b,c}»: 4 מצבים או 2?</span></summary><div>
+<p>הניסיון הראשון הוא לזכור זוג זוגיות, כלומר 4 מצבים. אבל התנאי "הזוגיות שונה" שקול ל-"«#_a+#_b» אי-זוגי". מספיק לזכור את הזוגיות של <b>הסכום</b>, ולכן 2 מצבים.</p>
+<p>בבדיקה: המצבים (זוגי, זוגי) ו-(אי-זוגי, אי-זוגי) שקולים, כי על כל קריאה של a או b שניהם עוברים למצב "שונה".</p></div></details>`},
+{t:'מתכונים לספירת מצבים', h:`
+<div class="tscroll"><table>
+<tr><th>סוג השפה</th><th>מספר מצבים</th><th>מאיפה זה בא</th></tr>
+<tr><td>«#_a(w) mod p = r»</td><td>p</td><td>שארית</td></tr>
+<tr><td>«#_a mod p» וגם «#_b mod q»</td><td>«p·q»</td><td>זוג שאריות</td></tr>
+<tr><td>«#_a mod 2 ≠ #_b mod 2», או «=»</td><td>2</td><td>זוגיות של הסכום</td></tr>
+<tr><td>«|w| mod k = r»</td><td>k</td><td></td></tr>
+<tr><td>כל רישא «−x ≤ #_a−#_b ≤ y»</td><td>«x+y+1», ועוד מלכודת</td><td>«|…|≤1» נותן 4, «|…|≤2» נותן 6, «[−2,3]» נותן 7</td></tr>
+<tr><td>«a^mb^k», «(m+k) mod 3=0»</td><td>7</td><td>3 בשלב a, ‏3 בשלב b, ומלכודת</td></tr>
+<tr><td>«#_a>1, #_b<2»</td><td>7</td><td>«3·2+1»</td></tr>
+<tr><td>«{a^{3k+5t}}»</td><td>9</td><td>האורך הגדול ביותר שאי אפשר להרכיב הוא 7</td></tr>
+<tr><td>«{a^p}^*={a^n | n≠1}»</td><td>3</td><td>«ε», a, ו-aa+</td></tr>
+<tr><td>מסתיימת ב-w באורך k (בלי חפיפות)</td><td>«k+1»</td><td></td></tr>
+<tr><td>האות ה-k מהסוף</td><td>«2^k»</td><td>זוכרים את k האותיות האחרונות</td></tr>
+<tr><td>שפה סופית «{a^k}» מעל «{a}»</td><td>«k+2»</td><td>«k+1» ועוד מלכודת</td></tr>
+<tr><td>מילים מעל «{a}» עם אס״ד של 2 מצבים</td><td>4 שפות</td><td>«{ε}», «a^+», «(aa)^*», «a(aa)^*»</td></tr>
+</table></div>
+<div class="callout warn"><b>מלכודות בספירה:</b>
+<ul><li>האם השאלה אומרת "כולל מלכודת"?</li>
+<li>א״ב גדול יותר (למשל c שלא מופיע בתנאי) בדרך כלל לא משנה, כי c פשוט עושה לולאה.</li>
+<li>תמיד מנסים לאחד מצבים: האם שני מצבים מתנהגים אותו דבר בכל המשך?</li></ul></div>`},
+{t:'הוכחת אי-רגולריות עם נרוד', h:`
+<p>לפי המשפט, כדי להראות ש-L <b>אינה</b> רגולרית מספיק להראות <b>אינסוף מילים שכל שתיים מהן במחלקות שונות</b>.</p>
+<div class="box"><h3>התבנית (מעתיקים למבחן)</h3>
+<ol>
+<li>נתבונן בקבוצה האינסופית «{w_i | i≥0}», כאשר «w_i=a^i».</li>
+<li>יהיו «i≠j». נבחר «z=…».</li>
+<li>אז «w_iz=…∈L», ואילו «w_jz=…∉L» כי …</li>
+<li>לכן «w_i» ו-«w_j» במחלקות שונות של «R_L», ולכן ל-«R_L» אינסוף מחלקות. לפי משפט מייהיל–נרוד, L אינה רגולרית. ∎</li>
+</ol></div>
+<h3>איך מוצאים את z?</h3>
+<p>שואלים: "אחרי «a^i», מה צריך להוסיף כדי להיכנס לשפה בדיוק?" ה-z הזה כמעט תמיד "מתאים" ל-i ולא ל-j.</p>
+<details class="wex"><summary><span class="wl">מבחן 2018</span><span class="wq">«{w∈{a,b,c}^* | #_a=#_b·#_c}»</span></summary><div>
+<p>«w_i=a^i». אחרי «a^i» צריך «#_b·#_c=i». הדרך הפשוטה ביותר: «z=b^ic» (כלומר «i·1=i»).</p>
+<p>«a^ib^ic»: ‏«#_a=i=i·1» ✓. ‏«a^jb^ic»: ‏«j≠i·1» ✗. סיימנו.</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2022</span><span class="wq">«{ww | w∈{a,b}^*}»</span></summary><div>
+<p>«w_i=a^i». ‏«z=ba^ib»: ‏«a^iba^ib=(a^ib)(a^ib)» ✓.</p>
+<p>«a^jba^ib»: אם זו הייתה «uu», אז בכל חצי יש b אחת, והחצי הראשון הוא «a^jb», והשני «a^ib». מאחר ש-«i≠j» זו לא מילה מהצורה uu ✗.</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2023</span><span class="wq">«{a^{1+2+…+k} | k≥1}» (מספרים משולשים)</span></summary><div>
+<p>כאן כדאי לבחור «w_i=a^{T_i}», כאשר «T_i=1+…+i». עבור «i<j» נבחר «z=a^{i+1}».</p>
+<p>«w_iz=a^{T_i+i+1}=a^{T_{i+1}}∈L» ✓.</p>
+<p>«w_jz=a^{T_j+i+1}». מאחר ש-«1≤i+1<j+1», מתקיים «T_j<T_j+i+1<T_j+j+1=T_{j+1}». זה ממש בין שני מספרים משולשים עוקבים, ולכן ✗.</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2024</span><span class="wq">כל המחלקות של «{a^{n²}}» עם מילים מפרידות</span></summary><div>
+<p>כל «a^i» נמצאת במחלקה <b>נפרדת</b>. עבור «k<i» נבחר «z=a^{i²+i+1}»:</p>
+<p>«a^iz=a^{i²+2i+1}=a^{(i+1)²}∈L» ✓. ‏«a^kz=a^{i²+i+k+1}». מאחר ש-«0≤k<i», מתקיים «i²<i²+i+k+1<(i+1)²» ✗.</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2026</span><span class="wq">«{a^mb^kc^t | k=m·t}»</span></summary><div>
+<p>«w_i=a^i», «z=b^ic». ‏«a^ib^ic»: ‏«i=i·1» ✓. ‏«a^jb^ic»: ‏«i≠j·1» ✗.</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">«{a^mb^k | m≠k}»</span></summary><div>
+<p>«w_i=a^i», «z=b^i». ‏«a^ib^i∉L», אבל «a^jb^i∈L» (כי «j≠i»). שימו לב: כאן ה-z מכניס את «w_j» לשפה ולא את «w_i», וזה תקין. צריך רק שאחת תיכנס והשנייה לא.</p></div></details>`}
+]},
+/* ------------------------------------------------------------------ 4 */
+{id:'regex', name:'ביטויים רגולריים ומשפט קלין', short:'קריאה וכתיבה של ביטויים, «+ · *»', tool:'regex',
+sections:[
+{t:'מה זה ביטוי רגולרי', h:`
+<p>ביטוי רגולרי הוא דרך <b>לכתוב</b> שפה בנוסחה קצרה. הוא בנוי משלוש פעולות:</p>
+<div class="tscroll"><table>
+<tr><th>סימון</th><th>משמעות</th><th>דוגמה</th><th>השפה</th></tr>
+<tr><td>«r+s»</td><td>איחוד ("או")</td><td>«a+b»</td><td>«{a,b}»</td></tr>
+<tr><td>«rs»</td><td>שרשור</td><td>«ab»</td><td>«{ab}»</td></tr>
+<tr><td>«r^*»</td><td>0 חזרות או יותר</td><td>«a^*»</td><td>«{ε,a,aa,…}»</td></tr>
+<tr><td>«r^+»</td><td>חזרה אחת או יותר («=rr^*»)</td><td>«a^+»</td><td>«{a,aa,…}»</td></tr>
+<tr><td>«ε», «∅»</td><td>המילה הריקה, השפה הריקה</td><td></td><td></td></tr>
+</table></div>
+<p><b>סדר קדימויות:</b> «*» קודם, אחר כך שרשור, ואחרון «+». לכן «ab^*» הוא a ואחריה b-ים (abbb), ולא «(ab)^*» (ababab). ו-«a+bc» הוא «a» או «bc».</p>
+<div class="callout warn">אצלנו <b>«+» הוא "או"</b>, ולא "אחת או יותר". כשמופיע «^+» כחזקה עילית, זה "אחת או יותר".</div>`},
+{t:'קריאת ביטויים: הרבה דוגמאות', h:`
+<p>לכל ביטוי: נסו להגיד בעברית איזו שפה הוא מקבל, ורק אחר כך פתחו.</p>
+<details class="wex"><summary><span class="wl">1</span><span class="wq">«(a+b)^*»</span></summary><div><p>כל המילים, «Σ^*».</p></div></details>
+<details class="wex"><summary><span class="wl">2</span><span class="wq">«(a+b)^*a(a+b)^*»</span></summary><div><p>מכילה לפחות a אחת. "משהו, a, משהו".</p></div></details>
+<details class="wex"><summary><span class="wl">3</span><span class="wq">«b^*ab^*ab^*»</span></summary><div><p>בדיוק שתי a-ים.</p></div></details>
+<details class="wex"><summary><span class="wl">4</span><span class="wq">«((a+b)(a+b))^*»</span></summary><div><p>אורך זוגי. כל סיבוב מוסיף שתי אותיות.</p></div></details>
+<details class="wex"><summary><span class="wl">5</span><span class="wq">«(a+b)^*b(a+b)»</span></summary><div><p>האות השנייה מהסוף היא b.</p></div></details>
+<details class="wex"><summary><span class="wl">6</span><span class="wq">«(a+ba)^*(ε+b)»</span></summary><div><p>אין שתי b-ים ברצף. כל b (חוץ מאולי האחרונה) באה מיד עם a אחריה.</p></div></details>
+<details class="wex"><summary><span class="wl">7</span><span class="wq">«(a+ba^*b)^*» ו-«(a+ba^*b)^*ba^*» (מבחנים 2020, 2024)</span></summary><div>
+<p>«ba^*b» הוא בלוק עם בדיוק שתי b-ים. לכן «(a+ba^*b)^*» = מילים עם מספר <b>זוגי</b> של b-ים.</p>
+<p>מוסיפים «ba^*», כלומר עוד b אחת, ומקבלים מספר <b>אי-זוגי</b> של b-ים.</p></div></details>
+<details class="wex"><summary><span class="wl">8</span><span class="wq">«(0+10)^*1^*» (2022)</span></summary><div>
+<p>«(0+10)^*»: כל 1 באה מיד עם 0 אחריה, כלומר אין שתי 1-ים ברצף ולא מסתיימים ב-1. אחר כך «1^*» מאפשר זנב של 1-ים בסוף.</p>
+<p>אם כך, מתי מופיע "11"? רק בזנב, ואחרי הזנב אין 0. לכן השפה היא <b>מילים בלי 110</b>.</p></div></details>
+<details class="wex"><summary><span class="wl">9</span><span class="wq">«(0+10+110)^*(ε+1+11)» (2020)</span></summary><div><p>בלוקים שמסתיימים ב-0 עם לכל היותר שתי 1-ים לפניו, ובסוף עד שתי 1-ים. כלומר <b>אין 111</b>.</p></div></details>
+<details class="wex"><summary><span class="wl">10</span><span class="wq">«(b+a^+bb)^*(a^*+a^+b)» (2026)</span></summary><div><p>אחרי בלוק של a-ים שאחריו באה b, חייבות לבוא לפחות שתי b-ים (אלא אם זה סוף המילה). כלומר <b>אין aba</b>.</p></div></details>
+<details class="wex"><summary><span class="wl">11</span><span class="wq">«(01+10)^*(ε+0+1)» (2017)</span></summary><div><p>זוגות של 01 או 10, ואולי אות בודדת בסוף. בכל רישא ההפרש «|#_0−#_1|» לכל היותר 1.</p></div></details>
+<details class="wex"><summary><span class="wl">12</span><span class="wq">«r_1=a^++b^*(a^*b)^*» מול «r_2=a^*+b(a^*b)^*» (2022)</span></summary><div>
+<p>«b^*(a^*b)^*»: «ε» או מילים שמסתיימות ב-b (כל בלוק נגמר ב-b). לכן «r_1» = a-ים בלבד (לפחות אחת), או «ε», או מילים שמסתיימות ב-b.</p>
+<p>«b(a^*b)^*»: מתחילות ב-b <b>וגם</b> מסתיימות ב-b. לכן «r_2» = a-ים בלבד (כולל «ε»), או מילים שמתחילות ונגמרות ב-b.</p>
+<p>מסקנה: «L(r_2)⊊L(r_1)». למשל ab ב-«r_1» בלבד.</p></div></details>`},
+{t:'כתיבת ביטויים: השיטה', h:`
+<ol>
+<li><b>מפרקים למקרים</b> ומחברים אותם עם «+».</li>
+<li><b>חושבים בבלוקים:</b> מה החתיכה שחוזרת? זה הדבר שנכנס בתוך «^*».</li>
+<li><b>מטפלים בקצוות:</b> מה מותר בהתחלה, מה מותר בסוף, האם «ε» בשפה.</li>
+<li><b>בודקים</b> מילים קצרות: גם כאלה שאמורות להתקבל וגם כאלה שלא. (בשביל זה יש את הכלי למטה.)</li>
+</ol>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">מילים שמתחילות ב-00 ולא מכילות 000 (2017)</span></summary><div>
+<ol><li>מתחילים ב-00. אחרי 00 האות הבאה (אם יש) חייבת להיות 1.</li>
+<li>אחר כך בלוקים שכל אחד מתחיל ב-1 ואחריו לכל היותר שתי 0-ים: «1», «10», «100».</li></ol>
+<p>התשובה: «00(1+10+100)^*».</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2024</span><span class="wq">מסתיימות ב-b ולא מכילות bab</span></summary><div>
+<ol><li>bab אסור, כלומר בין שתי b-ים לא יכולה להיות a <b>בודדת</b>. אחרי בלוק b-ים (שאינו בסוף) צריך לפחות aa.</li>
+<li>בלוקים: «a» (a-ים חופשיים), או «b^+aa» (b-ים ואחריהן לפחות שתי a-ים).</li>
+<li>בסוף: «b^+».</li></ol>
+<p>התשובה: «(a+b^+aa)^*b^+».</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2025</span><span class="wq">לא מסתיימות בשתי אותיות זהות</span></summary><div>
+<p>מקרים: מילים באורך 0 או 1 («ε+a+b»), או מילים שמסתיימות ב-ab או ב-ba.</p>
+<p>התשובה: «ε+a+b+(a+b)^*(ab+ba)».</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2025</span><span class="wq">בדיוק שתי b-ים, <b>או</b> לפחות שתי a-ים</span></summary><div>
+<p>איחוד של שני ביטויים: «a^*ba^*ba^* + (a+b)^*a(a+b)^*a(a+b)^*».</p></div></details>
+<details class="wex"><summary><span class="wl">דוגמה</span><span class="wq">משלים של "מכילה 111"</span></summary><div>
+<p>משלים ישירות קשה לכתוב. חושבים על השפה המשלימה במילים: "<b>אין</b> 111". בונים בלוקים שמסתיימים ב-0 עם עד שתי 1-ים לפניו: «(0+10+110)^*», ומאפשרים זנב של עד שתי 1-ים: «(ε+1+11)».</p></div></details>
+<h3>זהויות שימושיות</h3>
+<ul>
+<li>«(a+b)^*=(a^*b^*)^*=(a^*+b^*)^*»</li>
+<li>«(ε+a)^*=a^*», «a^*a^*=a^*», «(a^*)^*=a^*»</li>
+<li>«r+∅=r», «r∅=∅», «∅^*=ε», «rε=r»</li>
+<li>«a(ba)^*=(ab)^*a»</li>
+</ul>`},
+{t:'משפט קלין', h:`
+<div class="callout idea"><b>משפט קלין:</b> שפה L רגולרית (כלומר יש לה אוטומט סופי) ⟺ קיים ביטוי רגולרי שמקבל אותה.</div>
+<p>כלומר שלושת המודלים שקולים: <b>אס״ד ≡ אסל״ד ≡ ביטוי רגולרי</b>.</p>
+<h3>שני הכיוונים של ההוכחה (ברמת רעיון)</h3>
+<ul>
+<li><b>ביטוי ⟵ אוטומט:</b> בונים אסל״ד באינדוקציה על מבנה הביטוי: לאות, לאיחוד (התחלה חדשה עם «ε»), לשרשור, ולכוכב (כמו בנושא 2).</li>
+<li><b>אוטומט ⟵ ביטוי:</b> מגדירים את «r_{ij}^k» = <b>המילים שמובילות מ-«q_i» ל-«q_j» כשכל מצבי הביניים הם מבין «q_1…q_k»</b>, ובונים בהדרגה:<br>
+«r_{ij}^k=r_{ij}^{k−1}+r_{ik}^{k−1}(r_{kk}^{k−1})^*r_{kj}^{k−1}»<br>
+(או שלא עוברים דרך «q_k», או שהולכים ל-«q_k», מסתובבים בו, וממשיכים ל-«q_j».)</li>
+</ul>
+<h3>מה שואלים</h3>
+<ul>
+<li>"מה קובע משפט קלין?" בוחרים את התשובה עם <mark>ביטוי רגולרי</mark>. אס״ד↔אסל״ד היא בניית החזקה, ומחלקות שקילות הן נרוד. (הופיע ב-5 מבחנים.)</li>
+<li>"כל שפה רגולרית מתקבלת מהשפות האלמנטריות ע״י…" התשובה: <b>איחוד, שרשור וסגור *</b>.</li>
+<li>"«r_{ij}^k» מקבל מסלולים ש…" התשובה: <b>עשויים לעבור במצבי הביניים «q_1…q_k»</b>.</li>
+</ul>`},
+{t:'שאלות "איזו מילה לא מתקבלת"', h:`
+<p>השיטה הבטוחה:</p>
+<ol><li>מתרגמים את הביטוי למשפט בעברית (בעזרת הספרייה למעלה).</li>
+<li>מחפשים בתשובות את המילה שמפרה את הכלל.</li>
+<li>אם לא מצליחים לתרגם, מנסים לפרק כל מילה לבלוקים של הביטוי משמאל לימין. אם נתקעים, המילה לא מתקבלת.</li></ol>
+<details class="wex"><summary><span class="wl">מבחן 2018</span><span class="wq">איזו מילה לא מתקבלת ע״י «(0(0(01)^*1)^*1)^*»: 011001, 010011, 001011, 000111?</span></summary><div>
+<p>כל בלוק חיצוני הוא «0 X^* 1», כאשר «X=0(01)^*1». ננסה לפרק:</p>
+<ul>
+<li>010011 = 01 | 0(01)1, כלומר «0·X·1» עם «X=01» ✓.</li>
+<li>001011 = 0 · 01 · 01 · 1 ✓.</li>
+<li>000111 = 0 · 0(01)1 · 1 ✓.</li>
+<li>011001 = 01 | 1001: בלוק חייב להתחיל ב-0, ו-1001 מתחיל ב-1 ✗.</li>
+</ul></div></details>
+<div class="callout warn">שימו לב: «{w | |#_0(w)−#_1(w)|≤2}» (על <b>כל המילה</b>) <b>אינה רגולרית</b>, ואין לה ביטוי רגולרי. אבל "בכל <b>רישא</b> «|…|≤2»" כן רגולרית. ההבדל בין המילה כולה לכל רישא משמעותי.</div>`}
+]},
+/* ------------------------------------------------------------------ 5 */
+{id:'pump', name:'למת הניפוח (רגולריות)', short:'הוכחה ששפה אינה רגולרית, בחירת z', tool:'pump',
+sections:[
+{t:'האינטואיציה', h:`
+<p>לאס״ד יש n מצבים. כשקוראים מילה באורך n לפחות, עוברים דרך «n+1» מצבים, ולכן <b>מצב כלשהו חוזר</b>. בין שתי ההופעות שלו קראנו חתיכה v שמחזירה אותנו לאותו מצב, כלומר <b>מעגל</b>.</p>
+<p>את המעגל אפשר לעבור 0 פעמים, פעמיים, או 17 פעמים, והאוטומט לא ירגיש בהבדל. לכן גם המילים «uw», «uvvw», «uvvvw»… מתקבלות.</p>
+<p>המסקנה: <b>בשפה רגולרית, כל מילה ארוכה מכילה ליד ההתחלה חתיכה שאפשר "לנפח".</b> אם מוצאים מילה ארוכה שבה <i>כל</i> ניפוח יוצא מהשפה, השפה לא רגולרית.</p>`},
+{t:'הלמה', h:`
+<div class="box">אם L רגולרית, אז <b>קיים</b> n (קבוע הלמה) כך ש<b>לכל</b> «z∈L» עם «|z|≥n» <b>קיים</b> פירוק «z=uvw» המקיים:
+<ol><li>«|uv|≤n»: המעגל נמצא ב-n האותיות הראשונות.</li><li>«|v|≥1»: המעגל לא ריק.</li><li><b>לכל</b> «i≥0»: «uv^iw∈L».</li></ol></div>
+<h3>ההוכחה כמשחק בין שני שחקנים</h3>
+<div class="tscroll"><table>
+<tr><th>שלב</th><th>מי בוחר</th><th>מה</th></tr>
+<tr><td>1</td><td>היריב</td><td>את n (לא יודעים מה הוא, ולכן עובדים עם n כללי)</td></tr>
+<tr><td>2</td><td><b>אתם</b></td><td>מילה «z∈L» עם «|z|≥n». המילה תלויה ב-n</td></tr>
+<tr><td>3</td><td>היריב</td><td>את הפירוק «uvw». צריך לטפל ב<b>כל</b> פירוק אפשרי</td></tr>
+<tr><td>4</td><td><b>אתם</b></td><td>את i, כך ש-«uv^iw∉L»</td></tr>
+</table></div>
+<p>אם תמיד אפשר לנצח, השפה לא רגולרית.</p>
+<div class="callout warn"><b>הלמה עובדת רק בכיוון אחד:</b> היא מוכיחה ששפה <b>אינה</b> רגולרית. שפה שמקיימת את הלמה <b>לא בהכרח</b> רגולרית. שפה סופית מקיימת את הלמה באופן ריק (בוחרים n גדול מהמילה הארוכה ביותר, ואז אין מילים שצריך לבדוק).</div>`},
+{t:'הוכחות פתורות', h:`
+<div class="box"><h3>התבנית (מעתיקים למבחן)</h3>
+נניח בשלילה ש-L רגולרית, ויהי n קבוע הלמה. נבחר «z=…». מתקיים «z∈L» ו-«|z|≥n».<br>
+לפי הלמה קיים פירוק «z=uvw» עם «|uv|≤n», «|v|≥1», ולכל «i≥0» «uv^iw∈L».<br>
+מאחר ש-«|uv|≤n», v מורכבת רק מ-… . נסמן «v=…^t», «1≤t≤n».<br>
+נבחר «i=…», ונקבל «uv^iw=…∉L», בסתירה. לכן L אינה רגולרית. ∎</div>
+<details class="wex"><summary><span class="wl">קלאסי</span><span class="wq">«{a^nb^n | n≥0}»</span></summary><div>
+<ol><li>«z=a^nb^n». ה-n הראשונים הם רק a, ולכן «v=a^t» עם «t≥1».</li>
+<li>«i=2»: «a^{n+t}b^n». מאחר ש-«n+t≠n», המילה לא בשפה. סתירה.</li></ol>
+<p>(גם «i=0» עובד: «a^{n−t}b^n».)</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2020</span><span class="wq">«{ww^Rw | w∈{0,1,2}^*}»</span></summary><div>
+<ol><li>בוחרים «w=0^n1», ולכן «z=0^n1·10^n·0^n1=0^n110^{2n}1».</li>
+<li>«|uv|≤n», ולכן «v=0^t».</li>
+<li>«i=2»: «0^{n+t}110^{2n}1». במילה מהשפה «ww^Rw» הבלוק הראשון של 0-ים הוא חצי מהבלוק האמצעי. כאן «2(n+t)≠2n», ולכן המילה לא בשפה.</li></ol>
+<p><b>טיפ:</b> בחרנו w עם 1, כדי שיהיו "סמנים" שמפרידים בין החלקים. «z=0^{3n}» לא הייתה עובדת, כי «0^k» בשפה כשה-k מתחלק ב-3, ואז קשה להגיע לסתירה.</p></div></details>
+<details class="wex"><summary><span class="wl">הטריק «n!»</span><span class="wq">«{a^mb^k | m≠k}»: למה «z=a^nb^{n+1}» לא מספיקה?</span></summary><div>
+<p>עם «z=a^nb^{n+1}» ו-«v=a^t», צריך i כך ש-«n+(i−1)t=n+1», כלומר «(i−1)t=1». זה עובד רק אם «t=1». אם היריב בחר «t=2», אי אפשר.</p>
+<p><b>הפתרון:</b> «z=a^nb^{n+n!}». לכל «1≤t≤n», ‏t מחלק את «n!», ולכן «i=n!/t+1» מספר שלם, ומקבלים «a^{n+n!}b^{n+n!}∉L». ‏«n!» מתחלק בכל מספר עד n, ולכן מתאים לכל t שהיריב בוחר.</p></div></details>
+<details class="wex"><summary><span class="wl">מבחן 2022</span><span class="wq">«{w∈{a,b}^* | #_a≠2#_b}»</span></summary><div>
+<ol><li>«z=b^na^{2n+2n!}». יש «#_a=2n+2n!≠2n=2#_b», ולכן «z∈L».</li>
+<li>«v=b^t». נבחר «i=n!/t+1», ומספר ה-b-ים יהיה «n+n!».</li>
+<li>אז «2#_b=2n+2n!=#_a», ולכן המילה <b>לא</b> בשפה. סתירה.</li></ol></div></details>
+<details class="wex"><summary><span class="wl">ריבועים</span><span class="wq">«{a^{k²}}»</span></summary><div>
+<ol><li>«z=a^{n²}», «v=a^t», «1≤t≤n».</li>
+<li>«i=2»: האורך «n²+t». מתקיים «n²<n²+t≤n²+n<n²+2n+1=(n+1)²».</li>
+<li>האורך נופל בין שני ריבועים עוקבים, ולכן הוא לא ריבוע. סתירה.</li></ol>
+<p>אותו דבר עם חזקות שלישיות («{a^{k³}}») ו-«i=3» או «i=5»: ‏«n³+4n<(n+1)³», ולכן גם כאן האורך לא חזקה שלישית.</p></div></details>
+<details class="wex"><summary><span class="wl">ראשוניים</span><span class="wq">«{a^p | p ראשוני}»</span></summary><div>
+<ol><li>בוחרים «z=a^p» עם p ראשוני, «p≥n+2». «v=a^t».</li>
+<li>«i=p+1»: האורך «p+pt=p(1+t)». זו מכפלה של שני מספרים גדולים מ-1, ולכן לא ראשוני. סתירה.</li></ol></div></details>
+<details class="wex"><summary><span class="wl">מטלה 2017</span><span class="wq">«{ba^kba^t | k≠t}»: שני מקרים</span></summary><div>
+<p>«z=ba^nba^{n+n!}». כאן v יכולה להכיל את ה-b הראשונה, ולכן יש שני מקרים:</p>
+<ul><li>«v=a^t» (בלי ה-b): ‏«i=n!/t+1» נותן «ba^{n+n!}ba^{n+n!}∉L».</li>
+<li>v מכילה את ה-b הראשונה: ‏«i=0» מוחק אותה, והמילה לא מתחילה ב-b, ולכן ∉L.</li></ul>
+<p><b>חובה לטפל בכל המקרים של v.</b></p></div></details>`},
+{t:'איך בוחרים z טובה (ואיך לא)', h:`
+<ul>
+<li><b>z חייבת להיות בשפה.</b> בלי זה ההוכחה לא תקפה.</li>
+<li><b>שמים את החלק ה"רגיש" ב-n האותיות הראשונות.</b> מאחר ש-«|uv|≤n», v חייבת להיות שם, ואתם יודעים בדיוק ממה היא מורכבת.</li>
+<li><b>z צריכה להיות "על הקצה":</b> כך שכל שינוי קטן יוציא אותה מהשפה.</li>
+</ul>
+<h3>בחירות גרועות שנשאלו כשאלות אמריקאיות</h3>
+<details class="wex"><summary><span class="wl">2017</span><span class="wq">למה «z=(ab)^n» לא טובה עבור «#_a=#_b»?</span></summary><div><p>היריב בוחר «v=ab», ואז כל ניפוח שומר על האיזון. אין סתירה. הבחירה הטובה: «z=a^nb^n», ואז v היא רק a-ים.</p></div></details>
+<details class="wex"><summary><span class="wl">2025</span><span class="wq">למה «z=ba^nb» לא טובה עבור פלינדרומים?</span></summary><div><p>היריב בוחר «u=b», ו-v מתוך ה-a-ים. אז «ba^mb» היא פלינדרום לכל m. בחירה טובה: «a^nba^n», ואז v היא a-ים מהצד השמאלי בלבד, והסימטריה נשברת.</p></div></details>
+<h3>טעויות נפוצות</h3>
+<ul>
+<li>לבחור את הפירוק בעצמכם. הפירוק נבחר ע״י היריב, ולכן צריך לטפל בכולם.</li>
+<li>לבחור n מספרי (למשל «n=5»). n הוא כללי.</li>
+<li>לשכוח את «|uv|≤n». זה הכלי הכי חשוב להגביל את v.</li>
+<li>להסיק "השפה מקיימת את הלמה, ולכן רגולרית". זה לא נכון.</li>
+</ul>
+<div class="callout idea"><b>דרך עוקפת שימושית: סגירות.</b> כדי להראות ש-«{#_a=#_b}» לא רגולרית: אם היא הייתה רגולרית, גם «L∩a^*b^*={a^nb^n}» הייתה רגולרית (חיתוך עם רגולרית). אבל ראינו שהיא לא.</div>`}
+]},
+/* ------------------------------------------------------------------ 6 */
+{id:'closure', name:'סגירות ו"תנו דוגמה"', short:'רגולרי / לא רגולרי, הוכיחו או הפריכו', tool:null,
+sections:[
+{t:'מה זה "סגורות תחת פעולה"', h:`
+<p>מחלקת שפות <b>סגורה</b> תחת פעולה אם הפעלת הפעולה על שפות מהמחלקה תמיד נותנת שפה באותה מחלקה. למשל: "שפות רגולריות סגורות לאיחוד" = אם «L_1,L_2» רגולריות, אז גם «L_1∪L_2».</p>
+<p class="callout"><b>הקטגוריה הגדולה במבחנים.</b> רוב השאלות נפתרות ע״י 1) ידיעה מה סגור ומה לא, ו-2) מאגר קטן של דוגמאות נגדיות.</p>`},
+{t:'שפות רגולריות: סגורות, ולמה', h:`
+<div class="tscroll"><table>
+<tr><th>פעולה</th><th>למה סגורות (הבנייה)</th></tr>
+<tr><td>משלים</td><td>אס״ד שלם, מחליפים מקבלים</td></tr>
+<tr><td>חיתוך, איחוד, הפרש, «Δ»</td><td>אוטומט מכפלה</td></tr>
+<tr><td>שרשור, «*», «+»</td><td>אסל״ד עם מסעי «ε»</td></tr>
+<tr><td>היפוך</td><td>הופכים את החצים</td></tr>
+<tr><td>רישות</td><td>כל מצב שממנו אפשר להגיע ל-F הופך למקבל</td></tr>
+<tr><td>סיפות, תתי-מילים</td><td>אסל״ד: «ε» מההתחלה לכל מצב ישיג (וגם רישות)</td></tr>
+<tr><td>החלפת אותיות (הומומורפיזם)</td><td>מחליפים תוויות על החצים, למשל a,b→1</td></tr>
+<tr><td>מיזוג 1-1 (אות מכל מילה לסירוגין)</td><td>מכפלה שמתקדמת בכל צעד באוטומט אחר</td></tr>
+<tr><td>«L_{min}», «L_{max}»</td><td>חוסמים יציאה ממקבל / משאירים מקבלים רק "סופיים"</td></tr>
+<tr><td>«{w | w∈L, w^R∈L}»</td><td>«L∩L^R»</td></tr>
+</table></div>
+<h3>לא סגורות</h3>
+<ul>
+<li><b>תת-קבוצה:</b> כל שפה מוכלת ב-«Σ^*» הרגולרית, כולל שפות לא רגולריות.</li>
+<li><b>ערבוב סדר האותיות:</b> «(ab)^*» הופכת ל-«{#_a=#_b}» (לא רגולרית). «(abc)^*» הופכת ל-«{#_a=#_b=#_c}» (אפילו לא ח״ה).</li>
+<li><b>פלינדרומים בתוך L:</b> עבור «L=Σ^*» מתקבלים כל הפלינדרומים, שאינם רגולריים.</li>
+<li><b>"האות האמצעית היא a":</b> עבור «L={#_a=1}» מתקבלת «{b^nab^n}».</li>
+<li><b>איחוד אינסופי:</b> כל שפה היא איחוד אינסופי של שפות בנות מילה אחת (שהן רגולריות).</li>
+</ul>`},
+{t:'שפות לא רגולריות: (כמעט) כלום לא סגור', h:`
+<ul>
+<li><b>איחוד:</b> «L∪!{L}=Σ^*», שהיא רגולרית.</li>
+<li><b>חיתוך:</b> «L∩!{L}=∅», שהיא רגולרית.</li>
+<li><b>משלים:</b> <mark>כן</mark>. אם «!{L}» הייתה רגולרית, אז גם «L=!{!{L}}».</li>
+<li><b>«*»:</b> «{a^p}» ⟵ «{a^n | n≠1}», שהיא רגולרית.</li>
+</ul>
+<h3>טענות "אם … אז …" עם שפה רגולרית</h3>
+<div class="tscroll"><table>
+<tr><th>נתון</th><th>מסקנה</th><th>נכון?</th></tr>
+<tr><td>A רגולרית, «AΔB» רגולרית</td><td>B רגולרית</td><td>✓, כי «B=AΔ(AΔB)»</td></tr>
+<tr><td>A רגולרית, «A∪B» רגולרית</td><td>B רגולרית</td><td>✗, דוגמה נגדית «A=Σ^*»</td></tr>
+<tr><td>A רגולרית, «A∩B» רגולרית</td><td>B רגולרית</td><td>✗, דוגמה נגדית «A=∅»</td></tr>
+<tr><td>«L_1», «L_1−L_2» רגולריות</td><td>«L_2» רגולרית</td><td>✗, דוגמה נגדית «L_1=∅»</td></tr>
+<tr><td>«L_2», «L_1−L_2» רגולריות</td><td>«L_1» רגולרית</td><td>✗, דוגמה נגדית «L_2=Σ^*»</td></tr>
+<tr><td>L לא רגולרית, F סופית</td><td>«L∪F», «L−F» לא רגולריות</td><td>✓: שינוי סופי לא משנה סיווג</td></tr>
+<tr><td>L לא רגולרית, M רגולרית</td><td>«L∪M»?</td><td>אפשר הכל: «M=∅» או «M=Σ^*»</td></tr>
+</table></div>`},
+{t:'השיטה ל"הוכיחו או הפריכו"', h:`
+<div class="callout idea"><b>מנסים קודם את הדוגמאות הקיצוניות:</b>
+<ol><li><b>«∅»</b> (חיתוך, שרשור ומיזוג איתה נותנים «∅»)</li>
+<li><b>«Σ^*»</b> (איחוד איתה נותן «Σ^*», והיא מכילה הכל)</li>
+<li><b>שפה סופית</b> (תמיד רגולרית)</li>
+<li><b>«{a^nb^n}» והמשלים שלה</b> (זוג לא רגולרי שהאיחוד שלו «Σ^*»)</li>
+<li><b>«{a^{k²}}», «{a^p}»</b> (לא ח״ה, מעל אות אחת)</li></ol>
+ברוב המקרים אחת מהן מפריכה את הטענה בשורה אחת.</div>
+<details class="wex"><summary><span class="wl">2018</span><span class="wq">"אם L אינה רגולרית, אוסף תתי-המילים שלה אינו רגולרי"</span></summary><div><p>הפרכה: «L={a^{k²}}» אינה רגולרית, אבל תתי-המילים שלה הן כל «a^n», כלומר «a^*», שהיא רגולרית.</p></div></details>
+<details class="wex"><summary><span class="wl">2025</span><span class="wq">"לכל A⊊B לא רגולריות יש C רגולרית עם A⊊C⊊B"</span></summary><div><p>הפרכה: «A={a^nb^n | n≥1}», ‏«B=A∪{ε}». בין שתיהן יש רק מילה אחת, ולכן אין שפה שלישית ביניהן.</p></div></details>
+<details class="wex"><summary><span class="wl">2020</span><span class="wq">"L רגולרית ⟹ «L'={1^n | יש ב-L מילה באורך n}» רגולרית"</span></summary><div><p><b>נכון.</b> מחליפים כל תווית a או b ב-1 באס״ד של L. מתקבל אסל״ד מעל «{1}» שמקבל בדיוק את «L'».</p></div></details>
+<details class="wex"><summary><span class="wl">2025</span><span class="wq">"A רגולרית, והמיזוג 1-1 של A עם B רגולרי. אז B רגולרית / מוכלת ב-A?"</span></summary><div><p>«A=∅»: המיזוג תמיד «∅», לכל B. לכן B לא בהכרח רגולרית ולא בהכרח מוכלת ב-A.</p></div></details>`},
+{t:'מאגר הדוגמאות לשאלות "תנו דוגמה"', h:`
+<div class="tscroll"><table>
+<tr><th>צריך…</th><th>דוגמה</th></tr>
+<tr><td>אינסוף שפות לא ח״ה שהאיחוד שלהן רגולרי <mark>(2024 + 2025, זהה)</mark></td><td>«A_k={a^{n²+k} | n≥0}», והאיחוד הוא «a^*»</td></tr>
+<tr><td>«L_1,L_2» ח״ה לא רגולריות, ו-«L_1∪L_2» ו-«L_1·L_2» רגולריות</td><td>«{#_a=#_b}», «{#_a≠#_b}∪{ε}», ושתי הפעולות נותנות «Σ^*»</td></tr>
+<tr><td>«L^*=L»: רגולרית / לא רגולרית</td><td>«Σ^*» / «{#_a=#_b}»</td></tr>
+<tr><td>«L^2=L» לא רגולרית</td><td>«{#_a=#_b}»</td></tr>
+<tr><td>«L^R=L» לא רגולרית</td><td>«{#_a<#_b}», או הפלינדרומים</td></tr>
+<tr><td>L לא רגולרית, «L^*» רגולרית</td><td>«{a^p}» ⟵ «{a^n | n≠1}»</td></tr>
+<tr><td>L לא רגולרית, תתי-המילים שלה רגולריות</td><td>«{a^{k²}}» ⟵ «a^*»</td></tr>
+<tr><td>L רגולרית, הערבוב שלה לא</td><td>«(ab)^*» ⟵ «{#_a=#_b}»</td></tr>
+<tr><td>L לא רגולרית, הערבוב שלה רגולרי</td><td>«{a^{n²}ba^k}» ⟵ «{#_b=1}»</td></tr>
+<tr><td>A⊊B לא רגולריות בלי C רגולרית ביניהן</td><td>«{a^nb^n | n≥1}», ‏«{a^nb^n | n≥0}»</td></tr>
+<tr><td>רגולרית ∩ ח״ה שאינה רגולרית</td><td>«Σ^*∩{a^nb^n}»</td></tr>
+<tr><td>שתי ח״ה שהחיתוך שלהן אינו ח״ה</td><td>«{a^nb^nc^m}∩{a^mb^nc^n}={a^nb^nc^n}»</td></tr>
+</table></div>`}
+]},
+/* ------------------------------------------------------------------ 7 */
+{id:'cfg', name:'דקדוקים חופשיי הקשר', short:'כתיבת דקדוק וזיהוי השפה שלו', tool:'cfg',
+sections:[
+{t:'מה זה דקדוק: הגדרה רקורסיבית', h:`
+<p>דקדוק הוא אוסף של <b>כללי החלפה</b>. מתחילים מהמשתנה S, ובכל צעד מחליפים משתנה (אות גדולה) לפי אחד הכללים, עד שנשארות רק אותיות קטנות (טרמינלים).</p>
+<details class="wex" open><summary><span class="wl">דוגמה</span><span class="wq">גזירה של aaabbb בדקדוק «S→aSb | ε»</span></summary><div>
+<div class="pre">S ⇒ aSb ⇒ aaSbb ⇒ aaaSbbb ⇒ aaabbb</div>
+<p>בכל צעד ה-S "עוטף" את עצמו ב-a משמאל וב-b מימין. לכן תמיד יש בדיוק אותו מספר a-ים ו-b-ים, וכל ה-a-ים לפני כל ה-b-ים. השפה: «{a^nb^n | n≥0}».</p></div></details>
+<p><b>הגדרה:</b> «G=(V,T,S,P)»: משתנים, טרמינלים, משתנה התחלה, וכללים. דקדוק <b>חופשי הקשר</b> (ח״ה): בצד שמאל של כל כלל יש <b>משתנה בודד</b>. כלומר אפשר להחליף משתנה בלי להתחשב במה שמסביבו.</p>
+<p>שפה היא <b>ח״ה</b> אם יש לה דקדוק ח״ה. כל שפה רגולרית היא ח״ה, אבל לא להפך («a^nb^n» ח״ה ולא רגולרית).</p>
+<h3>הכוח של דקדוק: התאמה מקוננת</h3>
+<p>האוטומט לא יכול "לספור", אבל הדקדוק יכול <b>לעטוף</b>: כל אות שנוספת משמאל מותאמת לאות שנוספת מימין. בזכות זה דקדוק יכול לטפל ב-«a^nb^n», בפלינדרומים ובסוגריים מאוזנים.</p>`},
+{t:'תבניות בסיס: דוגמאות פתורות', h:`
+<details class="wex"><summary><span class="wl">1</span><span class="wq">«{a^nb^{2n}}»</span></summary><div><p>«S→aSbb | ε». כל a מתאימה לשתי b-ים.</p></div></details>
+<details class="wex"><summary><span class="wl">2</span><span class="wq">«{a^nb^m | n≤m}»</span></summary><div><p>«S→aSb | Sb | ε». ‏aSb מתאים זוגות, ו-Sb מוסיף b-ים עודפות. (לחלופין: «S→aSb | B», «B→bB | ε».)</p></div></details>
+<details class="wex"><summary><span class="wl">3</span><span class="wq">«{a^mb^k | m<2k}» (2020)</span></summary><div><p>«S→Sb | aSb | aaSb | b | ab». כל b "לוקחת" 0, 1 או 2 a-ים. הבסיס b או ab לוקח לכל היותר a אחת, ולכן יש פחות מ-2k.</p></div></details>
+<details class="wex"><summary><span class="wl">4</span><span class="wq">«{a^mbc^k | 2m<k<3m}» (2020)</span></summary><div>
+<ol><li>כל a מקבלת 2 או 3 c-ים: «S→aScc | aSccc».</li>
+<li>צריך <b>אי-שוויון חזק</b> בשני הצדדים. נבדוק מה ה-m הכי קטן: «m=1»: ‏«2<k<3», אין k כזה. «m=2»: ‏«4<k<6», ולכן «k=5».</li>
+<li>הבסיס: «aabccccc» (m=2, k=5).</li>
+<li>בדיקה: מוסיפים j a-ים, וה-k בין «5+2j» ל-«5+3j». צריך «4+2j<k<6+3j» ✓.</li></ol></div></details>
+<details class="wex"><summary><span class="wl">5</span><span class="wq">«{a^nb^mc^md^n}»: התאמה מקוננת</span></summary><div><p>«S→aSd | X», «X→bXc | ε». החיצוני (a…d) עוטף את הפנימי (b…c).</p></div></details>
+<details class="wex"><summary><span class="wl">6</span><span class="wq">«{a^nb^na^kb^k}»: שרשור</span></summary><div><p>«S→XX», «X→aXb | ε». שני חלקים בלתי תלויים, שכל אחד מהם «a^nb^n». (זו שאלת זיהוי מ-2018.)</p></div></details>
+<details class="wex"><summary><span class="wl">7</span><span class="wq">«{a^ib^jc^k | i=j או j=k}»: איחוד</span></summary><div><p>«S→XC | AY», «X→aXb | ε», «C→cC | ε», «A→aA | ε», «Y→bYc | ε». מקרה ראשון «a^nb^nc^*», מקרה שני «a^*b^nc^n».</p></div></details>
+<details class="wex"><summary><span class="wl">8</span><span class="wq">«{a^{m−k}b^mc^k | m≥k, m≥1}» (2026)</span></summary><div>
+<ol><li>הטריק: מפרקים את «b^m» ל-«b^{m−k}·b^k».</li>
+<li>המילה היא «a^{m−k}b^{m−k}·b^kc^k», כלומר שני חלקים מוכרים.</li>
+<li>«X→aXb | ε», «Y→bYc | ε».</li>
+<li>«m≥1» אומר שיש לפחות b אחת: «S→aXbY | XbYc».</li></ol></div></details>
+<details class="wex"><summary><span class="wl">9</span><span class="wq">«{uv | u∈{0,1}^*, v∈{2,3}^*, |u|≤#_2(v)}» (2024)</span></summary><div><p>«S→0S2 | 1S2 | S2 | S3 | ε». כל אות של u עוטפת 2, ואפשר להוסיף 2-ים ו-3-ים חופשיים מימין.</p></div></details>`},
+{t:'ספירה: «#_a=#_b» ומשפחתה', h:`
+<details class="wex"><summary><span class="wl">קלאסי</span><span class="wq">«{w | #_a(w)=#_b(w)}»: למה «S→aSbS | bSaS | ε»?</span></summary><div>
+<p><b>הרעיון:</b> מילה מאוזנת לא ריקה מתחילה ב-a או ב-b. נניח שהיא מתחילה ב-a. נלך משמאל ונעקוב אחרי ההפרש «#_a−#_b». הוא מתחיל ב-1, ובסוף הוא 0, ולכן יש נקודה <b>ראשונה</b> שבה הוא חוזר ל-0, וזה קורה על b.</p>
+<p>לכן «w=a·x·b·y», כאשר x מאוזנת (בין ה-a ל-b ההפרש לא ירד מתחת ל-1) ו-y מאוזנת. זה בדיוק «aSbS».</p>
+<p>דקדוק שקול (2018): «S→aSb | bSa | SS | ε».</p></div></details>
+<details class="wex"><summary><span class="wl">2018</span><span class="wq">«{w | #_a=#_b+2}»</span></summary><div><p>«S→XaXaX», «X→aXbX | bXaX | ε». ‏X מייצר חלקים מאוזנים, ושתי ה-a-ים העודפות מפוזרות ביניהם.</p></div></details>
+<details class="wex"><summary><span class="wl">שאלה</span><span class="wq">האם «S→aSb | bSa | ε» מקבל את כל «#_a=#_b»?</span></summary><div><p>לא. הוא מייצר רק מילים שבהן האות הראשונה <b>שונה</b> מהאחרונה, ובאופן רקורסיבי פנימה. למשל abba לא מתקבלת (a…a בקצוות). בגלל זה צריך את «SS» או את «aSbS».</p></div></details>`},
+{t:'פלינדרומים, לא-פלינדרומים ו-ww', h:`
+<details class="wex"><summary><span class="wl">1</span><span class="wq">פלינדרומים</span></summary><div><p>«S→aSa | bSb | a | b | ε». מוסיפים אותה אות בשני הצדדים. ‏a או b באמצע נותנים אורך אי-זוגי, ו-«ε» נותן אורך זוגי.</p></div></details>
+<details class="wex"><summary><span class="wl">2</span><span class="wq">לא-פלינדרומים <mark>(4 מבחנים)</mark></span></summary><div>
+<ol><li>מילה אינה פלינדרום ⟺ יש מקום <b>ראשון</b> (מבחוץ פנימה) שבו האותיות התואמות שונות.</li>
+<li>מבחוץ: זוגות שווים, «S→aSa | bSb».</li>
+<li>בנקודת השבירה: זוג שונה, «aXb | bXa».</li>
+<li>אחרי השבירה הכל מותר: «X→aX | bX | ε».</li></ol>
+<p>«S→aSa | bSb | aXb | bXa», ‏«X→aX | bX | ε».</p></div></details>
+<details class="wex"><summary><span class="wl">3</span><span class="wq">לא-פלינדרומים באורך <b>אי-זוגי</b> (2025)</span></summary><div>
+<p>«S→TST | aXb | bXa», ‏«X→TXT | a | b», ‏«T→a | b».</p>
+<p>כאן ‏TST מבחוץ (זוג כלשהו, וזה בסדר כי השבירה תגיע בפנים). X מוסיף זוגות ובאמצע אות אחת, ולכן האורך אי-זוגי. לאורך זוגי: «X→TXT | ε».</p></div></details>
+<details class="wex"><summary><span class="wl">4</span><span class="wq">אורך זוגי ו<b>לא</b> מהצורה ww (2023)</span></summary><div>
+<p>«S→XY | YX», ‏«X→TXT | a», ‏«Y→TYT | b».</p>
+<p><b>למה זה עובד?</b> מילה באורך 2n אינה ww ⟺ יש מקום i שבו «w[i]≠w[i+n]». ‏X מייצר מילה באורך אי-זוגי עם a באמצע, ו-Y אותו דבר עם b. כשמשרשרים X באורך «2p+1» ו-Y באורך «2q+1», האות האמצעית של X והאות האמצעית של Y נמצאות בדיוק במרחק n זו מזו. הטריק הוא שאפשר "להזיז" את גבולות החלוקה.</p>
+<p>(כל המילים שאינן ww: מוסיפים גם את כל המילים באורך אי-זוגי.)</p></div></details>
+<details class="wex"><summary><span class="wl">5</span><span class="wq">«{uu^Rv^Rv}» (2024)</span></summary><div><p>«uu^R» הוא פלינדרום זוגי, וגם «v^Rv». לכן «S→XX», ‏«X→0X0 | 1X1 | ε».</p></div></details>
+<details class="wex"><summary><span class="wl">6</span><span class="wq">«{v2w | v≠w^R}» מעל «{0,1,2}» (2023)</span></summary><div>
+<p>«v=w^R» פירושו שהמילה היא "פלינדרום סביב ה-2". צריך עדות לשבירה:</p>
+<ul><li>זוגות מבחוץ, כלשהם: «S→TST».</li>
+<li>אי-התאמה: «0X2X1 | 1X2X0», ואחרי השבירה הכל מותר.</li>
+<li>או שאחד הצדדים ארוך יותר: «TX2 | 2XT».</li></ul>
+<p>«X→TX | ε», ‏«T→0 | 1».</p></div></details>`},
+{t:'זיהוי השפה של דקדוק נתון', h:`
+<ol>
+<li><b>גוזרים</b> 4–5 מילים קצרות (או משתמשים בכלי למטה).</li>
+<li><b>מחפשים אינווריאנטה:</b> מה נשמר בכל כלל? (כמה a-ים מול כמה b-ים, סימטריה, אורך זוגי)</li>
+<li><b>בודקים משתנים "מתים":</b> משתנה שבכל הכללים שלו מופיע משתנה לא יכול להסתיים. אם S תלוי בו, השפה היא «∅».</li>
+<li><b>בודקים את התשובות</b> עם מילה קצרה שמבדילה ביניהן.</li>
+</ol>
+<details class="wex"><summary><span class="wl">2025</span><span class="wq">«S→XY», «X→aXb|bXa|aXa|bXb|ε», «Y→aYa|bYb|aYb|bYa»</span></summary><div><p>ל-Y אין כלל בלי Y, ולכן הוא אף פעם לא נגמר. «L=∅».</p></div></details>
+<details class="wex"><summary><span class="wl">2023</span><span class="wq">«S→0S2 | X», «X→1X2 | 1X | 1» מול «L'={0^m1^t2^k | m+t>k}»</span></summary><div>
+<p>הדקדוק: כל 0 עוטפת 2. ב-X כל 1 עוטפת 2 או עומדת לבד, ותמיד יש 1 אחת לבד לפחות. לכן «k<m+t», כלומר «L(G)⊆L'».</p>
+<p>אבל הדקדוק תמיד מייצר לפחות 1 אחת. המילה 002 (m=2, t=0, k=1) נמצאת ב-«L'» אבל לא ב-«L(G)». לכן ההכלה ממש.</p></div></details>
+<details class="wex"><summary><span class="wl">2022</span><span class="wq">«G'» מצורת חומסקי עם משתנים מתויגים «X'», «X'→Y'Z | YZ'», «X'→ε»</span></summary><div><p>המשתנה המתויג "נושא" משימה: למחוק <b>אות אחת</b>. בכל פיצול הוא מעביר את התיוג לאחד הילדים, ובעלה הוא מוחק את האות. התוצאה: מילים מ-L שהוסרה מהן אות אחת (בכל מקום).</p></div></details>`},
+{t:'דקדוקים כלליים (לא ח״ה)', h:`
+<p>ב<b>דקדוק כללי</b> מותר שיהיו בצד שמאל כמה סימנים, למשל «AB→BA». זה מאפשר "להזיז" אותיות ולתקשר בין חלקים רחוקים במילה. הכוח שלו שקול למכונת טיורינג.</p>
+<details class="wex"><summary><span class="wl">2020</span><span class="wq">«S→ABCS | ε» + כל ההחלפות + «A→a, B→b, C→c»</span></summary><div><p>מייצרים כמויות שוות של A, B ו-C, וההחלפות מאפשרות כל סידור. השפה: «{#_a=#_b=#_c}».</p></div></details>
+<details class="wex"><summary><span class="wl">2018</span><span class="wq">כתבו דקדוק ל-«#_a=2#_b=3#_c»</span></summary><div><p>היחס הוא «6:3:2». ‏«S→AAAAAABBBCCS | ε», וכל 6 ההחלפות («AB→BA, BA→AB, AC→CA, CA→AC, BC→CB, CB→BC»), ו-«A→a, B→b, C→c».</p></div></details>
+<details class="wex"><summary><span class="wl">2023</span><span class="wq">«S→MR», «M→aMbX | ε», «Xb→bX», «XR→Rc», «R→ε»</span></summary><div>
+<p>«M→aMbX» נותן «a^n(bX)^n». כל X "זוחל" ימינה מעל b-ים («Xb→bX»), וכשהוא פוגש את R הוא הופך ל-c שמאחוריו («XR→Rc»). בסוף «R→ε».</p>
+<p>התוצאה: «a^nb^nc^n».</p></div></details>
+<details class="wex"><summary><span class="wl">2022</span><span class="wq">«S→MR», ‏M מייצר «Xw», ‏X מעתיק כל אות אל אחרי R</span></summary><div><p>X עובר על w משמאל לימין. על כל אות הוא שולח עותק (A או B) שזוחל ימינה ונכנס <b>מיד אחרי R</b>. העותק הראשון נדחף הכי רחוק ימינה, ולכן העותקים יוצאים בסדר הפוך: «w·w^R». התשובה: «{ww^R}».</p></div></details>`}
+]},
+/* ------------------------------------------------------------------ 8 */
+{id:'cfl', name:'שפות ח״ה, בר-הלל וחומסקי', short:'מה ח״ה ומה לא, סגירות, היררכיה', tool:'pda',
+sections:[
+{t:'אוטומט מחסנית', h:`
+<p>אוטומט מחסנית הוא אוטומט סופי + <b>מחסנית</b> (ערימה: מכניסים ומוציאים רק מלמעלה). בכל צעד הוא קורא אות (או «ε»), מסתכל על ראש המחסנית, ומחליט לאיזה מצב לעבור ומה להכניס במקום הראש.</p>
+<p><b>משפט:</b> שפה היא ח״ה ⟺ יש לה אוטומט מחסנית (לא דטרמיניסטי).</p>
+<details class="wex" open><summary><span class="wl">דוגמה</span><span class="wq">איך מחסנית מזהה «a^nb^n»?</span></summary><div>
+<ol><li>על כל a: דוחפים סימן A.</li><li>על כל b: מוציאים A. אם המחסנית ריקה, דוחים.</li><li>אם מגיע a אחרי b, דוחים.</li><li>בסוף: מקבלים אם המחסנית ריקה.</li></ol>
+<p>המחסנית היא בעצם <b>מונה אחד</b>. אפשר לבדוק את זה בכלי למטה.</p></div></details>
+<p><b>מה מחסנית לא יכולה?</b> להשוות <b>שני</b> זוגות בבת אחת. ב-«a^nb^nc^n», אחרי שהשתמשנו במחסנית כדי לבדוק a מול b, היא ריקה ואין עם מה להשוות את ה-c-ים.</p>`},
+{t:'היררכיית חומסקי', h:`
+<div class="svgbox">
+<svg viewBox="0 0 520 300" width="520" role="img" aria-label="היררכיית חומסקי">
+<rect x="6" y="6" width="508" height="288" rx="14" fill="var(--bg)" stroke="var(--line)"/>
+<rect x="30" y="40" width="460" height="244" rx="12" fill="var(--surface)" stroke="var(--muted)"/>
+<rect x="56" y="80" width="408" height="196" rx="12" fill="var(--bg)" stroke="var(--muted)"/>
+<rect x="84" y="120" width="352" height="148" rx="12" fill="var(--accent-soft)" stroke="var(--accent)"/>
+<rect x="116" y="162" width="288" height="98" rx="12" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+<g font-family="IBM Plex Sans Hebrew,Arial,sans-serif" font-size="14" fill="var(--ink)" text-anchor="middle">
+<text x="260" y="27">כל השפות (יש גם שפות בלי שום דקדוק)</text>
+<text x="260" y="62">סוג 0 · דקדוק כללי · מכונת טיורינג</text>
+<text x="260" y="102">סוג 1 · תלוי הקשר · אוטומט חסום לינארית</text>
+<text x="260" y="142">סוג 2 · חופשי הקשר · אוטומט מחסנית</text>
+<text x="260" y="186" font-weight="700">סוג 3 · רגולרית</text>
+<text x="260" y="206" font-size="13">אוטומט סופי · ביטוי רגולרי · לינארי ימני/שמאלי</text>
+</g>
+<g font-family="IBM Plex Mono,monospace" font-size="13" fill="var(--accent)" text-anchor="middle" direction="ltr">
+<text x="260" y="240">a*b*   (ab)*   #a mod 2 = 0</text>
+<text x="260" y="157" font-size="12" fill="var(--muted)">a^n b^n · palindromes · #a=#b</text>
+<text x="260" y="117" font-size="12" fill="var(--muted)">a^n b^n c^n · ww</text>
+</g>
+</svg>
+<div class="cap">כל מחלקה מכילה את כל המחלקות שבתוכה. דוגמה מכל שכבה מופיעה בכחול.</div></div>
+<ul>
+<li>"למי כוח חישובי גדול יותר?" מבין ח״ה, תלוי הקשר, לינארי ימני ולינארי שמאלי, התשובה היא <b>תלוי הקשר</b>.</li>
+<li>"אילו שקולים?" התשובה: <b>לינארי ימני ולינארי שמאלי</b> (שניהם רגולריים).</li>
+<li>דקדוק <b>לינארי ימני</b>: כל כלל מהצורה «A→wB» או «A→w». מתאים ישירות לאוטומט, כאשר A הוא מצב.</li>
+</ul>`},
+{t:'מה ח״ה ומה לא: כלל "ההשוואה האחת"', h:`
+<div class="callout idea"><b>כלל אצבע:</b> שפה ח״ה יכולה לבדוק <b>השוואה מקוננת אחת</b> בכל פעם (או איחוד של כמה מקרים, כשבכל מקרה יש השוואה אחת). שפה שדורשת <b>שתי השוואות בו-זמנית</b> על אותן אותיות, או השוואות "חוצות", בדרך כלל <b>אינה</b> ח״ה.<br>
+וה<b>משלים</b> של שפה כזו בדרך כלל <b>כן</b> ח״ה: הוא איחוד של "ההשוואה הראשונה נכשלה" ∪ "השנייה נכשלה" ∪ "הסדר לא נכון".</div>
+<div class="tscroll"><table>
+<tr><th>שפה</th><th>ח״ה?</th><th>למה</th></tr>
+<tr><td>«a^nb^n»</td><td>✓</td><td>השוואה אחת</td></tr>
+<tr><td>«a^nb^mc^md^n»</td><td>✓</td><td>מקוננות (החיצונית עוטפת את הפנימית)</td></tr>
+<tr><td>«a^nb^mc^nd^m»</td><td>✗</td><td>השוואות <b>חוצות</b></td></tr>
+<tr><td>«a^nb^nc^n»</td><td>✗</td><td>שתי השוואות; המשלים ✓</td></tr>
+<tr><td>«a^ib^jc^k», «i=j או j=k»</td><td>✓</td><td>איחוד של שני מקרים</td></tr>
+<tr><td>«a^ib^jc^k», «i≤j≤k»</td><td>✗</td><td>שתי השוואות בו-זמנית</td></tr>
+<tr><td>«a^nb^nc^kd^k», «n>k» (2017)</td><td>✗</td><td>שלוש השוואות; המשלים ✓</td></tr>
+<tr><td>«#_a>#_b>#_c» (2018)</td><td>✗</td><td>המשלים ✓</td></tr>
+<tr><td>«a^mb^ka^{m+k}», «m>k» (2023)</td><td>✗</td><td>המשלים ✓</td></tr>
+<tr><td>«#_a=#_b=#_c»</td><td>✗</td><td></td></tr>
+<tr><td>«ww»</td><td>✗</td><td>"חוצה". <b>המשלים</b> ✓ (דקדוק בנושא 7)</td></tr>
+<tr><td>«ww^R» (פלינדרומים)</td><td>✓</td><td>מקונן</td></tr>
+<tr><td>«ww ∩ פלינדרומים»</td><td>✗</td><td>(2023)</td></tr>
+<tr><td>«{a^{k²}}», «{a^p}», אורך ראשוני</td><td>✗</td><td>וגם המשלים ✗ (אות אחת)</td></tr>
+</table></div>
+<div class="callout"><b>עובדה חשובה:</b> מעל א״ב של <b>אות אחת</b>, ח״ה ⟺ רגולרית. לכן «{a^{k²}}» אינה ח״ה, <b>וגם המשלים שלה לא</b> (אם המשלים היה ח״ה, הוא היה רגולרי, ואז גם השפה עצמה).</div>`},
+{t:'סגירות של שפות ח״ה', h:`
+<div class="grid2">
+<div class="box"><h3>סגורות ✓</h3><ul>
+<li>איחוד: «S→S_1 | S_2»</li><li>שרשור: «S→S_1S_2»</li><li>«*»: «S→S_1S | ε»</li><li>היפוך: הופכים כל כלל</li>
+<li><mark>חיתוך עם רגולרית</mark>: מכפלה של אוטומט מחסנית עם אס״ד</li><li>הפרש עם רגולרית: «L−R=L∩!{R}»</li><li>החלפת אותיות</li></ul></div>
+<div class="box"><h3>לא סגורות ✗</h3><ul>
+<li><mark>חיתוך</mark>: «{a^nb^nc^m}∩{a^mb^nc^n}={a^nb^nc^n}»</li>
+<li><mark>משלים</mark>: אחרת חיתוך היה סגור, לפי דה-מורגן: «L_1∩L_2=!{!{L_1}∪!{L_2}}»</li>
+<li><mark>מיזוג 1-1</mark></li><li>ערבוב סדר האותיות</li><li>הפרש בין שתי ח״ה</li></ul></div></div>
+<h3>מסקנות ששואלים</h3>
+<ul>
+<li>רגולרית ∩ ח״ה ⟵ ח״ה, לא בהכרח רגולרית.</li>
+<li>ח״ה − רגולרית ⟵ ח״ה (יכולה לצאת רגולרית, למשל עם «Σ^*»).</li>
+<li>«{w∈L | #_a=#_b}» עבור L רגולרית ⟵ ח״ה, ואולי רגולרית (אם L סופית).</li>
+<li>לא ח״ה פחות סופית ⟵ לא ח״ה. ח״ה לא רגולרית Δ סופית ⟵ ח״ה לא רגולרית.</li>
+<li>אם «L^R» ח״ה, אז L ח״ה, כי «L=(L^R)^R».</li>
+</ul>`},
+{t:'למת בר-הלל (ניפוח לשפות ח״ה)', h:`
+<div class="box">אם L ח״ה, קיים n כך שלכל «z∈L» עם «|z|≥n» קיים פירוק «z=uvwxy» עם:
+<ol><li>«|vwx|≤n»</li><li>«|vx|≥1»</li><li>לכל «i≥0»: «uv^iwx^iy∈L»</li></ol>
+הקבוע: <b>«n=2^k»</b>, כאשר k הוא מספר המשתנים בדקדוק <b>בצורת חומסקי</b>.</div>
+<p><b>האינטואיציה:</b> במילה ארוכה עץ הגזירה גבוה, ולכן יש מסלול שבו משתנה A חוזר על עצמו. את תת-העץ שבין שתי ההופעות של A אפשר לשכפל, וזה מנפח <b>שני</b> מקומות בו-זמנית (v ו-x).</p>
+<p><b>ההבדל מהלמה הרגולרית:</b> מנפחים <b>שתי</b> חתיכות, והן יכולות להיות בכל מקום במילה (לא רק בהתחלה), כל עוד «vwx» קצר.</p>
+<details class="wex"><summary><span class="wl">הוכחה</span><span class="wq">«{a^nb^nc^n}» אינה ח״ה</span></summary><div>
+<ol><li>«z=a^nb^nc^n».</li>
+<li>«|vwx|≤n», ולכן vwx לא יכול לגעת גם ב-a-ים וגם ב-c-ים, כי יש ביניהם n אותיות b.</li>
+<li>לכן ב-vx יש לכל היותר שני סוגי אותיות. ב-«i=2» מספר האותיות מאותם סוגים גדל, והסוג השלישי לא משתנה. הכמויות לא שוות, ולכן המילה ∉L.</li>
+<li>(אם v או x מכילים שני סוגים, הניפוח גם שובר את הסדר.)</li></ol></div></details>
+<details class="wex"><summary><span class="wl">2020</span><span class="wq">איזו z לבחור עבור «#_a<#_b<#_c»?</span></summary><div>
+<p>«z=a^nc^{n+2}b^{n+1}». המילה בשפה (הסדר לא משנה, רק הכמויות). בלוק ה-c-ים, באורך «n+2», מפריד בין a ל-b, ולכן vwx לא נוגע בשניהם.</p>
+<ul><li>vx מכיל a: ‏«i=2», ו-«#_a≥n+1=#_b» ✗.</li>
+<li>vx מכיל b ולא a: ‏«i=0», ו-«#_b≤n=#_a» ✗.</li>
+<li>vx רק c: ‏«i=0», ו-«#_c≤n+1=#_b» ✗.</li></ul>
+<p>למה לא «(abbccc)^n»? היריב בוחר «v=ab», «x=c» צמודים, והיחסים נשמרים.</p></div></details>
+<details class="wex"><summary><span class="wl">2018</span><span class="wq">«{ww}»: איזו z?</span></summary><div><p>«z=a^nb^na^nb^n». ‏vwx בתוך חלון באורך n, ולכן משפיע על לכל היותר שני בלוקים סמוכים. כל ניפוח שובר את השוויון בין החצי הראשון לשני.</p></div></details>
+<h3>עובדות</h3>
+<ul>
+<li>הלמה הרגולרית ⟹ בר-הלל (בוחרים «u'=v'=ε», ‏«w'=u», ‏«x'=v», ‏«y'=w»). ההפך לא נכון: «a^nb^n».</li>
+<li>שפה שלא מקיימת את בר-הלל ⟵ לא ח״ה ולא רגולרית (אינסוף מחלקות, אין ביטוי רגולרי). אבל <b>ייתכן שאין לה אפילו דקדוק כללי</b>, כי יש יותר שפות מדקדוקים.</li>
+<li>המילים שלא מקיימות את תנאי הלמה הן רק מילים קצרות מ-n, כלומר קבוצה סופית ולכן רגולרית.</li>
+</ul>`}
+]}
+];
+
+/* =====================================================================
+   EXAMS & QUESTIONS (mc: option 0 is correct; shuffled on display)
+   ===================================================================== */
+const EXAMS = [
+{id:'17s', name:'2017 מבחן לדוגמה', fmt:'10 אמריקאיות × 6 + 2 פתוחות × 20'},
+{id:'17m', name:'2017 מטלת אמצע', fmt:'10 אמריקאיות × 6 + 2 פתוחות × 20'},
+{id:'18a', name:'2018ב מועד א׳', fmt:'2 פתוחות × 20 + 10 אמריקאיות × 6'},
+{id:'18b', name:'2018ב מועד ב׳', fmt:'2 פתוחות × 20 + 10 אמריקאיות × 6'},
+{id:'20a', name:'2020א מועד א׳', fmt:'2 פתוחות × 20 + 10 אמריקאיות × 6'},
+{id:'20b', name:'2020א מועד ב׳', fmt:'2 פתוחות × 20 + 10 אמריקאיות × 6'},
+{id:'22a', name:'2022 קיץ מועד א׳', fmt:'2 פתוחות × 26 + 8 אמריקאיות × 6'},
+{id:'22b', name:'2022 קיץ מועד ב׳', fmt:'2 פתוחות × 26 + 8 אמריקאיות × 6'},
+{id:'23a', name:'2023א מועד א׳', fmt:'2 פתוחות × 26 + 8 אמריקאיות × 6'},
+{id:'23b', name:'2023א מועד ב׳', fmt:'2 פתוחות × 26 + 8 אמריקאיות × 6'},
+{id:'24a', name:'2024א מועד א׳', fmt:'7 אמריקאיות × 7 + 2 פתוחות'},
+{id:'24s', name:'2024 קיץ מועד א׳', fmt:'2 פתוחות × 30 + 4 אמריקאיות × 10'},
+{id:'25a', name:'2025א מועד א׳', fmt:'2 פתוחות × 30 + 4 אמריקאיות × 10'},
+{id:'25b', name:'2025ב מועד א׳', fmt:'2 פתוחות × 30 + 4 אמריקאיות × 10'},
+{id:'26b', name:'2026א מועד ב׳', fmt:'2 פתוחות × 30 + 4 אמריקאיות × 10'},
+{id:'prac', name:'תרגול נוסף', fmt:''}
+];
+
+const Q = [
+/* 2017 sample */
+{id:'17s1',x:'17s',t:'lang',k:'mc',rep:'plus',q:`נתון «L={a^2,a^3}». מהי «L^+»?`,o:[`«{a^n | n≥2}»`,`«{a^n | n≥0}»`,`«{a^n | n≥1}»`,`«{a^n | n≠1}»`],e:`כל «n≥2» אפשר לכתוב כסכום של 2-ים ו-3-ים. «ε∉L^+» כי «ε∉L».`},
+{id:'17s2',x:'17s',t:'nerode',k:'mc',rep:'7inf',q:`ל-«R_{L_1}» יש 7 מחלקות ול-«R_{L_2}» יש אינסוף מחלקות. כמה מחלקות יש ל-«R_{L_1∩L_2}»?`,o:[`אף אחת מהתשובות האחרות אינה נכונה`,`לכל היותר 7`,`לכל הפחות 7`,`אינסוף`],e:`אם השפות זרות, החיתוך הוא «∅» ויש לו מחלקה אחת. אם «L_2⊆L_1», החיתוך הוא «L_2» ויש לו אינסוף מחלקות. לכן אי אפשר לקבוע.`},
+{id:'17s4',x:'17s',t:'cfl',k:'mc',rep:'twocmp',q:`תהי «L={a^nb^nc^kd^k | n>k}». מהי הטענה הנכונה?`,o:[`L אינה ח״ה ו-«!{L}» ח״ה`,`L ו-«!{L}» ח״ה`,`L ח״ה ו-«!{L}» אינה ח״ה`,`L ו-«!{L}» אינן ח״ה`],e:`L דורשת שלוש השוואות («n=n», «k=k», «n>k»), ולכן אינה ח״ה. המשלים הוא איחוד של מקרים שבכל אחד נכשלת השוואה אחת, ולכן הוא ח״ה.`},
+{id:'17s5',x:'17s',t:'nerode',k:'mc',q:`L שפה מעל «{a}», והאס״ד שמקבל אותה כולל שני מצבים. איזו שפה L <b>לא יכולה</b> להיות?`,o:[`«{aa}»`,`«{a^n | n mod 2=1}»`,`«{ε}»`,`«{a^n | n≠0}»`],e:`«{aa}» צריכה מצבים עבור ε, a, aa ומלכודת, כלומר 4 מצבים. לכל אחת מהשפות האחרות מספיקים 2.`},
+{id:'17s6',x:'17s',t:'pump',k:'mc',q:`ד״ר שקשוקה רוצה להוכיח בעזרת למת הניפוח ש-«{w | #_a(w)=#_b(w)}» אינה רגולרית, ובוחר «z=(ab)^n». למה הבחירה לא טובה?`,o:[`עבור «v=ab» (למשל), לכל i מתקבל «z_i∈L»`,`הלמה לא חלה על מילה זו`,`לכל «i≠1» מתקבל «z_i∉L»`,`השפה «{(ab)^n}» רגולרית`],e:`היריב בוחר את הפירוק. אם הוא בוחר «v=ab», כל ניפוח שומר על «#_a=#_b» ולא מגיעים לסתירה.`},
+{id:'17s7',x:'17s',t:'regex',k:'mc',q:`איזו שפה מקבל הביטוי «(01+10)^*(ε+0+1)»?`,o:[`בכל רישא x של w: «|#_0(x)−#_1(x)|≤1»`,`«|#_0(w)−#_1(w)|≤1»`,`«|#_0(w)−#_1(w)|=1»`,`בכל סיפא x של w: «|#_0(x)−#_1(x)|≤1»`],e:`כל זוג 01 או 10 מחזיר את ההפרש ל-0, ולכן ההפרש ברישות אף פעם לא עובר 1. דוגמה לכך שגרסת הסיפא שונה: 001 מקיימת את תנאי הסיפא, אבל הרישא 00 שלה מפרה את תנאי הרישא.`},
+{id:'17s8',x:'17s',t:'cfg',k:'mc',rep:'nonpal',q:`איזה דקדוק מקבל את «{w∈{a,b}^* | w^R≠w}»?`,o:[`«S→aSa|bSb|aXb|bXa»  «X→aX|bX|ε»`,`«S→aXb|bXa»  «X→aXa|aXb|bXa|bXb|ε|a|b»`,`«S→XY»  «X→aXa|b»  «Y→bYb|a»`,`«S→XY»  «X→aXb|ε|a|b»  «Y→bYa|ε|a|b»`],e:`מבחוץ זוגות תואמים, ובנקודת השבירה זוג לא תואם (aXb או bXa). אחרי השבירה הכל מותר. התשובה השנייה מפספסת לא-פלינדרומים כמו aaba, שבהם האותיות החיצוניות תואמות.`},
+{id:'17s9',x:'17s',t:'cfl',k:'mc',q:`חיתוך של שפה רגולרית עם שפה ח״ה הוא:`,o:[`ח״ה, אבל לא בהכרח רגולרי`,`סופי`,`רגולרי, אבל לא בהכרח סופי`,`לא בהכרח ח״ה`],e:`שפות ח״ה סגורות לחיתוך עם רגולרית. דוגמה שאינה רגולרית: «Σ^*∩a^nb^n».`},
+{id:'17s10',x:'17s',t:'regex',k:'mc',q:`L מתקבלת ע״י «(a+b)^*s», ו-«!{L}» מתקבלת ע״י «(a+b)^*t». רמז: «ε» נמצאת ב-L או ב-«!{L}».`,o:[`«L=∅» או «L={a,b}^*»`,`«L=∅»`,`«L≠∅» וגם «L≠{a,b}^*»`,`«L={a,b}^*»`],e:`אם «ε∈L», אז «ε∈L(s)», ולכן «(a+b)^*s⊇(a+b)^*», כלומר L היא הכל. באופן סימטרי, אם «ε∈!{L}», אז «!{L}» היא הכל ו-«L=∅».`},
+{id:'17s11',x:'17s',t:'closure',k:'open',q:`א. תנו דוגמה לשפה לא רגולרית L מעל «{a,b}» המקיימת «L^2=L».<br>ב. תנו דוגמה לשפה לא רגולרית L המקיימת «L^R=L». (דוגמה שונה בכל סעיף.)`,s:`א. «L={w | #_a(w)=#_b(w)}»: היא מכילה את «ε» וסגורה לשרשור.<br>ב. «L={w | #_a(w)<#_b(w)}»: היפוך לא משנה את מספר האותיות.`},
+{id:'17s12',x:'17s',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה ל-«{w∈{a,b}^* | w^R≠w, #_a(w)≠3}».`,s:`<b>הרעיון:</b> מפרקים לפי מספר ה-a-ים. מילה בלי a-ים היא פלינדרום (רק b-ים), ולכן נשארים המקרים «#_a∈{1,2}» ו-«#_a≥4».<br>בונים כמה משתנים, כל אחד לא-פלינדרום עם מספר a-ים ידוע: Y עם a אחת, L עם שתי a-ים, M עם ארבע או יותר. העטיפה החיצונית היא «S→bSb | aXa | …», ושומרים על ספירת ה-a-ים.<br>בפתרון הרשמי: Y גוזר לא-פלינדרום עם a אחת, L עם שתיים, ו-M עם ארבע ומעלה.`},
+/* 2017 midterm */
+{id:'17m1',x:'17m',t:'lang',k:'mc',rep:'plus',q:`אם «L^*=L^+», אז בהכרח:`,o:[`«ε∈L»`,`«ε∉L»`,`L סופית`,`L אינסופית`],e:`«ε» נמצאת תמיד ב-«L^*», ונמצאת ב-«L^+» רק אם היא ב-L.`},
+{id:'17m2',x:'17m',t:'nerode',k:'mc',rep:'parity',q:`מספר המצבים המינימלי באס״ד עבור «{w∈{a,b,c}^* | #_a(w) mod 2 ≠ #_b(w) mod 2}»:`,o:[`2`,`4`,`6`,`8`],e:`התנאי שקול לכך ש-«#_a+#_b» אי-זוגי, ולכן מספיק לזכור ביט אחד.`},
+{id:'17m3',x:'17m',t:'fa',k:'mc',rep:'product',q:`באוטומט המכפלה עבור «L_1−L_2», המצבים המקבלים הם:`,o:[`«F_1×(Q_2−F_2)»`,`«F_1−F_2»`,`«F_1×F_2»`,`«F_1ΔF_2»`],e:`צריך ש-«A_1» יקבל וגם ש-«A_2» לא יקבל.`},
+{id:'17m4',x:'17m',t:'fa',k:'mc',rep:'flipnfa',q:`באסל״ד A (מכל מצב יוצאת לפחות קשת אחת לכל אות) הופכים את המצבים המקבלים ללא מקבלים ולהפך, ומקבלים את B. מה נכון?`,o:[`«L(B)⊇!{L(A)}»`,`«L(B)=!{L(A)}»`,`«L(B)⊆!{L(A)}»`,`«L(B)≠!{L(A)}»`],e:`מילה ש-A דוחה (כל המסלולים שלה נכשלים) תתקבל ב-B. אבל מילה ש-A מקבל יכולה גם להתקבל ב-B, אם יש לה גם מסלול שנכשל.`},
+{id:'17m5',x:'17m',t:'regex',k:'mc',q:`איזה ביטוי מקבל את המילים שמתחילות ב-00 ולא מכילות 000?`,o:[`«00(1+10+100)^*»`,`«(1+01+001)^*00»`,`«00(1+01)^*(ε+0)»`,`«001^+(ε+0)»`],e:`אחרי 00 חייבת לבוא 1, ואחריה בלוקים של 1, 10 או 100. התשובה השלישית לא מקבלת את 00100.`},
+{id:'17m6',x:'17m',t:'regex',k:'mc',q:`בהוכחת משפט קלין, «r_{ij}^k» מקבל את המחרוזות שיש להן מסלול מ-«q_i» ל-«q_j», ו…`,o:[`שעשויות לעבור במצבי הביניים «q_1,…,q_k»`,`שאורכן לכל היותר k`,`שעוברות לכל היותר דרך k מצבים`,`שעוברות דרך מצב הביניים «q_k»`],e:`זו ההגדרה של בניית התכנון הדינמי בהוכחה.`},
+{id:'17m8',x:'17m',t:'closure',k:'mc',q:`אם L רגולרית, אוסף הפלינדרומים ב-L הוא שפה:`,o:[`אף אחת מהתשובות האחרות אינה בהכרח נכונה`,`סופית`,`רגולרית`,`לא רגולרית`],e:`עבור «L=a^*» מתקבלת «a^*» (רגולרית ואינסופית). עבור «L=Σ^*» מתקבלים כל הפלינדרומים (לא רגולרית).`},
+{id:'17m9',x:'17m',t:'pump',k:'mc',q:`L שפה סופית. איזו טענה <b>אינה</b> בהכרח נכונה?`,o:[`L אינה מקיימת את למת הניפוח`,`קיים ביטוי רגולרי שמקבל את L`,`קיים אסל״ד שמקבל את L`,`L מקיימת את למת הניפוח`],e:`שפה סופית היא רגולרית, ולכן מקיימת את הלמה (באופן ריק).`},
+{id:'17m10',x:'17m',t:'closure',k:'mc',q:`טענה: אם A רגולרית ו-«A⊡B» רגולרית, אז B רגולרית. עבור איזו פעולה «⊡» הטענה נכונה?`,o:[`«Δ»`,`«∪»`,`«∩»`,`«−»`],e:`«B=AΔ(AΔB)», וזה הפרש סימטרי של שתי שפות רגולריות. עם שאר הפעולות, «A=Σ^*» או «A=∅» מפריכות את הטענה.`},
+{id:'17m11',x:'17m',t:'fa',k:'open',q:`נתון אס״ד A מעל «{a,b,c}». בנו אס״ד B שמקבל את «(L(A)∪{b})−{ε}» בלי אוטומט מכפלה.`,s:`מוסיפים מצב התחלה חדש «q_{00}» (לא מקבל) ומצב «q_b» (מקבל).<br>«δ'(q_{00},σ)=δ(q_0,σ)» לכל «σ≠b», ו-«δ'(q_{00},b)=q_b». מ-«q_b» ממשיכים כמו «δ(q_0,b)»: «δ'(q_b,σ)=δ(δ(q_0,b),σ)».<br>«F'=F∪{q_b}». «ε» נדחית כי «q_{00}» לא מקבל.`},
+{id:'17m12',x:'17m',t:'pump',k:'open',q:`הוכיחו בעזרת למת הניפוח ש-«L={ba^kba^t | k≠t}» אינה רגולרית.`,s:`נניח בשלילה, ונבחר «z=ba^nba^{n+n!}».<br>אם «v=a^t» (אחרי ה-b הראשונה), נבחר «i=n!/t+1» ונקבל «ba^{n+n!}ba^{n+n!}∉L».<br>אם v מכילה את ה-b הראשונה, נבחר «i=0» ונקבל מילה שלא מתחילה ב-b, ולכן אינה ב-L. בשני המקרים יש סתירה.`},
+/* 2018 a */
+{id:'18a1',x:'18a',t:'cfl',k:'mc',q:`«L_1» רגולרית ו-«L_2» ח״ה ולא רגולרית. מה אפשר לומר על «L_2−L_1»?`,o:[`ח״ה`,`רגולרית`,`לא רגולרית`,`לא ח״ה`],e:`«L_2−L_1=L_2∩!{L_1}», חיתוך של ח״ה עם רגולרית. היא יכולה להיות רגולרית (למשל «L_1=Σ^*» נותן «∅»), ולכן התשובה היא רק "ח״ה".`},
+{id:'18a2',x:'18a',t:'nerode',k:'mc',q:`אילו שפות מקיימות «R_L=R_{!{L}}»?`,o:[`כל שפה`,`רק שפות רגולריות`,`רק שפות ח״ה`,`אף שפה`],e:`z מפרידה בין x ל-y עבור L בדיוק כשהיא מפרידה ביניהן עבור המשלים.`},
+{id:'18a3',x:'18a',t:'cfl',k:'mc',rep:'twocmp',q:`«L={w∈{a,b,c}^* | #_a>#_b>#_c}». מה נכון?`,o:[`«!{L}» ח״ה ו-L אינה ח״ה`,`L ו-«!{L}» ח״ה`,`L ח״ה ו-«!{L}» אינה ח״ה`,`L ו-«!{L}» אינן ח״ה`],e:`L דורשת שתי השוואות בו-זמנית. המשלים הוא «#_a≤#_b ∪ #_b≤#_c», איחוד של שתי שפות ח״ה.`},
+{id:'18a4',x:'18a',t:'lang',k:'mc',rep:'plus',q:`איזו שפה <b>אינה</b> מקיימת «L^+=L^*»?`,o:[`«{w | |w| mod 2=1}»`,`«{ε,a,ba}»`,`«{w | #_a(w)<3}»`,`«{w | w^R=w}»`],e:`רק בשפה של האורך האי-זוגי אין «ε».`},
+{id:'18a5',x:'18a',t:'pump',k:'mc',q:`מוכיחים בלמת הניפוח ש-«{a^{k³}}» אינה רגולרית, עם «z=a^{n³}». אילו ערכים של i מתאימים?`,o:[`גם «i=3» וגם «i=5»`,`«i=3» אבל לא «i=5»`,`«i=5» אבל לא «i=3»`,`לא «i=3» וגם לא «i=5»`],e:`«n³<n³+(i−1)t≤n³+4n<(n+1)³=n³+3n²+3n+1». האורך נופל בין שתי חזקות שלישיות עוקבות.`},
+{id:'18a6',x:'18a',t:'cfg',k:'mc',rep:'eqab',q:`איזו שפה מקבל «S→aSb|bSa|SS|ε»?`,o:[`«{w | #_a(w)=#_b(w)}»`,`«{w | w^R=w}»`,`«{w | w^R≠w}»`,`«{ww}»`],e:`כל כלל מוסיף a ו-b יחד. ההרכבה SS מכסה את כל הסידורים.`},
+{id:'18a7',x:'18a',t:'regex',k:'mc',q:`איזו מילה <b>אינה</b> מתקבלת ע״י «(0(0(01)^*1)^*1)^*»?`,o:[`011001`,`010011`,`001011`,`000111`],e:`כל בלוק חיצוני מתחיל ב-0. אחרי 01 נשאר 1001, שמתחיל ב-1, ולכן לא ניתן לפרק אותו.`},
+{id:'18a8',x:'18a',t:'cfl',k:'mc',q:`L ח״ה, ו-A היא קבוצת המילים ב-L שאינן מקיימות את תנאי למת בר-הלל. מה אפשר לומר על A?`,o:[`רגולרית`,`לא רגולרית, ואולי ח״ה`,`ח״ה, ואולי לא רגולרית`,`לא ח״ה`],e:`רק מילים קצרות מ-n לא מקיימות את התנאי. זו קבוצה סופית, ולכן רגולרית.`},
+{id:'18a9',x:'18a',t:'fa',k:'mc',q:`באסל״ד יש מעבר «q_0 →(ε,a) q_1» ומעבר «q_1 →(ε,b) q_2». מהו «CL_ε(q_1)»?`,o:[`«{q_1,q_2}»`,`«{q_0,q_1}»`,`«{q_1}»`,`«{q_2}»`],e:`מ-«q_1» אפשר להגיע ל-«q_2» במסע «ε», ו-«q_1» עצמו תמיד בפנים.`},
+{id:'18a10',x:'18a',t:'fa',k:'mc',rep:'product',q:`מהם המצבים המקבלים באוטומט המכפלה עבור «L_1ΔL_2»?`,o:[`«(F_1×!{F_2})∪(!{F_1}×F_2)»`,`«F_1ΔF_2»`,`«Q_1ΔF_2»`,`«Q_1×F_2»`],e:`בדיוק אחד מהאוטומטים מקבל.`},
+{id:'18a11',x:'18a',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה ל-«{w∈{a,b}^* | #_a(w)=#_b(w)+2}».`,s:`«S→XaXaX», «X→aXbX | bXaX | ε».<br>X מייצר מילים מאוזנות («#_a=#_b»), ומשבצים ביניהן שתי a-ים עודפות.`},
+{id:'18a12',x:'18a',t:'nerode',k:'open',rep:'nerodeproof',q:`הוכיחו בעזרת משפט נרוד ש-«{w∈{a,b,c}^* | #_a(w)=#_b(w)·#_c(w)}» אינה רגולרית.`,s:`«w_i=a^i». עבור «i≠j» נבחר «z=b^ic». אז «a^ib^ic∈L» («i=i·1»), אבל «a^jb^ic∉L». לכן יש אינסוף מחלקות.`},
+/* 2018 b */
+{id:'18b1',x:'18b',t:'pump',k:'mc',q:`L אינה רגולרית. איזו טענה <b>ייתכן שאינה נכונה</b>?`,o:[`L אינה מקיימת את למת הניפוח`,`L אינסופית`,`ל-«R_L» אינסוף מחלקות`,`אין ביטוי רגולרי שמקבל את L`],e:`יש שפות לא רגולריות שמקיימות את הלמה. שלוש הטענות האחרות נובעות מכך ש-L אינה רגולרית.`},
+{id:'18b2',x:'18b',t:'nerode',k:'mc',rep:'primes',q:`«L={a^p | p ראשוני}». כמה מצבים יש באס״ד המינימלי של «L^*»?`,o:[`3`,`2`,`5`,`אין אס״ד ל-«L^*»`],e:`«L^*={a^n | n≠1}» (כל «n≥2» הוא סכום של 2-ים ו-3-ים). המצבים: «ε», «a», «aa+».`},
+{id:'18b3',x:'18b',t:'cfl',k:'mc',rep:'ksq',q:`«L={a^{k²} | k≥0}». מה נכון?`,o:[`L ו-«!{L}» אינן ח״ה`,`L ו-«!{L}» ח״ה`,`L ח״ה ו-«!{L}» אינה ח״ה`,`«!{L}» ח״ה ו-L אינה ח״ה`],e:`מעל אות אחת, ח״ה ⟺ רגולרית. L אינה רגולרית, ולכן גם המשלים שלה לא, ואף אחת מהן אינה ח״ה.`},
+{id:'18b4',x:'18b',t:'regex',k:'mc',q:`מהו הביטוי הרגולרי ל-«{w∈{0,1}^* | |#_0(w)−#_1(w)|≤2}»?`,o:[`לא קיים ביטוי רגולרי לשפה`,`«(01+10)^*»`,`«(0(01)^*1+1(10)^*0)^*»`,`«(0(01)^*1+1(01)^*0)·(ε+0+00)»`],e:`התנאי הוא על <i>כל המילה</i> ולא על כל רישא, ולכן ההפרש באמצע המילה לא חסום. השפה אינה רגולרית.`},
+{id:'18b5',x:'18b',t:'cfl',k:'mc',q:`מוכיחים בבר-הלל ש-«{ww}» אינה ח״ה. איזו z מתאימה?`,o:[`«b^na^nb^na^n»`,`«a^nba^nb»`,`«a^{2n}ba^{2n}b»`,`«(ab)^n(ab)^n»`],e:`vwx באורך עד n נוגע לכל היותר בשני בלוקים סמוכים, וניפוח שובר את המבנה ww. ב-«a^nba^nb» אפשר לבחור את v ו-x כך שהמילה המנופחת נשארת ב-«{ww}».`},
+{id:'18b6',x:'18b',t:'closure',k:'mc',q:`L רגולרית. «L_{min}» = מילים ב-L שאין להן רישא אמיתית ב-L. «L_{max}» = מילים ב-L שאינן רישא אמיתית של מילה אחרת ב-L. מה נכון?`,o:[`«L_{min}» ו-«L_{max}» רגולריות`,`שתיהן לא בהכרח רגולריות`,`רק «L_{min}» רגולרית בהכרח`,`רק «L_{max}» רגולרית בהכרח`],e:`בשתיהן אפשר לשנות את האוטומט: ל-«L_{min}» חוסמים יציאה ממצב מקבל, ול-«L_{max}» משאירים מקבלים רק מצבים שמהם אין מסלול למצב מקבל.`},
+{id:'18b7',x:'18b',t:'nerode',k:'mc',rep:'7inf',q:`ל-«R_L» יש 7 מחלקות ול-«R_M» יש «∞». כמה מחלקות יש ל-«R_{L∩M}»?`,o:[`אי אפשר לדעת (ייתכן 1, ייתכן «∞»)`,`בדיוק 7`,`לכל היותר 7`,`«∞»`],e:`אותה שאלה כמו ב-2017. אם השפות זרות יש מחלקה אחת, ואם «M⊆L» יש אינסוף.`},
+{id:'18b8',x:'18b',t:'regex',k:'mc',rep:'kleene',q:`מה קובע משפט קלין?`,o:[`לכל שפה רגולרית קיים ביטוי רגולרי שמקבל אותה`,`כל שפה רגולרית מתקבלת ע״י אוטומט סופי`,`לכל אסל״ד יש אס״ד שקול`,`מספר המחלקות של כל שפה רגולרית סופי`],e:`קלין עוסק בביטויים רגולריים. התשובה השלישית היא בניית אוטומט החזקה, והרביעית היא משפט נרוד.`},
+{id:'18b10',x:'18b',t:'cfg',k:'mc',q:`מה השפה של «S→XX», «X→aXb|ε»?`,o:[`«{a^nb^na^kb^k | n,k≥0}»`,`«{ww}»`,`«{a^nb^na^nb^n}»`,`«{a^{2n}b^{2n}}»`],e:`כל X מייצר «a^nb^n» בנפרד, ולכן אין קשר בין n ל-k.`},
+{id:'18b11',x:'18b',t:'cfg',k:'open',q:`רשמו דקדוק <b>כללי</b> ל-«{w∈{a,b,c}^* | #_a(w)=2·#_b(w)=3·#_c(w)}».`,s:`היחס הוא «a:b:c=6:3:2».<br>«S→AAAAAABBBCCS | ε»<br>«AB→BA, BA→AB, AC→CA, CA→AC, BC→CB, CB→BC»<br>«A→a, B→b, C→c»`},
+{id:'18b12',x:'18b',t:'closure',k:'open',rep:'ksq',q:`הוכיחו או הפריכו: אם L אינה רגולרית, אז אוסף תתי-המילים של L אינו רגולרי.`,s:`<b>הפרכה:</b> «L={a^{k²}}» אינה רגולרית, אבל אוסף תתי-המילים שלה הוא «{a^n | n≥0}», שהוא רגולרי.`},
+/* 2020 a */
+{id:'20a1',x:'20a',t:'cfl',k:'mc',q:`מהו הקבוע n בלמת בר-הלל?`,o:[`«2^k», כאשר k = מספר המשתנים בדקדוק בצורת חומסקי`,`«k^2», כאשר k = מספר המשתנים בצורת גרייבך`,`«k!», כאשר k = מספר המצבים באוטומט המחסנית`,`«k(k−1)», כאשר k = גודל א״ב המחסנית`],e:`בצורת חומסקי עץ הגזירה בינארי, ולכן מילה באורך גדול מ-«2^k» מחייבת שמשתנה יחזור על עצמו במסלול כלשהו.`},
+{id:'20a2',x:'20a',t:'closure',k:'mc',rep:'shuffle',q:`L רגולרית. «L'» = כל המילים שמתקבלות מערבוב כלשהו של מילה מ-L. מה אפשר לומר על «L'»?`,o:[`ייתכן שאינה ח״ה`,`רגולרית`,`לא רגולרית`,`ח״ה, ואולי לא רגולרית`],e:`«L=(abc)^*» הופכת ל-«#_a=#_b=#_c», שאינה ח״ה.`},
+{id:'20a3',x:'20a',t:'nerode',k:'mc',q:`«L={a^mb^k | m>k}». טענה 1: «a^5» ו-«a^6b» באותה מחלקה. טענה 2: «b» ו-«ab^2» באותה מחלקה.`,o:[`רק טענה 2`,`רק טענה 1`,`שתי הטענות`,`אף טענה`],e:`«z=a» מפרידה: «a^6∈L», אבל «a^6ba∉L». המילים b ו-«ab^2» כבר נפסלו, ושום המשך לא יכניס אותן לשפה, ולכן הן באותה מחלקה (המלכודת).`},
+{id:'20a4',x:'20a',t:'closure',k:'mc',q:`L סופית. איזו טענה <b>אינה</b> בהכרח נכונה?`,o:[`לכל שפה M, «LΔM» רגולרית`,`«L^*» מקיימת את בר-הלל`,`ל-«R_{!{L}}» מספר סופי של מחלקות`,`«L^R» מקיימת את למת הניפוח`],e:`אם «L=∅» ו-M אינה רגולרית, אז «LΔM=M» אינה רגולרית.`},
+{id:'20a5',x:'20a',t:'cfl',k:'mc',q:`מוכיחים בבר-הלל ש-«{#_a<#_b<#_c}» אינה ח״ה. איזו z כדאי לבחור?`,o:[`«a^nc^{n+2}b^{n+1}»`,`«(abbccc)^n»`,`«a^nb^{2n}c^{3n}»`,`«(ab)^nbc^{n+2}»`],e:`בלוק ה-c-ים מפריד בין ה-a-ים ל-b-ים, ולכן vwx לא נוגע בשניהם. בכל מקרה ניפוח מעלה או מטה שובר את אחד האי-שוויונות. ב-«(abbccc)^n» אפשר לבחור «v=ab», «x=c», ובשאר הבחירות יש מרווח מספיק.`},
+{id:'20a6',x:'20a',t:'cfg',k:'mc',rep:'general',q:`איזו שפה מקבל הדקדוק הכללי «S→ABCS|ε», «AB→BA», «BA→AB», «AC→CA», «CA→AC», «BC→CB», «CB→BC», «A→a», «B→b», «C→c»?`,o:[`«{#_a=#_b=#_c}»`,`«{ww^Rw}»`,`«{a^nb^nc^n}»`,`«{www}»`],e:`יוצרים כמויות שוות מכל אות, וכללי ההחלפה מאפשרים כל סידור.`},
+{id:'20a7',x:'20a',t:'cfl',k:'mc',rep:'cfclose',q:`לאיזו פעולה שפות ח״ה <b>אינן</b> סגורות?`,o:[`מיזוג 1-1`,`חיתוך עם רגולרית`,`«L^+»`,`היפוך`],e:`מיזוג 1-1 מאפשר "לסנכרן" שתי שפות ח״ה, ומזה אפשר לקבל שפה כמו «a^nb^nc^n».`},
+{id:'20a8',x:'20a',t:'cfg',k:'mc',q:`איזו מילה <b>אינה</b> מתקבלת ע״י «S→Sb|aSb|aaSb|b|ab»?`,o:[`«aaaaaabbb»`,`«aaabb»`,`«aabbb»`,`«aaabbbbbb»`],e:`כל b מקבלת עד 2 a-ים, אבל הבסיס נותן עד a אחת. לכן «m<2k». במילה הראשונה «6<6» לא מתקיים.`},
+{id:'20a9',x:'20a',t:'regex',k:'mc',q:`איזה ביטוי מקבל את המשלים של «(0+1)^*111(0+1)^*»?`,o:[`«(0+10+110)^*(ε+1+11)»`,`«(0+10)^*(ε+1+11)(0+10)^*»`,`«(0+10+110)^*11(0+10+100)^*»`,`«(0+1)^*000(0+1)^*»`],e:`המשלים הוא "בלי 111": בלוקים שמסתיימים ב-0, ובסוף עד שתי 1-ים.`},
+{id:'20a10',x:'20a',t:'nerode',k:'mc',q:`כמה מצבים (כולל מלכודת) יש באס״ד המינימלי עבור המילים מעל «{a,b,c}» שמכילות את a או את bb, אבל לא את שתיהן?`,o:[`6`,`5`,`7`,`8`],e:`זוכרים: האם ראינו a, האם ראינו bb, והאם האות האחרונה הייתה b (רק כשעוד לא ראינו bb). כשראינו את שתיהן, נכנסים למלכודת.`},
+{id:'20a11',x:'20a',t:'closure',k:'open',q:`תנו שתי שפות «L_1,L_2» שאינן רגולריות, שתיהן ח״ה, ו-«L_1∪L_2» ו-«L_1·L_2» רגולריות.`,s:`«L_1={#_a=#_b}», «L_2={#_a≠#_b}∪{ε}».<br>«L_1∪L_2=Σ^*». גם «L_1·L_2=Σ^*», כי «ε» נמצאת בשתיהן, ולכן השרשור מכיל את שתיהן.`},
+{id:'20a12',x:'20a',t:'closure',k:'open',q:`L רגולרית מעל «{a,b}». הוכיחו או הפריכו: «L'={1^n | ∃w∈L, |w|=n}» רגולרית.`,s:`<b>נכון.</b> לוקחים אס״ד עבור L ומחליפים כל קשת a או b בקשת 1: «δ'(q,1)={δ(q,σ) | σ∈{a,b}}». מתקבל אסל״ד ל-«L'».`},
+/* 2020 b */
+{id:'20b1',x:'20b',t:'fa',k:'mc',rep:'finite',q:`L סופית עם 5 מילים באורכים 1, 2, 8, 9, 13. מה נכון לגבי האס״ד המינימלי (בלי מלכודת)?`,o:[`יש בו לפחות 14 מצבים (וייתכן שבדיוק 14)`,`יש בו לפחות 6`,`יש בו לכל היותר 18`,`יש בו לכל היותר 10`],e:`מילה באורך 13 עוברת דרך 14 מצבים. אם מצב היה חוזר על עצמו, היה מעגל והשפה הייתה אינסופית.`},
+{id:'20b2',x:'20b',t:'pump',k:'mc',q:`A סופית, ו-B היא קבוצת הפלינדרומים ב-A. מה נכון?`,o:[`B מקיימת את למת הניפוח`,`B אינה מקיימת את למת הניפוח`,`B מקיימת את בר-הלל ואולי לא את למת הניפוח`,`B אינה מקיימת את בר-הלל`],e:`B סופית, ולכן רגולרית.`},
+{id:'20b3',x:'20b',t:'nerode',k:'mc',q:`איזה מצב <b>לא אפשרי</b> עבור מחלקות השקילות של שפה?`,o:[`מספר המחלקות סופי וכל מחלקה סופית`,`מספר המחלקות סופי וכל מחלקה אינסופית`,`מספר המחלקות אינסופי וכל מחלקה סופית`,`מספר המחלקות אינסופי וכל מחלקה אינסופית`],e:`אז «Σ^*» הייתה סופית.`},
+{id:'20b4',x:'20b',t:'regex',k:'mc',rep:'kleene',q:`כל שפה רגולרית מתקבלת מהשפות האלמנטריות בעזרת:`,o:[`איחוד, שרשור וסגור *`,`איחוד, חיתוך ומשלים`,`שרשור, «+» ו-«*»`,`היפוך, חיתוך ושרשור`],e:`זה משפט קלין.`},
+{id:'20b5',x:'20b',t:'lang',k:'mc',q:`«L_1={w | ww∈L}», «L_2={ww | ww∈L}». מה נכון?`,o:[`«L_2⊆L_1·L_1», וייתכן שלא שוות`,`«L_2=L_1·L_1»`,`«L_1·L_1⊆L_2», וייתכן שלא שוות`,`«L_2≠L_1·L_1»`],e:`עבור «L={aa,bb}»: «L_1={a,b}», ולכן «L_1L_1» מכילה את ab, שאינה ב-«L_2».`},
+{id:'20b6',x:'20b',t:'lang',k:'mc',q:`«S·R=S» ו-«S≠∅». מה נכון לגבי R?`,o:[`מכילה את «ε»`,`מכילה את כל המילים`,`סופית`,`שווה ל-S`],e:`אחרת המילה הקצרה ביותר ב-S לא הייתה מופיעה ב-«S·R».`},
+{id:'20b7',x:'20b',t:'cfl',k:'mc',q:`איזו עובדה <b>מבטיחה</b> ש-L ח״ה?`,o:[`«L^R» ח״ה`,`«L^*» רגולרית`,`«{w | ww∈L}» ח״ה`,`יש ב-L רק מספר סופי של מילים באורך אי-זוגי`],e:`«L=(L^R)^R». דוגמה נגדית ל-«L^*» רגולרית: השפה «a^p» של מספרים ראשוניים. דוגמה נגדית לשתי האחרות: «{ww}».`},
+{id:'20b8',x:'20b',t:'regex',k:'mc',rep:'oddb',q:`איזו שפה מקבל «(a+ba^*b)^*ba^*»?`,o:[`מספר אי-זוגי של b-ים`,`אין שתי b-ים ברצף`,`לפחות b אחת`,`מספר ה-b-ים מתחלק ב-3`],e:`«(a+ba^*b)^*» נותן מספר זוגי של b-ים, ועוד b אחת הופכת אותו לאי-זוגי.`},
+{id:'20b9',x:'20b',t:'nerode',k:'mc',q:`לאיזו שפה יש הכי הרבה מצבים באס״ד המינימלי (כולל בור)?`,o:[`«{aaaaa}»`,`«{#_b mod 5=2}»`,`«{#_a זוגי, #_b אי-זוגי}»`,`«{ab,ba}»`],e:`«a^5»: מצבים 0 עד 5 ועוד בור, כלומר 7. «mod 5»: 5. «{ab,ba}»: 5. זוגיות של שתי אותיות: 4.`},
+{id:'20b10',x:'20b',t:'cfl',k:'mc',q:`אוטומט מחסנית מעל «{a}» עם מצב יחיד ומעברים «δ(q_0,a,⊥)={(q_0,⊥),(q_0,ε)}» בלבד. מה הוא מקבל (בריקון מחסנית)?`,o:[`«{a^n | n>0}»`,`«{ε}»`,`«{a}»`,`«{a^n | n≥0}»`],e:`קוראים a-ים ומשאירים את «⊥», ובקריאה של a אחרונה מרוקנים את המחסנית. לכן צריך לפחות a אחת.`},
+{id:'20b11',x:'20b',t:'pump',k:'open',q:`הוכיחו בלמת הניפוח ש-«{ww^Rw | w∈{0,1,2}^*}» אינה רגולרית.`,s:`«w=0^n1», ולכן «z=0^n1·10^n·0^n1=0^n110^{2n}1». מאחר ש-«|uv|≤n», «v=0^t». נבחר «i=2» ונקבל «0^{n+t}110^{2n}1∉L».`},
+{id:'20b12',x:'20b',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה ל-«{a^mbc^k | 2m<k<3m}».`,s:`«S→aScc | aSccc | aabccccc»<br>הבסיס «m=2, k=5» מקיים «4<5<6», וכל a שנוספת מוסיפה 2 או 3 c-ים.`},
+/* 2022 a */
+{id:'22a1',x:'22a',t:'closure',k:'mc',q:`L אינה ח״ה ו-F סופית. מה אפשר לומר על «L^*∩F»?`,o:[`ח״ה ורגולרית`,`ח״ה ולא רגולרית`,`רגולרית ולא ח״ה`,`לא ח״ה ולא רגולרית`],e:`החיתוך מוכל ב-F, ולכן סופי ורגולרי.`},
+{id:'22a2',x:'22a',t:'nerode',k:'mc',q:`כמה מחלקות יש ל-«R_L» עבור «L={a^{3k+5t} | k,t≥0}»?`,o:[`9`,`8`,`15`,`5`],e:`האורכים שאי אפשר להרכיב הם 1, 2, 4, 7. מכל אורך מעל 7 הכל מתקבל, ולכן יש מצבים 0 עד 8, כלומר 9.`},
+{id:'22a3',x:'22a',t:'regex',k:'mc',q:`«r_1=a^++b^*(a^*b)^*», «r_2=a^*+b(a^*b)^*». מה נכון?`,o:[`«L(r_2)⊂L(r_1)» ולא שוות`,`«L(r_1)⊂L(r_2)» ולא שוות`,`שוות`,`אף אחת לא מוכלת בשנייה`],e:`«r_1» מקבל מילים של a-ים בלבד או מילים שמסתיימות ב-b. «r_2» מקבל מילים של a-ים בלבד או מילים שמתחילות ומסתיימות ב-b. לדוגמה ab ב-«r_1» בלבד.`},
+{id:'22a4',x:'22a',t:'regex',k:'mc',rep:'kleene',q:`מה קובע משפט קלין?`,o:[`L רגולרית ⟺ קיים ביטוי רגולרי שמקבל את L`,`L רגולרית ⟺ קיים דקדוק לינארי ימני`,`L רגולרית ⟺ קיים אוטומט סופי`,`L רגולרית ⟺ מספר המחלקות סופי`],e:`קלין = ביטויים רגולריים.`},
+{id:'22a5',x:'22a',t:'fa',k:'mc',q:`רוצים לשנות אוטומט A כך שיקבל את «{a}^*L». גאיה: מוסיפים לולאת a למצב ההתחלה. רמה: מוסיפים מצב התחלה חדש עם לולאת a ומסע «ε» למצב ההתחלה המקורי.`,o:[`רק רמה צודקת`,`רק גאיה צודקת`,`שתיהן צודקות`,`שתיהן טועות`],e:`בהצעה של גאיה אפשר להוסיף a-ים בכל פעם שחוזרים למצב ההתחלה, גם באמצע המילה.`},
+{id:'22a6',x:'22a',t:'cfg',k:'mc',rep:'nonpal',q:`מה השפה של «S→aSa|bSb|aXb|bXa», «X→aXa|aXb|bXa|bXb|ε»?`,o:[`מחרוזות באורך זוגי שאינן פלינדרומים`,`מחרוזות באורך אי-זוגי שאינן פלינדרומים`,`פלינדרומים באורך זוגי`,`פלינדרומים באורך אי-זוגי`],e:`X מוסיף תמיד שתי אותיות ונגמר ב-«ε», ולכן האורך זוגי. aXb או bXa מבטיחים שבירה של הסימטריה.`},
+{id:'22a7',x:'22a',t:'cfl',k:'mc',q:`איזו שפה מעל «{a,b}» <b>אינה</b> ח״ה?`,o:[`המחרוזות שאורכן אינו מספר פריק`,`המחרוזות שאינן מהצורה ww`,`המחרוזות שבהן «#_a≠#_b»`,`המחרוזות שאינן פלינדרומים`],e:`האורכים המותרים הם 0, 1 והמספרים הראשוניים. אם מחליפים כל אות ב-a (פעולה שח״ה סגורות לה) מקבלים בערך את «{a^p}», שאינה ח״ה. שלוש השפות האחרות ח״ה.`},
+{id:'22a8',x:'22a',t:'lang',k:'mc',rep:'plus',q:`איזו שפה מקיימת «L^+=L^*»?`,o:[`«{#_a(w) mod 3=0}»`,`«{#_a(w) mod 3≠0}»`,`«{#_a(w)>0}»`,`«{#_a(w)≠#_b(w)}»`],e:`רק הראשונה מכילה את «ε».`},
+{id:'22a9',x:'22a',t:'closure',k:'open',rep:'shuffle',q:`«L'» = ערבובי אותיות של מילים ב-L.<br>א. תנו L רגולרית כך ש-«L'» אינה רגולרית.<br>ב. תנו L לא רגולרית כך ש-«L'» רגולרית.`,s:`א. «L=(ab)^*», ולכן «L'={#_a=#_b}».<br>ב. «L={a^{n²}ba^k}», ולכן «L'={w | #_b(w)=1}».`},
+{id:'22a10',x:'22a',t:'pump',k:'open',q:`הוכיחו בלמת הניפוח ש-«{w∈{a,b}^* | #_a(w)≠2#_b(w)}» אינה רגולרית.`,s:`«z=b^na^{2n+2n!}» (כאן «2n≠2n+2n!»). מאחר ש-«|uv|≤n», «v=b^t». נבחר «i=n!/t+1» ונקבל «b^{n+n!}a^{2n+2n!}», שבה «#_a=2#_b», ולכן היא אינה ב-L. סתירה.`},
+/* 2022 b */
+{id:'22b1',x:'22b',t:'closure',k:'mc',q:`L אינה ח״ה ו-F סופית. מה אפשר לומר על «L−F»?`,o:[`לא ח״ה ולא רגולרית`,`ח״ה ולא רגולרית`,`רגולרית ולא ח״ה`,`ח״ה ורגולרית`],e:`אם «L−F» הייתה ח״ה, אז «L=(L−F)∪(L∩F)» הייתה איחוד של ח״ה עם שפה סופית, ולכן ח״ה. סתירה.`},
+{id:'22b2',x:'22b',t:'nerode',k:'mc',q:`ל-«R_L» יש m מחלקות (m סופי). מה נכון לגבי «R_{L^*}»?`,o:[`מספר סופי, וייתכן שקטן מ-m`,`מספר סופי וגדול או שווה ל-m`,`אינסוף`,`ייתכן סופי וייתכן אינסופי`],e:`L רגולרית, ולכן גם «L^*». עבור «L={a,b}» יש 3 מחלקות, ו-«L^*=Σ^*» עם מחלקה אחת.`},
+{id:'22b3',x:'22b',t:'cfg',k:'mc',q:`G בצורת חומסקי. «G'» מוסיף לכל משתנה X משתנה «X'». לכל כלל «X→YZ» נוספים הכללים «X'→Y'Z | YZ'», ולכל כלל «X→σ» נוסף הכלל «X'→ε». מה מקבל «G'» (מ-«S'»)?`,o:[`מילים מ-L שהוסרה מהן אות אחת`,`רישות של L`,`תתי-מילים של L`,`מילים מ-L שהוסרה מהן האות הימנית ביותר`],e:`המשתנה המתויג "זוכר" שצריך למחוק אות אחת בדיוק, ויכול להעביר את המחיקה לכל אחד מהענפים.`},
+{id:'22b4',x:'22b',t:'cfl',k:'mc',rep:'chomsky',q:`לאיזה דקדוק יש כוח חישובי גדול יותר?`,o:[`תלוי הקשר`,`חופשי הקשר`,`לינארי ימני`,`לינארי שמאלי`],e:`זה נובע מהיררכיית חומסקי.`},
+{id:'22b5',x:'22b',t:'nerode',k:'mc',q:`כמה שפות מעל «{a}» מתקבלות ע״י אס״ד עם 2 מצבים ולא ע״י אס״ד עם מצב אחד?`,o:[`4`,`2`,`6`,`8`],e:`«{ε}», «a^+», «(aa)^*», «a(aa)^*».`},
+{id:'22b6',x:'22b',t:'closure',k:'mc',q:`A אינה ח״ה ו-B רגולרית. טענה 1: כל שפה אינסופית שמכילה את A אינה ח״ה. טענה 2: כל תת-שפה סופית של B רגולרית.`,o:[`רק טענה 2`,`רק טענה 1`,`שתיהן`,`אף אחת`],e:`«Σ^*» מכילה את A והיא רגולרית, ולכן טענה 1 שגויה. כל שפה סופית רגולרית, ולכן טענה 2 נכונה.`},
+{id:'22b7',x:'22b',t:'cfg',k:'mc',rep:'general',q:`מה השפה של הדקדוק הכללי «S→MR», «M→Ma|Mb|X», «Xa→aXA», «Xb→bXB», «Aa→aA», «Ab→bA», «Ba→aB», «Bb→bB», «AR→Ra», «BR→Rb», «XR→ε»?`,o:[`«{ww^R}»`,`«{ww}»`,`«{w | w^R=w}»`,`«{w | w^R≠w}»`],e:`X עובר על w ושולח עותק של כל אות אל מעבר ל-R. כל עותק נכנס מיד אחרי R, ולכן העותקים יוצאים בסדר הפוך.`},
+{id:'22b8',x:'22b',t:'regex',k:'mc',q:`איזו מילה <b>אינה</b> מתקבלת ע״י «(0+10)^*1^*»?`,o:[`0110`,`1000`,`0111`,`1001`],e:`הביטוי מקבל בדיוק את המילים שאין בהן 110.`},
+{id:'22b9',x:'22b',t:'closure',k:'open',q:`א. תנו L רגולרית מעל «{a,b}» עם «L^*=L».<br>ב. תנו L לא רגולרית עם «L^*=L».`,s:`א. «L={a,b}^*».<br>ב. «L={w | #_a(w)=#_b(w)}».`},
+{id:'22b10',x:'22b',t:'nerode',k:'open',rep:'nerodeproof',q:`הוכיחו בנרוד ש-«{ww | w∈{a,b}^*}» אינה רגולרית.`,s:`«w_i=a^i». עבור «i≠j» נבחר «z=ba^ib». אז «a^iba^ib∈L», אבל «a^jba^ib∉L».`},
+/* 2023 a */
+{id:'23a1',x:'23a',t:'cfl',k:'mc',q:`«A={ww}», «B=פלינדרומים», «C=A∩B». מה אפשר לומר על C?`,o:[`לא ח״ה`,`ח״ה ולא רגולרית`,`רגולרית ולא ריקה`,`ריקה`],e:`מוכיחים בבר-הלל עם «z=a^nba^{2n}ba^n».`},
+{id:'23a2',x:'23a',t:'cfg',k:'mc',q:`«L'={0^m1^t2^k | m+t>k}», ו-«G: S→0S2|X», «X→1X2|1X|1». מה נכון?`,o:[`«L(G)⊂L'» ולא שוות`,`«L(G)=L'»`,`«L'⊂L(G)» ולא שוות`,`אף אחת לא מוכלת בשנייה`],e:`הדקדוק תמיד מייצר לפחות 1 אחת. המילה 002 נמצאת ב-«L'», אבל לא ב-«L(G)».`},
+{id:'23a3',x:'23a',t:'fa',k:'mc',rep:'finite',q:`F סופית, x המילה הארוכה ביותר בה («|x|=l»), y הקצרה ביותר («|y|=m»), «|F|=k», «|Σ|=t». A אס״ד ל-F עם n מצבים. מה נכון?`,o:[`«n>l»`,`«n<m»`,`«n>t»`,`«n<k»`],e:`אחרת המילה הארוכה ביותר הייתה עוברת במעגל, והיה אפשר לנפח אותה לאינסוף מילים.`},
+{id:'23a4',x:'23a',t:'nerode',k:'mc',rep:'parity',q:`כמה מצבים יש באס״ד המינימלי ל-«{w∈{a,b}^* | #_a mod 2≠#_b mod 2}»?`,o:[`2`,`3`,`4`,`5`],e:`מעל «{a,b}» זה פשוט "אורך אי-זוגי".`},
+{id:'23a5',x:'23a',t:'fa',k:'mc',q:`A, B אסל״דים. C = מכפלה עם «F_1×F_2», ו-D = מכפלה עם «F_1×!{F_2}». טענה 1: «L(C)=L(A)∩L(B)». טענה 2: «L(D)=L(A)−L(B)».`,o:[`רק טענה 1`,`רק טענה 2`,`שתיהן`,`אף אחת`],e:`חיתוך עובד גם באסל״ד. הפרש לא עובד: מילה ב-«L(B)» יכולה להיות גם עם מסלול שנכשל ב-B, ולכן תתקבל ב-D.`},
+{id:'23a6',x:'23a',t:'cfl',k:'mc',rep:'chomsky',q:`לפי היררכיית חומסקי, אילו מודלים שקולים?`,o:[`דקדוק לינארי ימני ודקדוק לינארי שמאלי`,`דקדוק תלוי הקשר ואוטומט מחסנית`,`דקדוק כללי ודקדוק תלוי הקשר`,`דקדוק ח״ה ומכונת טיורינג`],e:`שניהם מתאימים לשפות הרגולריות.`},
+{id:'23a7',x:'23a',t:'cfg',k:'mc',rep:'general',q:`איזו שפה מקבל «S→MR», «M→aMbX|ε», «Xb→bX», «XR→Rc», «R→ε»?`,o:[`«{a^nb^nc^n}»`,`«{a^nb^nc^{2n}}»`,`«{a^{2n}b^nc^n}»`,`«{a^nb^{2n}c^n}»`],e:`כל X עובר ימינה, חוצה את R ונהפך ל-c.`},
+{id:'23a8',x:'23a',t:'lang',k:'mc',rep:'plus',q:`איזו שפה מקיימת «L^+≠L^*»?`,o:[`«{#_a mod 2=1}»`,`«{#_a<3}»`,`«{#_a mod 3=0}»`,`«{#_a=#_b}»`],e:`רק בה אין «ε».`},
+{id:'23a9',x:'23a',t:'nerode',k:'open',q:`ל-«L=Σ^+abΣ» (כאשר «a,b∈Σ»): כמה מחלקות יש ל-«R_L»? הציגו נציג לכל מחלקה.`,s:`<b>6 מחלקות</b>, עם הנציגים «ε», «a», «aa», «aab», «aaba», «aabb».<br>האוטומט צריך לזכור: האם כבר קרא אות לפני ה-ab, איפה הוא נמצא בתוך "ab", והאם האות האחרונה סוגרת התאמה.`},
+{id:'23a10',x:'23a',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה מעל «{0,1,2}» ל-«{v2w | v,w∈{0,1}^*, v≠w^R}».`,s:`«S→TST | TX2 | 2XT | 0X2X1 | 1X2X0»<br>«X→TX | ε», «T→0 | 1»<br>מבחוץ אפשר זוגות כלשהם. בפנים חייבת להיות עדות לכך ש-«v≠w^R»: אי-התאמה באותו מרחק מה-2, או שאחד הצדדים ארוך יותר.`},
+/* 2023 b */
+{id:'23b1',x:'23b',t:'cfl',k:'mc',rep:'twocmp',q:`«L={a^mb^ka^{m+k} | m>k}». מה נכון?`,o:[`L אינה ח״ה, ו-«!{L}» ח״ה`,`L ח״ה, ו-«!{L}» אינה ח״ה`,`שתיהן ח״ה`,`שתיהן אינן ח״ה`],e:`L דורשת שתי השוואות («m+k» וגם «m>k»). המשלים דורש לכל היותר השוואה אחת בכל מקרה.`},
+{id:'23b2',x:'23b',t:'nerode',k:'mc',q:`L ו-M רגולריות, «L⊊M». t = מספר המצבים המינימלי ל-L, ו-s = מספר המצבים המינימלי ל-M. מה נכון?`,o:[`ייתכן «s>t» וייתכן «t>s»`,`«s≥t»`,`«t≥s»`,`«s>t»`],e:`M = אורך זוגי («s=2»). «L=∅» נותן «t=1», ו-L = אורך שמתחלק ב-4 נותן «t=4».`},
+{id:'23b3',x:'23b',t:'cfl',k:'mc',q:`L רגולרית. «L'={w∈L | #_a=#_b}». מה נכון?`,o:[`ח״ה, וייתכן שרגולרית`,`לא ח״ה`,`ח״ה ולא רגולרית`,`רגולרית`],e:`זה חיתוך של L עם שפה ח״ה, ולכן ח״ה. אם L סופית, גם «L'» סופית ורגולרית.`},
+{id:'23b4',x:'23b',t:'cfl',k:'mc',q:`L אינה מקיימת את בר-הלל. איזו טענה <b>אינה</b> נכונה?`,o:[`קיים דקדוק כללי שמקבל את L`,`ל-«R_L» אינסוף מחלקות`,`אין ביטוי רגולרי ל-L`,`אין שפה ח״ה M כך ש-«L=M^*»`],e:`יש שפות שאין להן אפילו דקדוק כללי (ממש יותר שפות מאשר דקדוקים).`},
+{id:'23b5',x:'23b',t:'cfg',k:'mc',q:`איזו מילה <b>אינה</b> מתקבלת ע״י «S→XY|YX», «X→TXT|a», «Y→TYT|b», «T→a|b»?`,o:[`aabaab`,`bbaabb`,`abbbba`,`babbba`],e:`הדקדוק מקבל מילים באורך זוגי שאינן מהצורה ww. «aabaab=(aab)(aab)».`},
+{id:'23b6',x:'23b',t:'nerode',k:'mc',rep:'prefix',q:`כמה מצבים (כולל מלכודת) יש באס״ד המינימלי ל-«{w | כל רישא x מקיימת −2≤#_a(x)−#_b(x)≤3}»?`,o:[`7`,`6`,`8`,`9`],e:`ערכי ההפרש האפשריים הם −2 עד 3 (6 ערכים), ועוד מלכודת.`},
+{id:'23b7',x:'23b',t:'fa',k:'mc',rep:'finite',q:`A אס״ד עם 5 מצבים שמקבל את aabaaa. איזו טענה <b>אינה</b> נכונה?`,o:[`קיימת ב-«L(A)» מילה באורך אי-זוגי`,`«L(A)» אינסופית`,`קיימת ב-«L(A)» מילה באורך קטן מ-5`,`«L(A)» ח״ה`],e:`אורך המילה (6) גדול ממספר המצבים, ולכן יש מעגל והשפה אינסופית. ייתכן שכל המילים בשפה באורך זוגי.`},
+{id:'23b8',x:'23b',t:'fa',k:'mc',rep:'flipnfa',q:`A אסל״ד שלם, ו-B מתקבל מהחלפת המקבלים. טענה 1: כל מילה ש-B מקבל, A לא מקבל. טענה 2: כל מילה ש-A לא מקבל, B מקבל.`,o:[`רק טענה 2`,`רק טענה 1`,`שתיהן`,`אף אחת`],e:`זו אותה שאלה כמו ב-2017: «L(B)⊇!{L(A)}».`},
+{id:'23b9',x:'23b',t:'nerode',k:'open',rep:'nerodeproof',q:`הוכיחו בנרוד ש-«L={a^{1+2+…+k} | k≥1}» אינה רגולרית.`,s:`«w_i=a^{1+…+i}». עבור «i<j» נבחר «z=a^{i+1}». אז «w_iz=a^{1+…+(i+1)}∈L». המילה «w_jz» באורך «1+…+j+(i+1)», שנמצא ממש בין «1+…+j» ל-«1+…+(j+1)», ולכן «w_jz∉L».`},
+{id:'23b10',x:'23b',t:'cfg',k:'open',q:`דקדוק ח״ה למילים «X+YP», כאשר X ו-Y בינאריים, ו-P הוא O אם הסכום אי-זוגי ו-E אם זוגי (0 נכתב «∅»).`,s:`הזוגיות של הסכום נקבעת רק לפי הספרות האחרונות.<br>«S→N∅+N∅E | N1+N1E | N∅+N1O | N1+N∅O»<br>«N→TN | ε», «T→∅ | 1»`},
+/* 2024 a */
+{id:'24a1',x:'24a',t:'closure',k:'mc',q:`טענה A: אם «L_1» ו-«L_1−L_2» רגולריות, אז «L_2» רגולרית. טענה B: אם «L_2» ו-«L_1−L_2» רגולריות, אז «L_1» רגולרית.`,o:[`שתיהן אינן נכונות`,`שתיהן נכונות`,`רק A`,`רק B`],e:`הפרכה ל-A: «L_1=∅», «L_2=a^nb^n». הפרכה ל-B: «L_1=a^nb^n», «L_2=Σ^*».`},
+{id:'24a2',x:'24a',t:'regex',k:'mc',rep:'kleene',q:`מה קובע משפט קלין?`,o:[`לכל שפה רגולרית מתאים ביטוי רגולרי ולהפך`,`לכל אסל״ד יש אס״ד שקול`,`קיימות שפות לא רגולריות`,`רגולריות סגורות לפעולות בוליאניות`],e:`קלין = ביטויים רגולריים.`},
+{id:'24a3',x:'24a',t:'pump',k:'mc',q:`צריך להוכיח ש-«{a^mb^k | m≠k}» אינה רגולרית. יריב: בלמת הניפוח. שקמה: בנרוד. מי צודק?`,o:[`שניהם`,`אף אחד`,`רק יריב`,`רק שקמה`],e:`בלמת הניפוח: «z=a^nb^{n+n!}». בנרוד: כל «a^i» נמצאת במחלקה נפרדת (מפרידים בעזרת «b^i»).`},
+{id:'24a4',x:'24a',t:'nerode',k:'mc',rep:'parity',q:`סטודנט בנה ל-«{w∈{a,b,c}^* | #_a mod 2=#_b mod 2}» אוטומט עם 4 מצבים, אחד לכל זוג (זוגיות של a, זוגיות של b), עם לולאות c. מה נכון?`,o:[`האוטומט נכון אבל לא מינימלי, ומספיקים 2 מצבים`,`נכון אבל לא מינימלי, ומספיקים 3 ולא פחות`,`האוטומט שגוי`,`נכון ומינימלי`],e:`אפשר לאחד את המצבים המקבלים למצב אחד ואת הלא מקבלים למצב אחד, כי התנאי שקול לכך ש-«#_a+#_b» זוגי.`},
+{id:'24a5',x:'24a',t:'cfg',k:'mc',q:`איזה דקדוק מקבל את «{uv | u∈{0,1}^*, v∈{2,3}^*, |u|≤#_2(v)}»?`,o:[`«S→0S2|1S2|S2|S3|ε»`,`«S→0S2|1S2|S3|2»`,`«S→0S2|1S2|0S3|1S3|2»`,`«S→0S2|1S2|0S3|1S3|ε»`],e:`כל אות של u עוטפת 2. אפשר להוסיף 2-ים ו-3-ים "חופשיים" בחלק של v.`},
+{id:'24a6',x:'24a',t:'lang',k:'mc',q:`«R={(x,y) | x סיפא של y, או y רישא של x}» מעל «{a,b}». מה נכון?`,o:[`R רפלקסיבי ולא סימטרי`,`סימטרי ולא רפלקסיבי`,`רפלקסיבי וסימטרי`,`לא רפלקסיבי ולא סימטרי`],e:`כל מילה היא סיפא של עצמה, ולכן R רפלקסיבי. «(b,ab)∈R» (b סיפא של ab), אבל «(ab,b)∉R».`},
+{id:'24a7',x:'24a',t:'cfl',k:'mc',rep:'cfclose',q:`לאיזו פעולה שפות ח״ה <b>אינן</b> סגורות?`,o:[`משלים`,`היפוך`,`סגור *`,`איחוד`],e:`לדוגמה, המשלים של «{ww}» ח״ה, אבל «{ww}» עצמה אינה ח״ה.`},
+{id:'24a8',x:'24a',t:'closure',k:'open',rep:'infunion',q:`תנו אינסוף שפות שונות שאינן ח״ה והאיחוד שלהן רגולרי.`,s:`«L_m={a^{n²+m} | n≥0}» לכל «m≥0». האיחוד הוא «{a^n | n≥0}».`},
+{id:'24a9',x:'24a',t:'regex',k:'open',q:`רשמו ביטוי רגולרי לכל המילים מעל «{a,b}» שמסתיימות ב-b ולא מכילות bab.`,s:`«(a+b^+aa)^*b^+»<br>אחרי בלוק של b-ים (שאינו בסוף המילה) חייבות לבוא לפחות שתי a-ים.`},
+/* 2024 summer */
+{id:'24s1',x:'24s',t:'lang',k:'mc',q:`«L_1,L_2» רגולריות, ואף אחת לא מוכלת בשנייה. טענה א׳: «(L_1∪L_2)^*=L_1^*∪L_2^*». טענה ב׳: «(L_1∩L_2)^*=L_1^*∩L_2^*».`,o:[`אף טענה`,`שתיהן`,`רק א׳`,`רק ב׳`],e:`עבור «{a},{b}», «ab» נמצאת רק בצד שמאל של א׳. עבור «{a},{aa}», «aa» נמצאת רק בצד ימין של ב׳.`},
+{id:'24s2',x:'24s',t:'cfl',k:'mc',q:`«L_1» סופית, «L_2» ח״ה ולא רגולרית. מה אפשר לומר על «L_1ΔL_2»?`,o:[`ח״ה ולא רגולרית`,`סופית`,`רגולרית ולא סופית`,`לא ח״ה`],e:`הוספה או הסרה של מספר סופי של מילים לא משנה את הסיווג.`},
+{id:'24s3',x:'24s',t:'regex',k:'mc',rep:'oddb',q:`איזו שפה מקבל «(a+ba^*b)^*ba^*»?`,o:[`מספר אי-זוגי של b-ים`,`לפחות b אחת`,`«#_a>#_b»`,`אחרי כל b יש a`],e:`זו אותה שאלה כמו ב-2020.`},
+{id:'24s4',x:'24s',t:'nerode',k:'mc',rep:'prefix',q:`כמה מצבים (כולל בור) יש באס״ד המינימלי ל-«{w | כל רישא x מקיימת |#_a(x)−#_b(x)|≤2}»?`,o:[`6`,`5`,`4`,`7`],e:`ההפרש יכול להיות −2 עד 2 (5 ערכים), ועוד בור.`},
+{id:'24s5',x:'24s',t:'nerode',k:'open',rep:'ksq',q:`רשמו את כל המחלקות של «R_L» עבור «L={a^{n²}}», והציגו מילים מפרידות.`,s:`כל «a^i» במחלקה נפרדת. עבור «k<i» נבחר «z=a^{i²+i+1}»: «a^iz=a^{(i+1)²}∈L», ו-«a^kz=a^{i²+i+k+1}∉L», כי «i²<i²+i+k+1<(i+1)²».`},
+{id:'24s6',x:'24s',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה ל-«{uu^Rv^Rv | u,v∈{0,1}^*}».`,s:`«S→XX», «X→0X0 | 1X1 | ε».<br>גם «uu^R» וגם «v^Rv» הם פלינדרומים זוגיים.`},
+/* 2025 a */
+{id:'25a1',x:'25a',t:'nerode',k:'mc',rep:'prefix',q:`«L={w | כל רישא x מקיימת |#_a(x)−#_b(x)|≤1}». מה נכון?`,o:[`L ו-«L^*» רגולריות`,`שתיהן לא רגולריות`,`רק L רגולרית`,`רק «L^*» רגולרית`],e:`ל-L יש אס״ד עם 4 מצבים, ורגולריות סגורות ל-«*».`},
+{id:'25a2',x:'25a',t:'closure',k:'mc',q:`טענה 1: שפות לא רגולריות סגורות לאיחוד. טענה 2: שפות לא רגולריות סגורות לחיתוך.`,o:[`שתיהן אינן נכונות`,`שתיהן נכונות`,`רק 1`,`רק 2`],e:`עבור L לא רגולרית והמשלים שלה: האיחוד הוא «Σ^*» והחיתוך הוא «∅», ושתיהן רגולריות.`},
+{id:'25a3',x:'25a',t:'cfg',k:'mc',q:`איזו שפה מקבל «S→XY», «X→aXb|bXa|aXa|bXb|ε», «Y→aYa|bYb|aYb|bYa»?`,o:[`«∅»`,`המשלים של «{ww}»`,`«{#_a>#_b}»`,`המשלים של הפלינדרומים`],e:`ל-Y אין כלל שמסתיים, ולכן אי אפשר לגזור ממנו אף מילה.`},
+{id:'25a4',x:'25a',t:'pump',k:'mc',q:`מוכיחים בלמת הניפוח ש-«{w | w^R=w}» אינה רגולרית. איזו מילה <b>לא מתאים</b> לבחור?`,o:[`«ba^nb»`,`«b^{n+1}ab^{n+1}»`,`«a^nb^na^nb^na^n»`,`«a^{n²}b^{2n+1}a^{n²}»`],e:`ב-«ba^nb» היריב בוחר v מתוך ה-a-ים, ו-«ba^mb» היא פלינדרום לכל m.`},
+{id:'25a5',x:'25a',t:'closure',k:'open',rep:'infunion',q:`תנו אינסוף שפות שונות שאינן ח״ה והאיחוד שלהן רגולרי.`,s:`«A_k={a^{n²+k} | n≥0}», והאיחוד הוא «{a^i | i≥0}». <mark>זו בדיוק השאלה מ-2024.</mark>`},
+{id:'25a6',x:'25a',t:'fa',k:'open',q:`בנו אסל״ד עם 6 מצבים לכל היותר עבור «{w∈{0,1}^* | בדיוק שתי 1-ים, או לפחות שתי 0-ים}».`,s:`שני אוטומטים קטנים, כל אחד עם 3 מצבים:<br>• בדיוק שתי 1-ים: «p_0→p_1→p_2» על 1, לולאות 0 בכל מצב, «p_2» מקבל (ואין קשת 1 מ-«p_2»).<br>• לפחות שתי 0-ים: «r_0→r_1→r_2» על 0, לולאות 1, «r_2» מקבל עם לולאה על 0 ועל 1.<br>מצב ההתחלה הוא «p_0» עם מסע «ε» ל-«r_0». כך מספיקים 6 מצבים.`},
+/* 2025 b */
+{id:'25b1',x:'25b',t:'cfl',k:'mc',q:`טענה 1: שפה שמקיימת את למת הניפוח הרגולרית מקיימת גם את בר-הלל. טענה 2: שפה שמקיימת את בר-הלל מקיימת גם את הלמה הרגולרית.`,o:[`רק טענה 1`,`רק טענה 2`,`שתיהן`,`אף אחת`],e:`מפירוק «uvw» מקבלים «u'=v'=ε, w'=u, x'=v, y'=w». הפרכה לטענה 2: «a^nb^n».`},
+{id:'25b2',x:'25b',t:'closure',k:'mc',q:`A רגולרית, והמיזוג 1-1 של A עם B רגולרי. מה אפשר לומר על B?`,o:[`לא בהכרח רגולרית ולא בהכרח מוכלת ב-A`,`לא בהכרח רגולרית, אבל בהכרח מוכלת ב-A`,`בהכרח רגולרית, אבל לא בהכרח מוכלת ב-A`,`בהכרח רגולרית ובהכרח מוכלת ב-A`],e:`אם «A=∅», המיזוג הוא «∅» לכל B.`},
+{id:'25b3',x:'25b',t:'nerode',k:'mc',q:`כמה מצבים יש באס״ד המינימלי ל-«{a^mb^k | (m+k) mod 3=0}»?`,o:[`7`,`3`,`9`,`6`],e:`המחלקות: «ε», a, aa, b, bb, bbb, ומלכודת (ba).`},
+{id:'25b4',x:'25b',t:'cfg',k:'mc',rep:'nonpal',q:`איזה דקדוק מקבל את המחרוזות באורך אי-זוגי מעל «{a,b}» שאינן פלינדרומים?`,o:[`«S→TST|aXb|bXa», «X→TXT|a|b», «T→a|b»`,`«S→TST|aXa|bXb», «X→TXT|a|b», «T→a|b»`,`«S→TST|aXb|bXa», «X→TXT|a|b», «T→a|b|ε»`,`«S→TST|aXb|bXa», «X→TXT|a|b|ε», «T→a|b»`],e:`השנייה שומרת על הסימטריה. השלישית מאפשרת אורך זוגי (בגלל «T→ε»). הרביעית מאפשרת אורך זוגי (בגלל «X→ε»).`},
+{id:'25b5',x:'25b',t:'regex',k:'open',q:`ביטוי רגולרי מעל «{a,b}»:<br>א. מילים שאינן מסתיימות בשתי אותיות זהות.<br>ב. מילים עם בדיוק שתי b-ים או לפחות שתי a-ים.`,s:`א. «ε+a+b+(a+b)^*(ab+ba)»<br>ב. «a^*ba^*ba^* + (a+b)^*a(a+b)^*a(a+b)^*»`},
+{id:'25b6',x:'25b',t:'closure',k:'open',q:`הוכיחו או הפריכו: לכל A, B לא רגולריות שונות עם «A⊂B» קיימת C רגולרית עם «A⊂C⊂B».`,s:`<b>הפרכה:</b> «A={a^nb^n | n≥1}», «B={a^nb^n | n≥0}=A∪{ε}». בין שתיהן אין שום שפה אחרת, ובוודאי לא רגולרית.`},
+/* 2026 b */
+{id:'26b1',x:'26b',t:'nerode',k:'mc',q:`כמה מצבים (כולל מלכודת) יש באס״ד המינימלי ל-«{w∈{a,b}^* | #_a(w)>1, #_b(w)<2}»?`,o:[`7`,`6`,`8`,`9`],e:`מספר ה-a-ים יכול להיות 0, 1 או 2+ (3 אפשרויות), מספר ה-b-ים 0 או 1 (2 אפשרויות), ועוד מלכודת כשמגיעים לשתי b-ים: «3×2+1=7».`},
+{id:'26b2',x:'26b',t:'closure',k:'mc',q:`L רגולרית מעל «{a,b}». איזו שפה <b>אינה</b> בהכרח רגולרית?`,o:[`המילים באורך אי-זוגי ב-L שהאות האמצעית שלהן היא a`,`הרישות של L`,`«L^3ΔL^2»`,`מיזוג 1-1 של L עם עצמה`],e:`עבור «L={w | #_a(w)=1}», המילים באורך אי-זוגי עם a באמצע הן «{b^nab^n}», שאינה רגולרית. שאר הפעולות שומרות על רגולריות.`},
+{id:'26b3',x:'26b',t:'regex',k:'mc',q:`איזו מילה <b>אינה</b> מתקבלת ע״י «(b+a^+bb)^*(a^*+a^+b)»?`,o:[`baba`,`bbaa`,`aabb`,`baaa`],e:`הביטוי מקבל את המילים שאין בהן aba.`},
+{id:'26b4',x:'26b',t:'closure',k:'mc',rep:'primes',q:`טענה 1: אם L רגולרית, אז «L^*» ח״ה. טענה 2: אם «L^*» רגולרית, אז L ח״ה.`,o:[`רק טענה 1`,`רק טענה 2`,`שתיהן`,`אף אחת`],e:`«L={a^p | p ראשוני}» אינה ח״ה, אבל «L^*={a^n | n≠1}» רגולרית.`},
+{id:'26b5',x:'26b',t:'cfg',k:'open',q:`רשמו דקדוק ח״ה ל-«{a^{m−k}b^mc^k | m≥k, m≥1}».`,s:`מפרקים: «a^{m−k}b^{m−k}·b^kc^k».<br>«S→aXbY | XbYc», «X→aXb | ε», «Y→bYc | ε»<br>(ב-S יש לפחות b אחת, כי «m≥1».)`},
+{id:'26b6',x:'26b',t:'nerode',k:'open',rep:'nerodeproof',q:`הוכיחו בנרוד ש-«{a^mb^kc^t | k=m·t}» אינה רגולרית.`,s:`«w_i=a^i» לכל «i≥1». עבור «i≠j» נבחר «z=b^ic». אז «a^ib^ic∈L», אבל «a^jb^ic∉L». לכן יש אינסוף מחלקות.`},
+
+/* ===== extra practice (written for understanding) ===== */
+/* lang */
+{id:'pl1',x:'prac',t:'lang',k:'mc',q:`מה זה «∅·{a,b}»?`,o:[`«∅»`,`«{a,b}»`,`«{ε}»`,`«{ε,a,b}»`],e:`בשרשור צריך לבחור מילה מכל אחת מהשפות. מ-«∅» אין מה לבחור, ולכן אין אף צירוף.`},
+{id:'pl2',x:'prac',t:'lang',k:'mc',q:`כמה מילים יש ב-«{a,ab}^2»?`,o:[`4`,`3`,`2`,`6`],e:`aa, aab, aba, abab. כל הארבע שונות.`},
+{id:'pl3',x:'prac',t:'lang',k:'mc',q:`«{ab, abab}^*» שווה ל-:`,o:[`«(ab)^*»`,`«{ε, ab, abab}»`,`«(ab)^+»`,`«a^*b^*»`],e:`abab כבר מתקבלת משרשור של ab עם ab, ולכן היא לא מוסיפה כלום. גם «ε» בפנים, כי זה «*».`},
+{id:'pl4',x:'prac',t:'lang',k:'mc',q:`איזו טענה נכונה <b>לכל</b> שפה L?`,o:[`«(L^*)^*=L^*»`,`«L^+=L^*»`,`«L^2={ww | w∈L}»`,`«L·L^R=L^R·L»`],e:`כוכב על כוכב לא מוסיף כלום. «L^+=L^*» רק כש-«ε∈L». ‏«L^2» מאפשר שתי מילים שונות.`},
+{id:'pl5',x:'prac',t:'lang',k:'mc',q:`«L=Σ^+» (כל המילים חוץ מ-«ε»). מה זה «L^*»?`,o:[`«Σ^*»`,`«Σ^+»`,`«{ε}»`,`«∅»`],e:`«L^*» מוסיף את «ε», ושאר המילים כבר ב-L.`},
+{id:'pl6',x:'prac',t:'lang',k:'mc',q:`עבור «w=abc», כמה תתי-מילים שונות יש (כולל «ε»)?`,o:[`7`,`8`,`6`,`4`],e:`«ε», a, b, c, ab, bc, abc. ‏ac לא נחשבת, כי היא לא רציפה.`},
+{id:'pl7',x:'prac',t:'lang',k:'mc',q:`מה זה «{a}^*·{b}^*»?`,o:[`a-ים ואחריהן b-ים, כלומר «a^*b^*»`,`«(ab)^*»`,`«{a,b}^*»`,`«{a^nb^n}»`],e:`בוחרים בנפרד כמה a-ים וכמה b-ים, ואין קשר בין המספרים.`},
+/* fa */
+{id:'pf1',x:'prac',t:'fa',k:'mc',q:`כמה מצבים יש באס״ד המינימלי ל"מסתיימות ב-ab" מעל «{a,b}»?`,o:[`3`,`2`,`4`,`5`],e:`שלוש אפשרויות לזכור: אין התאמה, ראיתי a, ראיתי ab.`},
+{id:'pf2',x:'prac',t:'fa',k:'mc',q:`כמה מצבים יש באס״ד המינימלי ל"האות השנייה מהסוף היא a" מעל «{a,b}»?`,o:[`4`,`3`,`2`,`8`],e:`צריך לזכור את שתי האותיות האחרונות («2^2=4» אפשרויות). לאסל״ד מספיקים 3.`},
+{id:'pf3',x:'prac',t:'fa',k:'mc',q:`בבניית אוטומט החזקה מאסל״ד עם n מצבים, כמה מצבים יכולים להיות לאס״ד?`,o:[`עד «2^n»`,`בדיוק n`,`עד «n^2»`,`עד «n!»`],e:`כל מצב באס״ד הוא תת-קבוצה של מצבי האסל״ד.`},
+{id:'pf4',x:'prac',t:'fa',k:'mc',q:`אוטומט מכפלה ל-«L_1∪L_2». מהם המצבים המקבלים?`,o:[`«(F_1×Q_2)∪(Q_1×F_2)»`,`«F_1×F_2»`,`«F_1∪F_2»`,`«(F_1×!{F_2})∪(!{F_1}×F_2)»`],e:`מספיק שאחד מהשניים מקבל. «F_1∪F_2» לא נכון בכלל, כי המצבים הם זוגות.`},
+{id:'pf5',x:'prac',t:'fa',k:'mc',q:`אס״ד <b>שלם</b> A. מחליפים מקבלים ולא מקבלים ומקבלים B. מה נכון?`,o:[`«L(B)=!{L(A)}»`,`«L(B)⊇!{L(A)}» בלבד`,`«L(B)⊆L(A)»`,`תלוי באוטומט`],e:`בדטרמיניסטי יש לכל מילה ריצה <b>אחת</b>, ולכן ההחלפה הופכת בדיוק את התשובה.`},
+{id:'pf6',x:'prac',t:'fa',k:'mc',q:`באסל״ד: «q_0 –ε→ q_1», «q_1 –ε→ q_2», «q_2 –a→ q_0». מהו «CL_ε(q_1)»?`,o:[`«{q_1,q_2}»`,`«{q_0,q_1,q_2}»`,`«{q_2}»`,`«{q_1}»`],e:`מ-«q_1» אפשר להגיע ב-«ε» ל-«q_2», ו-«q_1» עצמו כלול. ‏«q_0» לא, כי המעבר אליו הוא על a.`},
+{id:'pf7',x:'prac',t:'fa',k:'mc',q:`אס״ד בעל 4 מצבים מקבל את המילה abab. מה בהכרח נכון?`,o:[`השפה אינסופית`,`השפה סופית`,`השפה מכילה רק מילים באורך זוגי`,`השפה מכילה את «ε»`],e:`אורך 4 ≥ 4 מצבים, ולכן מצב כלשהו חוזר במסלול ויש מעגל שאפשר לחזור עליו.`},
+{id:'pf8',x:'prac',t:'fa',k:'open',q:`בנו אס״ד מעל «{a,b}» למילים שמכילות <b>לפחות</b> a אחת ו<b>לפחות</b> b אחת.`,s:`מכפלה של "ראיתי a?" עם "ראיתי b?": 4 מצבים.<br>«(0,0)»: a → «(1,0)», b → «(0,1)». ‏«(1,0)»: a לולאה, b → «(1,1)». ‏«(0,1)»: b לולאה, a → «(1,1)». ‏«(1,1)»: מקבל, לולאה על הכל.`},
+/* nerode */
+{id:'pn1',x:'prac',t:'nerode',k:'mc',q:`כמה מחלקות יש ל-«R_L» עבור «L=a^*b^*»?`,o:[`3`,`2`,`4`,`אינסוף`],e:`עדיין בשלב a («ε», a…), כבר בשלב b (ab, b…), ומלכודת (ba…).`},
+{id:'pn2',x:'prac',t:'nerode',k:'mc',q:`עבור «L=»"מסתיימת ב-b": האם aab ו-b שקולות?`,o:[`כן, כי שתיהן מסתיימות ב-b וכל המשך מתנהג אצלן אותו דבר`,`לא, z=a מפרידה`,`לא, כי האורכים שונים`,`לא, z=ε מפרידה`],e:`עבור «z=ε» שתיהן בשפה. עבור z לא ריקה, רק האות האחרונה של z קובעת. לכן שקולות.`},
+{id:'pn3',x:'prac',t:'nerode',k:'mc',q:`עבור «L={a^nb^n}», איזו מילה מפרידה בין aa ל-aaa?`,o:[`«bb»`,`«b»`,`«a»`,`«ε»`],e:`«aabb∈L», אבל «aaabb∉L».`},
+{id:'pn4',x:'prac',t:'nerode',k:'mc',q:`כמה מצבים יש באס״ד המינימלי ל-«{a^n | n≠3}» מעל «{a}»?`,o:[`5`,`4`,`3`,`2`],e:`צריך להבדיל בין אורכים 0, 1, 2, 3 ו-"4 ומעלה". אחרי 3, אורך 4 ומעלה תמיד מתקבל.`},
+{id:'pn5',x:'prac',t:'nerode',k:'mc',q:`כמה מחלקות יש ל-«R_L» עבור «L={ab}» מעל «{a,b}»?`,o:[`4`,`3`,`2`,`5`],e:`«ε», a, ab, ומלכודת (כל השאר).`},
+{id:'pn6',x:'prac',t:'nerode',k:'mc',q:`כמה מצבים יש ל-«#_a mod 3=0» <b>וגם</b> «#_b mod 2=0»?`,o:[`6`,`5`,`3`,`2`],e:`«3×2»: שתי שאריות בלתי תלויות.`},
+{id:'pn7',x:'prac',t:'nerode',k:'open',q:`הוכיחו בעזרת נרוד ש-«{a^nb^{2n}}» אינה רגולרית.`,s:`«w_i=a^i». עבור «i≠j» נבחר «z=b^{2i}». אז «a^ib^{2i}∈L», אבל «a^jb^{2i}∉L», כי «2i≠2j». לכן יש אינסוף מחלקות.`},
+{id:'pn8',x:'prac',t:'nerode',k:'open',q:`הוכיחו בעזרת נרוד שהפלינדרומים מעל «{a,b}» אינם רגולריים.`,s:`«w_i=a^ib». עבור «i≠j» נבחר «z=a^i». אז «a^iba^i» פלינדרום, ו-«a^jba^i» לא פלינדרום (מספר ה-a-ים משני צידי ה-b שונה).`},
+/* regex */
+{id:'pr1',x:'prac',t:'regex',k:'mc',q:`איזו שפה מקבל «(a+b)^*b(a+b)»?`,o:[`האות השנייה מהסוף היא b`,`מסתיימות ב-b`,`מכילות b`,`מתחילות ב-b`],e:`אחרי ה-b יש בדיוק אות אחת.`},
+{id:'pr2',x:'prac',t:'regex',k:'mc',q:`איזה ביטוי שקול ל-«(a+b)^*»?`,o:[`«(a^*b^*)^*»`,`«a^*b^*»`,`«(ab)^*»`,`«a^*+b^*»`],e:`«a^*b^*» לבדו לא מקבל את ba, אבל עם כוכב בחוץ אפשר לחזור ולהרכיב כל מילה.`},
+{id:'pr3',x:'prac',t:'regex',k:'mc',q:`איזו מילה <b>אינה</b> ב-«(ab+ba)^*»?`,o:[`aabb`,`abba`,`baab`,`abab`],e:`aabb מתחילה ב-aa, ואין בלוק שמתחיל כך.`},
+{id:'pr4',x:'prac',t:'regex',k:'mc',q:`ביטוי ל"בדיוק שתי a-ים" מעל «{a,b}»:`,o:[`«b^*ab^*ab^*»`,`«(a+b)^*a(a+b)^*a(a+b)^*»`,`«b^*aab^*»`,`«(b^*ab^*a)^*b^*»`],e:`השני הוא "לפחות שתיים". השלישי מחייב שהן יהיו צמודות. הרביעי הוא מספר זוגי של a-ים.`},
+{id:'pr5',x:'prac',t:'regex',k:'mc',q:`«(ε+b)(ab)^*(ε+a)» מקבל:`,o:[`מילים שבהן האותיות מתחלפות (אין aa ואין bb)`,`מילים עם מספר שווה של a ו-b`,`מילים שמתחילות ב-b`,`«(ab)^*»`],e:`אפשר להתחיל ב-b, אחריה זוגות ab, ואפשר לסיים ב-a. כך מתקבלת כל מילה מתחלפת.`},
+{id:'pr6',x:'prac',t:'regex',k:'mc',q:`«a^*(ba^*ba^*)^*» מקבל:`,o:[`מספר זוגי של b-ים`,`מספר אי-זוגי של b-ים`,`מספר זוגי של a-ים`,`אין שתי b-ים ברצף`],e:`כל סיבוב מוסיף בדיוק שתי b-ים.`},
+{id:'pr7',x:'prac',t:'regex',k:'open',q:`כתבו ביטוי רגולרי למילים מעל «{a,b}» שאין בהן שתי b-ים ברצף.`,s:`«(a+ba)^*(ε+b)». לחלופין: «a^*(baa^*)^*(ε+b)».`},
+/* pump */
+{id:'pp1',x:'prac',t:'pump',k:'mc',q:`בלמת הניפוח, <b>מי</b> בוחר את הפירוק «z=uvw»?`,o:[`היריב (צריך להראות סתירה לכל פירוק אפשרי)`,`אנחנו`,`הוא קבוע מראש לפי האוטומט`,`לא משנה`],e:`הלמה אומרת "<b>קיים</b> פירוק", ולכן בהוכחה בשלילה צריך לטפל בכל פירוק.`},
+{id:'pp2',x:'prac',t:'pump',k:'mc',q:`עבור «z=a^nb^n» ו-«|uv|≤n», ממה מורכבת v?`,o:[`רק a-ים`,`רק b-ים`,`a-ים ו-b-ים`,`לא ניתן לדעת`],e:`n האותיות הראשונות הן כולן a.`},
+{id:'pp3',x:'prac',t:'pump',k:'mc',q:`איזו שפה אפשר להוכיח שאינה רגולרית עם «z=a^nb^n» ו-«i=2»?`,o:[`«{a^nb^m | n≤m}»`,`«a^*b^*»`,`«{a^nb^m | n,m≥0}»`,`«{a^nb^m | n≥m}»`],e:`ניפוח של ה-a-ים כלפי מעלה שובר את «n≤m». ב-«n≥m» הניפוח כלפי מעלה לא שובר כלום, ושם צריך «i=0».`},
+{id:'pp4',x:'prac',t:'pump',k:'mc',q:`L מקיימת את למת הניפוח. מה אפשר להסיק?`,o:[`שום דבר בוודאות`,`L רגולרית`,`L סופית`,`L אינה רגולרית`],e:`הלמה היא תנאי הכרחי בלבד, ויש שפות לא רגולריות שמקיימות אותה.`},
+{id:'pp5',x:'prac',t:'pump',k:'mc',q:`בהוכחה ש-«{a^{n²}}» אינה רגולרית עם «i=2», למה האורך «n²+t» אינו ריבוע?`,o:[`כי «n²<n²+t<(n+1)²», כאשר «1≤t≤n»`,`כי t אי-זוגי`,`כי «n²+t» תמיד ראשוני`,`כי «t>n»`],e:`הריבוע הבא אחרי «n²» הוא «n²+2n+1», ו-«t≤n» לא מגיע אליו.`},
+{id:'pp6',x:'prac',t:'pump',k:'open',q:`הוכיחו בלמת הניפוח ש-«{a^nb^m | n>m}» אינה רגולרית.`,s:`«z=a^{n+1}b^n». ‏«|uv|≤n», ולכן «v=a^t». נבחר «i=0»: «a^{n+1−t}b^n». מאחר ש-«t≥1», «n+1−t≤n», ולכן המילה ∉L. סתירה.<br>(כאן ניפוח כלפי מעלה לא עוזר, ולכן מנפחים כלפי מטה.)`},
+/* closure */
+{id:'pc1',x:'prac',t:'closure',k:'mc',q:`L1 רגולרית ו-«L_1∪L_2» רגולרית. מה אפשר לומר על «L_2»?`,o:[`לא בהכרח רגולרית`,`בהכרח רגולרית`,`בהכרח סופית`,`בהכרח לא רגולרית`],e:`«L_1=Σ^*»: כל «L_2» תיתן איחוד «Σ^*».`},
+{id:'pc2',x:'prac',t:'closure',k:'mc',q:`L רגולרית. האם «{w | w∈L וגם w^R∈L}» רגולרית?`,o:[`כן, זו «L∩L^R»`,`לא בהכרח`,`רק אם L סופית`,`לא, זו שפת הפלינדרומים`],e:`רגולריות סגורות להיפוך ולחיתוך.`},
+{id:'pc3',x:'prac',t:'closure',k:'mc',q:`L לא רגולרית ו-F סופית. «L∪F» היא:`,o:[`לא רגולרית`,`רגולרית`,`ייתכן הכל`,`סופית`],e:`אם «L∪F» הייתה רגולרית, אז «L=(L∪F)−(F−L)» הייתה רגולרית (הפרש עם שפה סופית). סתירה.`},
+{id:'pc4',x:'prac',t:'closure',k:'mc',q:`כדי להראות ש-«{#_a=#_b}» אינה רגולרית בעזרת סגירות, חותכים אותה עם:`,o:[`«a^*b^*»`,`«(ab)^*»`,`«Σ^*»`,`«{ε}»`],e:`החיתוך הוא «{a^nb^n}», שאינה רגולרית. אם השפה המקורית הייתה רגולרית, גם החיתוך היה.`},
+{id:'pc5',x:'prac',t:'closure',k:'mc',q:`L לא רגולרית ו-M רגולרית. מה נכון לגבי «L∪M»?`,o:[`ייתכן שרגולרית וייתכן שלא`,`בהכרח רגולרית`,`בהכרח לא רגולרית`,`בהכרח ח״ה`],e:`«M=∅» משאירה את L (לא רגולרית). «M=Σ^*» נותנת «Σ^*» (רגולרית).`},
+{id:'pc6',x:'prac',t:'closure',k:'open',q:`תנו שפה לא רגולרית L כך ש-«L^*» רגולרית, אבל שונה מהדוגמה של הראשוניים.`,s:`«L={a^{k²} | k≥0}». מאחר ש-«a∈L» (כי «1=1²»), ‏«L^*=a^*», שהיא רגולרית.`},
+/* cfg */
+{id:'pg1',x:'prac',t:'cfg',k:'mc',q:`מה השפה של «S→aSbb | ε»?`,o:[`«{a^nb^{2n}}»`,`«{a^{2n}b^n}»`,`«{a^nb^n}»`,`«a^*b^*»`],e:`כל a באה עם שתי b-ים.`},
+{id:'pg2',x:'prac',t:'cfg',k:'mc',q:`מה השפה של «S→aS | Sb | ε»?`,o:[`«a^*b^*»`,`«{a^nb^n}»`,`«(ab)^*»`,`«{a,b}^*»`],e:`a-ים נכנסים משמאל ו-b-ים מימין, בלי קשר בין הכמויות.`},
+{id:'pg3',x:'prac',t:'cfg',k:'mc',q:`איזו מילה <b>לא</b> נוצרת ע״י «S→aSb | bSa | ε»?`,o:[`abba`,`abab`,`bbaa`,`aabb`],e:`בדקדוק הזה האות הראשונה תמיד שונה מהאחרונה. ב-abba שתיהן a. (זו הסיבה שצריך «SS» כדי לקבל את כל «#_a=#_b».)`},
+{id:'pg4',x:'prac',t:'cfg',k:'mc',q:`מה השפה של «S→SS | (S) | ε»?`,o:[`סוגריים מאוזנים`,`«{(^n)^n}» בלבד`,`כל מחרוזות הסוגריים`,`מספר זוגי של סוגריים`],e:`«(S)» עוטף, ו-«SS» מצמיד. לדוגמה ()(()).`},
+{id:'pg5',x:'prac',t:'cfg',k:'mc',q:`איזה דקדוק מקבל «{a^nb^m | n≥m}»?`,o:[`«S→aSb | aS | ε»`,`«S→aSb | Sb | ε»`,`«S→aSb | ε»`,`«S→aS | bS | ε»`],e:`aS מוסיף a-ים עודפות. ‏Sb (בתשובה השנייה) מוסיף b-ים עודפות, וזה הכיוון ההפוך.`},
+{id:'pg6',x:'prac',t:'cfg',k:'open',q:`כתבו דקדוק ח״ה ל-«{a^nb^mc^{n+m}}».`,s:`«S→aSc | X», «X→bXc | ε». כל a וכל b מקבלות c משלהן. ה-a-ים עוטפים מבחוץ, ולכן ה-c-ים שלהם בסוף.`},
+{id:'pg7',x:'prac',t:'cfg',k:'open',q:`כתבו דקדוק ח״ה ל-«{a^ib^jc^k | i≠j}».`,s:`«S→XC», «C→cC | ε», «X→aXb | A | B», «A→aA | a», «B→bB | b».<br>‏X מייצר «a^ib^j» עם «i≠j»: עוטפים זוגות, ובאמצע שמים עודף לא ריק של a-ים או של b-ים.`},
+/* cfl */
+{id:'pq1',x:'prac',t:'cfl',k:'mc',q:`«{a^ib^jc^k | i=j או j=k}» היא:`,o:[`ח״ה`,`לא ח״ה`,`רגולרית`,`ריקה`],e:`איחוד של שתי שפות ח״ה, שבכל אחת השוואה אחת.`},
+{id:'pq2',x:'prac',t:'cfl',k:'mc',q:`«{a^ib^jc^k | i≤j≤k}» היא:`,o:[`לא ח״ה`,`ח״ה`,`רגולרית`,`סופית`],e:`שתי השוואות בו-זמנית. בבר-הלל: «z=a^nb^nc^n».`},
+{id:'pq3',x:'prac',t:'cfl',k:'mc',q:`«{a^nb^mc^nd^m}» היא:`,o:[`לא ח״ה (השוואות חוצות)`,`ח״ה (מקונן)`,`רגולרית`,`ח״ה, כי זה שרשור`],e:`a מול c ו-b מול d מצטלבים, ומחסנית לא יכולה לבדוק את שניהם.`},
+{id:'pq4',x:'prac',t:'cfl',k:'mc',q:`בהוכחה ש-«a^nb^nc^n» אינה ח״ה, למה vwx לא יכול להכיל גם a וגם c?`,o:[`כי «|vwx|≤n», ויש ביניהם n אותיות b`,`כי «|vx|≥1»`,`כי v לפני x`,`כי i=0`],e:`מרחק של n+1 ומעלה בין ה-a האחרונה ל-c הראשונה.`},
+{id:'pq5',x:'prac',t:'cfl',k:'mc',q:`L1, L2 ח״ה. מה בהכרח ח״ה?`,o:[`«L_1∪L_2»`,`«L_1∩L_2»`,`«!{L_1}»`,`«L_1−L_2»`],e:`רק איחוד סגור. חיתוך, משלים והפרש לא.`},
+{id:'pq6',x:'prac',t:'cfl',k:'mc',q:`מעל «Σ={a}», שפה L ח״ה. מה נכון?`,o:[`L רגולרית`,`L סופית`,`L אינה רגולרית`,`L היא «a^*»`],e:`מעל אות אחת, ח״ה ⟺ רגולרית.`},
+{id:'pq7',x:'prac',t:'cfl',k:'open',q:`הוכיחו ש-שפות ח״ה אינן סגורות לחיתוך.`,s:`«L_1={a^nb^nc^m}» (ח״ה: «S→XC»), ‏«L_2={a^mb^nc^n}» (ח״ה: «S→AY»). החיתוך הוא «{a^nb^nc^n}», שאינה ח״ה (בר-הלל).`}
+];
+
+const REP = {
+  plus:'«L^+=L^*» ⟺ «ε∈L»', '7inf':'7 מחלקות ∩ אינסוף', twocmp:'שתי השוואות ⟵ לא ח״ה', nonpal:'דקדוק לא-פלינדרום',
+  parity:'זוגיות a מול b', product:'מצבים מקבלים במכפלה', flipnfa:'היפוך מקבלים באסל״ד', kleene:'משפט קלין',
+  oddb:'«(a+ba^*b)^*ba^*»', prefix:'הפרש ברישות', finite:'שפה סופית ומספר מצבים', primes:'ראשוניים ו-«L^*»',
+  ksq:'«a^{k²}»', shuffle:'ערבוב אותיות', general:'דקדוק כללי', cfclose:'סגירות ח״ה', chomsky:'היררכיית חומסקי',
+  eqab:'«#_a=#_b»', nerodeproof:'הוכחת נרוד', infunion:'אינסוף שפות, איחוד רגולרי'
+};
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function mx(x){
+  return esc(x)
+    .replace(/!\{([^}]*)\}/g,'<span class="ov">$1</span>')
+    .replace(/\^\{([^}]*)\}/g,'<sup>$1</sup>')
+    .replace(/_\{([^}]*)\}/g,'<sub>$1</sub>')
+    .replace(/\^([A-Za-z0-9*+])/g,'<sup>$1</sup>')
+    .replace(/_([A-Za-z0-9])/g,'<sub>$1</sub>');
+}
+function fm(s){ return s.replace(/«([^»]*)»/g,(m,x)=>'<span class="m'+(x.length>34?' wrapok':'')+'" dir="ltr">'+mx(x)+'</span>'); }
+const topicById = id => TOPICS.find(t=>t.id===id);
+const examById = id => EXAMS.find(e=>e.id===id);
+const realQ = Q.filter(q=>q.x!=='prac');
+const repCount = {}; realQ.forEach(q=>{ if(q.rep) repCount[q.rep]=(repCount[q.rep]||0)+1; });
+const sl = s => s===''?'ε':s;
+const cnt = (w,c) => w.split(c).length-1;
+
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem('modelim-progress')||'{}') || {}; } catch(e){ progress = {}; }
+function saveProg(){ try{ localStorage.setItem('modelim-progress', JSON.stringify(progress)); }catch(e){} }
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function wordsUpTo(al, L){ const out=['']; let layer=['']; for(let k=1;k<=L;k++){ const nx=[]; for(const w of layer) for(const c of al) nx.push(w+c); out.push(...nx); layer=nx; } return out; }
+
+function qCard(q){
+  const el = document.createElement('div'); el.className='q';
+  const tp = topicById(q.t), ex = examById(q.x);
+  const st = progress[q.id];
+  let head = `<div class="qhead">`;
+  head += q.x==='prac' ? `<span class="tag prac">תרגול נוסף</span>` : `<span class="tag">${ex.name}</span>`;
+  head += `<span class="tag">${tp.name}</span>`;
+  if(q.k==='open') head += `<span class="tag open">שאלה פתוחה</span>`;
+  if(q.rep && repCount[q.rep]>1) head += `<span class="tag rep">חוזרת ×${repCount[q.rep]}: ${fm(REP[q.rep])}</span>`;
+  if(st) head += `<span class="tag ${st==='ok'?'done-ok':'done-bad'}">${st==='ok'?'ידעתי':'לחזור'}</span>`;
+  head += `</div>`;
+  el.innerHTML = head + `<div class="qtext">${fm(q.q)}</div>`;
+  if(q.k==='mc'){
+    const box = document.createElement('div'); box.className='opts';
+    const order = shuffle(q.o.map((_,i)=>i));
+    const letters = ['א','ב','ג','ד'];
+    const btns = order.map((oi,pos)=>{
+      const b = document.createElement('button'); b.className='opt'; b.type='button';
+      b.innerHTML = `<span class="k">${letters[pos]}.</span><span>${fm(q.o[oi])}</span>`;
+      b.onclick = ()=>{
+        btns.forEach((bb,p)=>{ bb.disabled=true; if(order[p]===0) bb.classList.add('ok'); });
+        const right = oi===0; if(!right) b.classList.add('bad');
+        progress[q.id] = right?'ok':'bad'; saveProg();
+        const ex = document.createElement('div'); ex.className='expl';
+        ex.innerHTML = `<b class="${right?'v-ok':'v-bad'}">${right?'נכון.':'לא נכון.'}</b> ${fm(q.e)}`;
+        el.appendChild(ex);
+      };
+      box.appendChild(b); return b;
+    });
+    el.appendChild(box);
+  } else {
+    const row = document.createElement('div'); row.className='row';
+    const show = document.createElement('button'); show.className='btn ghost'; show.type='button'; show.textContent='הצג פתרון';
+    row.appendChild(show); el.appendChild(row);
+    show.onclick = ()=>{
+      show.remove();
+      const sol = document.createElement('div'); sol.className='sol'; sol.innerHTML = `<b>פתרון:</b><br>${fm(q.s)}`;
+      el.appendChild(sol);
+      const r2 = document.createElement('div'); r2.className='row'; r2.style.marginTop='10px';
+      const ok = document.createElement('button'); ok.className='btn okb'; ok.type='button'; ok.textContent='ידעתי';
+      const bad = document.createElement('button'); bad.className='btn badb'; bad.type='button'; bad.textContent='לא ידעתי, לחזור';
+      ok.onclick=()=>{progress[q.id]='ok';saveProg();r2.innerHTML='<span class="counter">נשמר. השאלה סומנה כ"ידעתי".</span>';};
+      bad.onclick=()=>{progress[q.id]='bad';saveProg();r2.innerHTML='<span class="counter">נשמר. השאלה תופיע במסנן "לחזור".</span>';};
+      r2.append(ok,bad); el.appendChild(r2);
+    };
+  }
+  return el;
+}
+
+function topicStats(id){
+  const qs = Q.filter(q=>q.t===id), rq = qs.filter(q=>q.x!=='prac');
+  return {n:qs.length, nExam:rq.length, exams:new Set(rq.map(q=>q.x)).size, done:qs.filter(q=>progress[q.id]==='ok').length};
+}
+
+/* =====================================================================
+   INTERACTIVE TOOLS
+   ===================================================================== */
+const TOOLS = {};
+
+/* --- language operations calculator --- */
+TOOLS.lang = el => {
+  el.innerHTML = `<div class="tt">מחשבון פעולות על שפות</div>
+  <div class="td">כתבו שפה סופית (מילים מופרדות בפסיק, «ε» למילה הריקה), בחרו פעולה, וקבלו את כל המילים בתוצאה עד אורך 6.</div>
+  <div class="fields"><div><label for="lg-in">השפה L</label><input type="text" id="lg-in" value="a, ab"></div>
+  <div><label for="lg-op">פעולה</label><select id="lg-op"><option value="sq">L·L</option><option value="cube">L·L·L</option><option value="star" selected>L* (עד אורך 6)</option><option value="plus">L+ (עד אורך 6)</option><option value="rev">היפוך L^R</option><option value="pre">כל הרישות</option><option value="sub">כל תתי-המילים</option></select></div></div>
+  <div class="out" id="lg-out"></div>`;
+  const inp=el.querySelector('#lg-in'), op=el.querySelector('#lg-op'), out=el.querySelector('#lg-out');
+  const run=()=>{
+    const L=[...new Set(inp.value.split(',').map(s=>s.trim()).map(s=>s==='ε'||s==='e'?'':s.replace(/\s/g,'')))];
+    const MAX=6; let R=new Set();
+    const cat=(A,B)=>{const S=new Set();A.forEach(x=>B.forEach(y=>{if((x+y).length<=MAX)S.add(x+y);}));return S;};
+    if(op.value==='sq') R=cat(L,L);
+    else if(op.value==='cube') R=cat([...cat(L,L)],L);
+    else if(op.value==='star'||op.value==='plus'){ let cur=new Set(op.value==='star'?['']:L.filter(w=>w.length<=MAX)); R=new Set(cur); if(op.value==='plus'){} for(let k=0;k<MAX+1;k++){ const nx=cat([...cur],L); let grew=false; nx.forEach(w=>{if(!R.has(w)){R.add(w);grew=true;}}); cur=nx; if(!grew)break; } }
+    else if(op.value==='rev') L.forEach(w=>R.add([...w].reverse().join('')));
+    else if(op.value==='pre') L.forEach(w=>{for(let i=0;i<=w.length;i++)R.add(w.slice(0,i));});
+    else if(op.value==='sub') L.forEach(w=>{for(let i=0;i<=w.length;i++)for(let j=i;j<=w.length;j++)R.add(w.slice(i,j));});
+    const arr=[...R].sort((a,b)=>a.length-b.length||a.localeCompare(b));
+    out.innerHTML=`<div class="counter">${arr.length} מילים${(op.value==='star'||op.value==='plus')?' (עד אורך 6, השפה עצמה אינסופית אם יש בה מילה לא ריקה)':''}:</div><div class="wordlist">${arr.map(w=>`<span>${esc(sl(w))}</span>`).join('')||'∅'}</div>`;
+  };
+  inp.oninput=run; op.onchange=run; run();
+};
+
+/* --- DFA runner --- */
+const DFAS = [
+ {n:'מספר זוגי של b-ים', S:['E','O'], s:'E', F:['E'], al:'ab', d:{E:{a:'E',b:'O'},O:{a:'O',b:'E'}}},
+ {n:'מסתיימות ב-ab', S:['q0','q1','q2'], s:'q0', F:['q2'], al:'ab', d:{q0:{a:'q1',b:'q0'},q1:{a:'q1',b:'q2'},q2:{a:'q1',b:'q0'}}},
+ {n:'מכילות aa', S:['q0','q1','q2'], s:'q0', F:['q2'], al:'ab', d:{q0:{a:'q1',b:'q0'},q1:{a:'q2',b:'q0'},q2:{a:'q2',b:'q2'}}},
+ {n:'#a mod 3 = 0', S:['0','1','2'], s:'0', F:['0'], al:'ab', d:{'0':{a:'1',b:'0'},'1':{a:'2',b:'1'},'2':{a:'0',b:'2'}}},
+ {n:'כל רישא: |#a−#b| ≤ 1', S:['-1','0','+1','trap'], s:'0', F:['-1','0','+1'], al:'ab', d:{'-1':{a:'0',b:'trap'},'0':{a:'+1',b:'-1'},'+1':{a:'trap',b:'0'},'trap':{a:'trap',b:'trap'}}},
+ {n:'a^m b^k, (m+k) mod 3 = 0', S:['A0','A1','A2','B0','B1','B2','trap'], s:'A0', F:['A0','B0'], al:'ab', d:{A0:{a:'A1',b:'B1'},A1:{a:'A2',b:'B2'},A2:{a:'A0',b:'B0'},B0:{a:'trap',b:'B1'},B1:{a:'trap',b:'B2'},B2:{a:'trap',b:'B0'},trap:{a:'trap',b:'trap'}}},
+ {n:'#a > 1 וגם #b < 2', S:['a0b0','a1b0','a2b0','a0b1','a1b1','a2b1','trap'], s:'a0b0', F:['a2b0','a2b1'], al:'ab', d:{a0b0:{a:'a1b0',b:'a0b1'},a1b0:{a:'a2b0',b:'a1b1'},a2b0:{a:'a2b0',b:'a2b1'},a0b1:{a:'a1b1',b:'trap'},a1b1:{a:'a2b1',b:'trap'},a2b1:{a:'a2b1',b:'trap'},trap:{a:'trap',b:'trap'}}}
+];
+TOOLS.dfa = el => {
+  el.innerHTML = `<div class="tt">מריץ אס״ד צעד-אחר-צעד</div>
+  <div class="td">בחרו אוטומט, כתבו מילה, ולחצו "צעד" כדי לראות איך הזיכרון מתעדכן בכל אות. השורה המודגשת היא המצב הנוכחי, והתא הצהוב הוא המעבר הבא.</div>
+  <div class="fields"><div><label for="df-p">אוטומט</label><select id="df-p">${DFAS.map((d,i)=>`<option value="${i}">${esc(d.n)}</option>`).join('')}</select></div>
+  <div><label for="df-w">מילה</label><input type="text" id="df-w" value="abba"></div></div>
+  <div class="row"><button type="button" class="btn" id="df-step">צעד ←</button><button type="button" class="btn ghost" id="df-all">הרץ עד הסוף</button><button type="button" class="btn ghost" id="df-reset">איפוס</button></div>
+  <div class="out" id="df-out"></div>`;
+  const sel=el.querySelector('#df-p'), w=el.querySelector('#df-w'), out=el.querySelector('#df-out');
+  let pos=0;
+  const render=()=>{
+    const A=DFAS[+sel.value]; const word=w.value.replace(/[^ab]/g,'');
+    if(word!==w.value) w.value=word;
+    let q=A.s; const path=[q]; for(let i=0;i<pos;i++){ q=A.d[q][word[i]]; path.push(q); }
+    const nextC = pos<word.length?word[pos]:null;
+    let t=`<div class="tscroll"><table class="ttab"><tr><th>מצב</th>${[...A.al].map(c=>`<th>${c}</th>`).join('')}</tr>`;
+    A.S.forEach(s=>{ t+=`<tr class="${s===q?'cur':''}"><td>${s===A.s?'→':''}${A.F.includes(s)?'*':''}${esc(s)}</td>${[...A.al].map(c=>`<td class="${s===q&&c===nextC?'hit':''}">${esc(A.d[s][c])}</td>`).join('')}</tr>`; });
+    t+=`</table></div>`;
+    let p='<b>'+esc(path[0])+'</b>'; for(let i=0;i<pos;i++) p+=` –${word[i]}→ <b>${esc(path[i+1])}</b>`;
+    const read = `<span style="font-family:var(--f-mono);direction:ltr;unicode-bidi:isolate"><b>${esc(word.slice(0,pos))}</b>${esc(word.slice(pos))}</span>`;
+    let v=''; if(pos===word.length){ const acc=A.F.includes(q); v=`<p class="verdict ${acc?'y':'n'}">${acc?'✓ המילה מתקבלת':'✗ המילה נדחית'} (הריצה הסתיימה ב-${esc(q)}, ${acc?'שהוא מקבל':'שאינו מקבל'})</p>`; }
+    out.innerHTML = `<p>נקרא עד עכשיו: ${read} (${pos}/${word.length})</p><div class="path">${p}</div>${t}${v}`;
+    el.querySelector('#df-step').disabled = pos>=word.length;
+  };
+  el.querySelector('#df-step').onclick=()=>{pos++;render();};
+  el.querySelector('#df-all').onclick=()=>{pos=w.value.length;render();};
+  el.querySelector('#df-reset').onclick=()=>{pos=0;render();};
+  sel.onchange=()=>{pos=0;render();}; w.oninput=()=>{pos=0;render();};
+  render();
+};
+
+/* --- regex tester --- */
+TOOLS.regex = el => {
+  el.innerHTML = `<div class="tt">בודק ביטויים רגולריים</div>
+  <div class="td">כתבו ביטוי בסימון של הקורס («+» = או, «*» = כוכב, ε = ריקה; אין צורך בסימון חזקה, «a^+» כותבים «aa*»). מוצגות כל המילים שהביטוי מקבל עד האורך שנבחר. זו דרך טובה לבדוק ביטוי שכתבתם.</div>
+  <div class="fields"><div style="grid-column:1/-1"><label for="rx-in">ביטוי</label><input type="text" id="rx-in" value="(a+ba*b)*ba*"></div>
+  <div><label for="rx-len">אורך מקסימלי</label><select id="rx-len"><option>3</option><option>4</option><option selected>5</option><option>6</option></select></div>
+  <div><label for="rx-w">בדיקת מילה</label><input type="text" id="rx-w" value="abab"></div></div>
+  <div class="row" style="margin-bottom:6px">${['(a+ba*b)*ba*','(0+10)*1*','(0+10+110)*(ε+1+11)','(b+aa*bb)*(a*+aa*b)','(01+10)*(ε+0+1)','(a+bbaa)*bb*'].map(s=>`<button type="button" class="chip" data-rx="${s}">${s}</button>`).join('')}</div>
+  <div class="out" id="rx-out"></div>`;
+  const inp=el.querySelector('#rx-in'), len=el.querySelector('#rx-len'), tw=el.querySelector('#rx-w'), out=el.querySelector('#rx-out');
+  el.querySelectorAll('[data-rx]').forEach(b=>b.onclick=()=>{inp.value=b.dataset.rx;run();});
+  const run=()=>{
+    const src=inp.value.replace(/\s/g,'');
+    let al=[...new Set(src.replace(/[^a-z0-9]/g,''))].sort(); if(!al.length) al=['a','b'];
+    let re; try{ re=new RegExp('^(?:'+src.replace(/ε/g,'').replace(/∅/g,'(?!)').replace(/\+/g,'|')+')$'); }catch(e){ out.innerHTML='<p class="verdict n">הביטוי לא תקין: בדקו שהסוגריים סגורים.</p>'; return; }
+    const L=+len.value; const all=wordsUpTo(al,Math.min(L, al.length>2?4:L)); const acc=all.filter(w=>re.test(w));
+    const t=tw.value.replace(/\s/g,''); const ok=re.test(t);
+    out.innerHTML=`<p>המילה «${esc(sl(t))}»: <span class="verdict ${ok?'y':'n'}">${ok?'מתקבלת ✓':'לא מתקבלת ✗'}</span></p>
+    <div class="counter">א״ב: {${al.join(',')}} · ${acc.length} מתוך ${all.length} המילים עד האורך הזה מתקבלות:</div><div class="wordlist">${acc.map(w=>`<span>${esc(sl(w))}</span>`).join('')||'(אף מילה)'}</div>`;
+    out.innerHTML = fm(out.innerHTML);
+  };
+  inp.oninput=run; len.onchange=run; tw.oninput=run; run();
+};
+
+/* --- Nerode explorer --- */
+const NER = [
+ {n:'מסתיימות ב-ab', al:'ab', L:6, K:6, p:w=>w.endsWith('ab')},
+ {n:'a*b*', al:'ab', L:6, K:6, p:w=>/^a*b*$/.test(w)},
+ {n:'#a mod 2 ≠ #b mod 2 (מעל a,b,c)', al:'abc', L:4, K:4, p:w=>cnt(w,'a')%2!==cnt(w,'b')%2},
+ {n:'a^m b^k, (m+k) mod 3 = 0', al:'ab', L:6, K:6, p:w=>/^a*b*$/.test(w)&&w.length%3===0},
+ {n:'#a > 1 וגם #b < 2', al:'ab', L:6, K:6, p:w=>cnt(w,'a')>1&&cnt(w,'b')<2},
+ {n:'כל רישא: −2 ≤ #a−#b ≤ 3', al:'ab', L:7, K:7, p:w=>{let d=0;for(const c of w){d+=c==='a'?1:-1;if(d<-2||d>3)return false;}return true;}},
+ {n:'a^(3k+5t) מעל {a}', al:'a', L:14, K:14, p:w=>![1,2,4,7].includes(w.length)},
+ {n:'מכילות a או bb, אבל לא את שתיהן (מעל a,b,c)', al:'abc', L:4, K:4, p:w=>(w.includes('a'))!==(w.includes('bb'))},
+ {n:'a^n b^n (לא רגולרית!)', al:'ab', L:6, K:7, p:w=>{const m=/^(a*)(b*)$/.exec(w);return !!m&&m[1].length===m[2].length;}},
+ {n:'ww (לא רגולרית!)', al:'ab', L:5, K:6, p:w=>w.length%2===0&&w.slice(0,w.length/2)===w.slice(w.length/2)}
+];
+TOOLS.nerode = el => {
+  el.innerHTML = `<div class="tt">חוקר מחלקות שקילות</div>
+  <div class="td">הכלי עובר על כל המילים הקצרות, ולכל אחת בודק אילו המשכים z מכניסים אותה לשפה. מילים עם אותה "חתימה" נמצאות באותה מחלקה. עבור שפה רגולרית המספר מתייצב. עבור שפה לא רגולרית הוא <b>ממשיך לגדול</b> כשמגדילים את האורך.</div>
+  <div class="fields"><div style="grid-column:1/-1"><label for="nr-p">שפה</label><select id="nr-p">${NER.map((d,i)=>`<option value="${i}">${esc(d.n)}</option>`).join('')}</select></div>
+  <div><label for="nr-L">אורך מילים מקסימלי</label><select id="nr-L"></select></div></div>
+  <div class="out" id="nr-out"></div>
+  <h4>מציאת מילה מפרידה</h4>
+  <div class="fields"><div><label for="nr-x">x</label><input type="text" id="nr-x" value="a"></div><div><label for="nr-y">y</label><input type="text" id="nr-y" value="b"></div></div>
+  <div id="nr-sep"></div>`;
+  const sel=el.querySelector('#nr-p'), Ls=el.querySelector('#nr-L'), out=el.querySelector('#nr-out'), X=el.querySelector('#nr-x'), Y=el.querySelector('#nr-y'), sep=el.querySelector('#nr-sep');
+  const fillL=()=>{const P=NER[+sel.value]; const opts=[]; for(let k=Math.max(2,P.L-3);k<=P.L;k++)opts.push(k); Ls.innerHTML=opts.map(k=>`<option ${k===P.L?'selected':''}>${k}</option>`).join('');};
+  const run=()=>{
+    const P=NER[+sel.value]; const al=[...P.al]; const W=wordsUpTo(al,+Ls.value); const Z=wordsUpTo(al,P.K);
+    const groups=new Map();
+    W.forEach(w=>{ const sig=Z.map(z=>P.p(w+z)?'1':'0').join(''); if(!groups.has(sig))groups.set(sig,[]); groups.get(sig).push(w); });
+    const rows=[...groups.entries()];
+    out.innerHTML=`<p><b>${rows.length}</b> מחלקות נמצאו בין המילים עד אורך ${Ls.value} (המשכים עד אורך ${P.K}).</p>
+    <div class="tscroll"><table><tr><th>#</th><th>נציג</th><th>עוד מילים במחלקה</th><th>בשפה?</th></tr>${rows.map(([sig,ws],i)=>`<tr><td>${i+1}</td><td><span class="m" dir="ltr">${esc(sl(ws[0]))}</span>${/^0+$/.test(sig)?' (מלכודת)':''}</td><td><span class="m wrapok" dir="ltr">${ws.slice(1,6).map(w=>esc(sl(w))).join(', ')}${ws.length>6?' …':''}</span></td><td>${P.p(ws[0])?'✓':''}</td></tr>`).join('')}</table></div>`;
+    sepRun();
+  };
+  const sepRun=()=>{
+    const P=NER[+sel.value]; const x=X.value.replace(/\s/g,''), y=Y.value.replace(/\s/g,'');
+    if([...x+y].some(c=>!P.al.includes(c))){ sep.innerHTML=`<p class="counter">השתמשו רק באותיות {${[...P.al].join(',')}}.</p>`; return; }
+    const Z=wordsUpTo([...P.al], Math.min(P.K+1,9)); const z=Z.find(z=>P.p(x+z)!==P.p(y+z));
+    sep.innerHTML = z===undefined ? `<p>לא נמצאה מילה מפרידה עד אורך ${Math.min(P.K+1,9)}, ולכן x ו-y כנראה <b>באותה מחלקה</b>.</p>`
+      : `<p>z = <span class="m" dir="ltr">${esc(sl(z))}</span> מפרידה: <span class="m" dir="ltr">${esc(sl(x+z))}</span> ${P.p(x+z)?'∈':'∉'} L, אבל <span class="m" dir="ltr">${esc(sl(y+z))}</span> ${P.p(y+z)?'∈':'∉'} L. לכן x ו-y <b>במחלקות שונות</b>.</p>`;
+  };
+  sel.onchange=()=>{fillL();run();}; Ls.onchange=run; X.oninput=sepRun; Y.oninput=sepRun;
+  fillL(); run();
+};
+
+/* --- pumping playground --- */
+const PUMP = [
+ {n:'a^n b^n, z = a⁴b⁴ (בחירה טובה)', z:'aaaabbbb', N:4, p:w=>{const m=/^(a*)(b*)$/.exec(w);return !!m&&m[1].length===m[2].length;}},
+ {n:'#a = #b, z = (ab)⁴ (בחירה גרועה)', z:'abababab', N:4, p:w=>cnt(w,'a')===cnt(w,'b')},
+ {n:'פלינדרומים, z = ba⁴b (בחירה גרועה)', z:'baaaab', N:4, p:w=>w===[...w].reverse().join('')},
+ {n:'פלינדרומים, z = a⁴ba⁴ (בחירה טובה)', z:'aaaabaaaa', N:4, p:w=>w===[...w].reverse().join('')},
+ {n:'a^(k²), z = a¹⁶ (n=4)', z:'a'.repeat(16), N:4, p:w=>/^a*$/.test(w)&&Number.isInteger(Math.sqrt(w.length))},
+ {n:'a^m b^k, m≠k, z = a³b⁹ (טריק n!, n=3)', z:'aaabbbbbbbbb', N:3, p:w=>{const m=/^(a*)(b*)$/.exec(w);return !!m&&m[1].length!==m[2].length;}},
+ {n:'a^m b^k, m≠k, z = a³b⁴ (בלי n!, בחירה גרועה)', z:'aaabbbb', N:3, p:w=>{const m=/^(a*)(b*)$/.exec(w);return !!m&&m[1].length!==m[2].length;}}
+];
+TOOLS.pump = el => {
+  el.innerHTML = `<div class="tt">מגרש משחקים: למת הניפוח</div>
+  <div class="td">כאן <b>אתם היריב</b>: בוחרים פירוק «z=uvw» (עם «|uv|≤n», «|v|≥1») וערך i, ורואים אם המילה המנופחת נשארת בשפה. בחירת z טובה היא כזו שכל פירוק נשבר עבור i כלשהו. הכלי בודק את זה בשבילכם.</div>
+  <div class="fields"><div style="grid-column:1/-1"><label for="pm-p">שפה ומילה</label><select id="pm-p">${PUMP.map((d,i)=>`<option value="${i}">${esc(d.n)}</option>`).join('')}</select></div></div>
+  <div class="fields">
+   <div><label for="pm-u">|u|</label><div class="range"><input type="range" id="pm-u" min="0" max="3" value="0"><output id="pm-uo">0</output></div></div>
+   <div><label for="pm-v">|v|</label><div class="range"><input type="range" id="pm-v" min="1" max="4" value="1"><output id="pm-vo">1</output></div></div>
+   <div><label for="pm-i">i</label><div class="range"><input type="range" id="pm-i" min="0" max="8" value="2"><output id="pm-io">2</output></div></div>
+  </div>
+  <div class="out" id="pm-out"></div>`;
+  const sel=el.querySelector('#pm-p'), U=el.querySelector('#pm-u'), V=el.querySelector('#pm-v'), I=el.querySelector('#pm-i'), out=el.querySelector('#pm-out');
+  const lim=()=>{const P=PUMP[+sel.value]; U.max=P.N-1; if(+U.value>P.N-1)U.value=P.N-1; V.max=P.N-(+U.value); if(+V.value>+V.max)V.value=V.max;};
+  const run=()=>{
+    lim(); const P=PUMP[+sel.value]; const u=+U.value, v=+V.value, i=+I.value;
+    el.querySelector('#pm-uo').textContent=u; el.querySelector('#pm-vo').textContent=v; el.querySelector('#pm-io').textContent=i;
+    const z=P.z, su=z.slice(0,u), sv=z.slice(u,u+v), sw=z.slice(u+v);
+    const zi=su+sv.repeat(i)+sw; const inL=P.p(zi);
+    const survivors=[]; for(let a=0;a<P.N;a++)for(let b=1;a+b<=P.N;b++){ const xu=z.slice(0,a),xv=z.slice(a,a+b),xw=z.slice(a+b); let broke=null; for(let k=0;k<=8;k++){ if(!P.p(xu+xv.repeat(k)+xw)){broke=k;break;} } if(broke===null) survivors.push(`u=${sl(xu)}, v=${xv}`); }
+    const show=s=>s.length>40?s.slice(0,40)+'…':s;
+    out.innerHTML=`<p>n = ${P.N}. ‏z בשפה: ${P.p(z)?'✓':'✗'}</p>
+    <div class="zword"><span class="u">${esc(su)}</span><span class="v">${esc(sv)}</span><span class="w">${esc(sw)}</span></div>
+    <p>u = <span class="m" dir="ltr">${esc(sl(su))}</span>, v = <span class="m" dir="ltr">${esc(sv)}</span>, w = <span class="m" dir="ltr">${esc(sl(sw))}</span></p>
+    <p>‏«uv^iw» עם i=${i}: <span class="m" dir="ltr">${esc(show(sl(zi)))}</span> (אורך ${zi.length}), <span class="verdict ${inL?'y':'n'}">${inL?'עדיין בשפה':'יצאה מהשפה ✓ סתירה'}</span></p>
+    <div class="callout ${survivors.length?'warn':'idea'}">${survivors.length?`<b>z הזו לא מתאימה להוכחה.</b> יש פירוקים שאף i (0 עד 8) לא שובר, למשל: <span class="m wrapok" dir="ltr">${esc(survivors.slice(0,3).join(' ; '))}</span>. היריב יבחר באחד מהם.`:`<b>z טובה.</b> כל פירוק אפשרי נשבר עבור i כלשהו, ולכן ההוכחה תעבוד.`}</div>`;
+    out.innerHTML = fm(out.innerHTML);
+  };
+  sel.onchange=()=>{U.value=0;V.value=1;run();}; U.oninput=run; V.oninput=run; I.oninput=run; run();
+};
+
+/* --- CFG generator --- */
+const CFGP = [
+ ['a^n b^n','S → aSb | ε'],
+ ['#a = #b','S → aSbS | bSaS | ε'],
+ ['לא-פלינדרומים','S → aSa | bSb | aXb | bXa\nX → aX | bX | ε'],
+ ['רק aSb|bSa (חסר!)','S → aSb | bSa | ε'],
+ ['a^n b^n a^k b^k','S → XX\nX → aXb | ε'],
+ ['m < 2k (2020)','S → Sb | aSb | aaSb | b | ab'],
+ ['זוגי ולא ww (2023)','S → XY | YX\nX → TXT | a\nY → TYT | b\nT → a | b'],
+ ['שפה ריקה (2025)','S → XY\nX → aXb | ε\nY → aYa | bYb']
+];
+TOOLS.cfg = el => {
+  el.innerHTML = `<div class="tt">מחולל מילים מדקדוק</div>
+  <div class="td">כתבו דקדוק (שורה לכל משתנה, אות גדולה = משתנה, «ε» = ריקה, «→» או «->»). הכלי מייצר את כל המילים עד האורך שנבחר. אפשר לבדוק כך דקדוק שכתבתם או לזהות שפה של דקדוק נתון.</div>
+  <div class="row" style="margin-bottom:8px">${CFGP.map((p,i)=>`<button type="button" class="chip" data-g="${i}">${esc(p[0])}</button>`).join('')}</div>
+  <div class="fields"><div style="grid-column:1/-1"><label for="cg-in">דקדוק</label><textarea id="cg-in">S → aSbS | bSaS | ε</textarea></div>
+  <div><label for="cg-len">אורך מקסימלי</label><select id="cg-len"><option>4</option><option>5</option><option selected>6</option><option>7</option></select></div>
+  <div><label for="cg-w">האם המילה נוצרת?</label><input type="text" id="cg-w" value="abba"></div></div>
+  <div class="out" id="cg-out"></div>`;
+  const ta=el.querySelector('#cg-in'), len=el.querySelector('#cg-len'), tw=el.querySelector('#cg-w'), out=el.querySelector('#cg-out');
+  el.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{ta.value=CFGP[+b.dataset.g][1];run();});
+  const run=()=>{
+    const rules={}; let start=null; let err='';
+    ta.value.split('\n').map(s=>s.trim()).filter(Boolean).forEach(line=>{
+      const m=line.split(/→|->/); if(m.length!==2){err='כל שורה צריכה להיות מהצורה X → …';return;}
+      const lhs=m[0].trim(); if(!/^[A-Z]$/.test(lhs)){err='בצד שמאל צריך משתנה יחיד (אות גדולה).';return;}
+      if(!start)start=lhs; rules[lhs]=(rules[lhs]||[]).concat(m[1].split('|').map(a=>a.replace(/\s/g,'').replace(/ε/g,'')));
+    });
+    if(err||!start){ out.innerHTML=`<p class="verdict n">${esc(err||'אין כללים.')}</p>`; return; }
+    const MAX=+len.value; const words=new Set(); const seen=new Set([start]); const queue=[start]; let steps=0, cut=false;
+    while(queue.length){ if(++steps>150000){cut=true;break;} const f=queue.shift(); const i=f.search(/[A-Z]/);
+      if(i<0){ if(f.length<=MAX) words.add(f); continue; }
+      const V=f[i]; for(const alt of (rules[V]||[])){ const g=f.slice(0,i)+alt+f.slice(i+1); const term=g.replace(/[A-Z]/g,'').length; const vars=g.length-term; if(term>MAX||vars>MAX+3||seen.has(g))continue; seen.add(g); queue.push(g); } }
+    const arr=[...words].sort((a,b)=>a.length-b.length||a.localeCompare(b));
+    const t=tw.value.replace(/\s/g,'');
+    const verdict = t.length>MAX ? `<span class="counter">המילה ארוכה מהאורך שנבחר.</span>` : (words.has(t)?`<span class="verdict y">נוצרת ✓</span>`:`<span class="verdict n">לא נוצרת ✗</span>`);
+    out.innerHTML=`<p>המילה <span class="m" dir="ltr">${esc(sl(t))}</span>: ${verdict}</p><div class="counter">${arr.length} מילים עד אורך ${MAX}${cut?' (החיפוש נעצר מוקדם)':''}:</div><div class="wordlist">${arr.map(w=>`<span>${esc(sl(w))}</span>`).join('')||'(אף מילה, כלומר השפה ריקה עד האורך הזה)'}</div>`;
+  };
+  ta.oninput=run; len.onchange=run; tw.oninput=run; run();
+};
+
+/* --- PDA tracer --- */
+TOOLS.pda = el => {
+  el.innerHTML = `<div class="tt">מעקב אחרי מחסנית</div>
+  <div class="td">רואים בדיוק מה המחסנית "זוכרת" בכל צעד. ראש המחסנית מימין.</div>
+  <div class="fields"><div><label for="pd-m">מכונה</label><select id="pd-m"><option value="anbn">a^n b^n</option><option value="eq">#a = #b (כל סדר)</option><option value="wcw">w c w^R (פלינדרום עם סמן)</option></select></div>
+  <div><label for="pd-w">מילה</label><input type="text" id="pd-w" value="aaabbb"></div></div>
+  <div class="out" id="pd-out"></div>`;
+  const m=el.querySelector('#pd-m'), w=el.querySelector('#pd-w'), out=el.querySelector('#pd-out');
+  const run=()=>{
+    const word=w.value.replace(/\s/g,''); let st=[]; const rows=[]; let ok=true, why='';
+    if(m.value==='anbn'){ let phase='a';
+      for(const c of word){ if(c==='a'){ if(phase==='b'){ok=false;why='a אחרי b';break;} st.push('A'); rows.push([c,'דחיפת A']); }
+        else if(c==='b'){ phase='b'; if(!st.length){ok=false;why='b בלי A להוציא';break;} st.pop(); rows.push([c,'הוצאת A']); } else {ok=false;why='אות לא מוכרת';break;} rows[rows.length-1].push(st.join('')); }
+      if(ok&&st.length){ok=false;why='נשארו A-ים במחסנית';}
+    } else if(m.value==='eq'){
+      for(const c of word){ const want=c==='a'?'B':'A', mine=c==='a'?'A':'B'; if(c!=='a'&&c!=='b'){ok=false;why='אות לא מוכרת';break;}
+        if(st.length&&st[st.length-1]===want){ st.pop(); rows.push([c,`הוצאת ${want} (מתקזז)`,st.join('')]); } else { st.push(mine); rows.push([c,`דחיפת ${mine}`,st.join('')]); } }
+      if(ok&&st.length){ok=false;why='נשאר עודף במחסנית';}
+    } else { let phase='push';
+      for(const c of word){ if(phase==='push'){ if(c==='c'){phase='pop';rows.push([c,'עוברים לשלב ההשוואה',st.join('')]);continue;} st.push(c.toUpperCase()); rows.push([c,`דחיפת ${c.toUpperCase()}`,st.join('')]); }
+        else { if(c==='c'){ok=false;why='c שנייה';break;} if(!st.length||st[st.length-1]!==c.toUpperCase()){ok=false;why=`ציפינו ל-${st.length?st[st.length-1].toLowerCase():'סוף'} וקיבלנו ${c}`;break;} st.pop(); rows.push([c,`הוצאת ${c.toUpperCase()} (תואם)`,st.join('')]); } }
+      if(ok&&(phase==='push'||st.length)){ok=false;why=phase==='push'?'אין c':'נשאר משהו במחסנית';}
+    }
+    out.innerHTML=`<div class="tscroll"><table><tr><th>צעד</th><th>אות</th><th>פעולה</th><th>מחסנית</th></tr>${rows.map((r,i)=>`<tr><td>${i+1}</td><td><span class="m">${esc(r[0])}</span></td><td>${esc(r[1])}</td><td><div class="stackviz">${(r[2]||'').split('').map(s=>`<span>${s}</span>`).join('')||'⊥'}</div></td></tr>`).join('')}</table></div>
+    <p class="verdict ${ok?'y':'n'}">${ok?'✓ מתקבלת: המחסנית ריקה בסוף':'✗ נדחית: '+esc(why)}</p>`;
+  };
+  m.onchange=()=>{w.value={anbn:'aaabbb',eq:'abbaab',wcw:'abcba'}[m.value];run();}; w.oninput=run; run();
+};
+
+/* =====================================================================
+   VIEWS
+   ===================================================================== */
+function viewHome(){
+  const sorted = TOPICS.map(t=>({t,...topicStats(t.id)})).sort((a,b)=>b.nExam-a.nExam);
+  const max = sorted[0].nExam;
+  const totalOk = Q.filter(q=>progress[q.id]==='ok').length;
+  app.innerHTML = `
+  <div class="eyebrow">ניתוח 15 מבחנים, 2017–2026</div>
+  <h1>מודלים חישוביים, מאפס.</h1>
+  <p class="lead">לכל נושא יש לשונית משלו: הסבר מההתחלה, הרבה דוגמאות פתורות, כלי אינטראקטיבי לניסויים, שאלות תרגול, ואז כל השאלות מהמבחנים.</p>
+  <div class="stats">
+    <div class="stat"><b>${TOPICS.length}</b><span>נושאים</span></div>
+    <div class="stat"><b>${realQ.length}</b><span>שאלות מבחן עם פתרון</span></div>
+    <div class="stat"><b>${Q.length-realQ.length}</b><span>שאלות תרגול נוספות</span></div>
+    <div class="stat"><b>${totalOk}</b><span>סימנתם "ידעתי"</span></div>
+  </div>
+
+  <h2>על מה הקורס, בפסקה אחת</h2>
+  <p>"שפה" היא קבוצת מילים, ובעצם בעיה של כן/לא: האם המילה בקבוצה. הקורס שואל איזה סוג של מכונה מסוגל לזהות איזו שפה. <b>אוטומט סופי</b> (זיכרון סופי) מזהה את השפות ה<b>רגולריות</b>. <b>אוטומט מחסנית</b> (זיכרון של ערימה) מזהה את השפות ה<b>חופשיות הקשר</b>. ויש שפות שאף אחת מהמכונות האלה לא מזהה. רוב השאלות במבחן הן: לבנות מכונה, להבין מה מכונה עושה, או להוכיח שמכונה מסוג מסוים <b>לא</b> מסוגלת.</p>
+
+  <h2>סדר הלימוד</h2>
+  <p>כל נושא נשען על הקודמים. מומלץ ללכת לפי המספרים:</p>
+  <div class="topiccards">${TOPICS.map((t,i)=>{const s=topicStats(t.id);return `<a class="tcard" href="#t-${t.id}"><div class="eyebrow">נושא ${i+1}</div><div class="tn">${t.name}</div><div class="ts">${fm(t.short)}</div><div class="tm">${t.sections.length} פרקים · ${s.nExam} שאלות מבחן · ${s.n-s.nExam} תרגול · ידעתי ${s.done}/${s.n}</div><div class="prog"><i style="width:${s.n?(s.done/s.n*100):0}%"></i></div></a>`}).join('')}</div>
+
+  <h2>מה שואלים, לפי תדירות</h2>
+  <p>מספר השאלות מכל נושא בכל 15 המבחנים יחד.</p>
+  <div class="box"><div class="freq">
+  ${sorted.map(s=>`<a class="frow" href="#t-${s.t.id}"><span class="fname">${s.t.name}</span><span class="ftrack"><span class="ffill" style="width:${(s.nExam/max*100).toFixed(1)}%"></span></span><span class="fnum">${s.nExam}</span></a>`).join('')}
+  </div></div>
+  <div class="callout"><b>מבנה המבחן בשנים האחרונות (2024–2026):</b> 2 שאלות פתוחות × 30 נקודות + 4 אמריקאיות × 10 נקודות, 3 שעות, בלי חומר עזר.<br>
+  השאלות הפתוחות כמעט תמיד מתוך: <mark>כתבו דקדוק ח״ה</mark> · <mark>הוכיחו בנרוד</mark> · <mark>תנו דוגמה לשפות</mark> · כתבו ביטוי רגולרי · הוכיחו או הפריכו.</div>
+
+  <h2>איך מגיעים ל-100</h2>
+  <p>מי שמבין את החומר מאבד בדרך כלל נקודות על ניסוח, ולא על ידע. אלה הדברים שבודקים בכל סוג של שאלה פתוחה:</p>
+  <div class="tscroll"><table>
+  <tr><th>סוג השאלה</th><th>מה חייב להופיע בתשובה</th><th>איפה מאבדים נקודות</th></tr>
+  <tr><td>הוכחה בנרוד</td><td>קבוצה אינסופית מפורשת, z לכל זוג «i≠j», הסבר <b>למה</b> «w_jz∉L», ומשפט סיכום שמזכיר את מייהיל–נרוד</td><td>z שעובד רק לחלק מהזוגות. "ברור ש-…∉L" בלי נימוק</td></tr>
+  <tr><td>הוכחה בלמת הניפוח</td><td>"נניח בשלילה", n כללי, «z∈L» עם «|z|≥n», שימוש ב-«|uv|≤n» כדי לקבוע ממה v מורכבת, i מפורש, וסתירה</td><td>בחירת הפירוק בעצמכם. שכחת מקרה של v. z שאינה בשפה</td></tr>
+  <tr><td>כתיבת דקדוק</td><td>כללים מלאים + משפט הסבר לכל משתנה ("X מייצר…")</td><td>שכחת מקרה הבסיס, «ε» מיותרת (כמו «m≥1»), אי-שוויון חזק מול חלש</td></tr>
+  <tr><td>ביטוי רגולרי</td><td>הביטוי + בדיקה על 3–4 מילים (בפנים ובחוץ)</td><td>קצוות: «ε», מילים באורך 1, ההתחלה והסוף</td></tr>
+  <tr><td>"תנו דוגמה"</td><td>להציג במפורש את השפות <b>ואת התוצאה</b> (למשל "האיחוד הוא «a^*»")</td><td>לא לציין מה יוצא. דוגמה זהה בשני סעיפים כשנדרשו שונות</td></tr>
+  <tr><td>הוכיחו או הפריכו</td><td>להכריע במשפט הראשון. בהפרכה: דוגמה נגדית מפורשת ובדיקה שהיא מקיימת את ההנחות ומפרה את המסקנה</td><td>דוגמה נגדית שלא מקיימת את ההנחות (למשל A ו-B לא שונות)</td></tr>
+  </table></div>
+  <div class="callout idea"><b>באמריקאיות:</b> לפני שבוחרים תשובה, מנסים להפריך כל אחת מהאחרות עם «∅», «Σ^*», שפה סופית או «a^nb^n». אם תשובה אחת שורדת, היא הנכונה. במילים כמו "אינה בהכרח נכונה" ו"ייתכן" כדאי לסמן לעצמכם את ה"לא" בשאלה, כי שם קל להתבלבל.</div>
+  <p><b>שיטה מומלצת:</b> לסיים נושא רק כשכל שאלות המבחן שלו מסומנות "ידעתי", <b>וגם</b> כשאפשר לכתוב את הדוגמאות הפתורות על דף בלי להציץ. בסוף עוברים למצב <a href="#drill">תרגול</a> עם "רק מבחנים", ואחר כך פותרים את 2025ב ו-2026א מלאים תחת שעון.</p>`;
+}
+
+function viewTopic(id){
+  const t = topicById(id); if(!t){ viewHome(); return; }
+  const i = TOPICS.indexOf(t); const s = topicStats(id);
+  const examQs = Q.filter(q=>q.t===id && q.x!=='prac').sort((a,b)=>(b.rep&&repCount[b.rep]>1?1:0)-(a.rep&&repCount[a.rep]>1?1:0));
+  const pracQs = Q.filter(q=>q.t===id && q.x==='prac');
+  const toc = t.sections.map((sec,k)=>[`sec${k}`,sec.t]);
+  if(t.tool) toc.push(['sec-tool','כלי אינטראקטיבי']);
+  if(pracQs.length) toc.push(['sec-prac',`תרגול (${pracQs.length})`]);
+  toc.push(['sec-exam',`שאלות מבחן (${examQs.length})`]);
+  app.innerHTML = `<div class="eyebrow">נושא ${i+1} מתוך ${TOPICS.length} · ${s.nExam} שאלות ב-${s.exams} מבחנים</div><h1>${t.name}</h1>
+  <p class="lead">${fm(t.short)}</p>
+  <div class="toc">${toc.map(([a,l])=>`<button type="button" data-to="${a}">${fm(l)}</button>`).join('')}</div>
+  ${t.sections.map((sec,k)=>`<h2 id="sec${k}">${fm(sec.t)}</h2>${fm(sec.h)}`).join('')}
+  ${t.tool?`<h2 id="sec-tool">כלי אינטראקטיבי</h2><p>לשחק עם הכלי עד שהרעיון יושב. זה עוזר יותר מעוד קריאה.</p><div class="tool" id="toolbox"></div>`:''}
+  ${pracQs.length?`<h2 id="sec-prac">תרגול: בדקו שהבנתם</h2><p>שאלות שכתבתי כדי לבדוק הבנה לפני שאלות המבחן. הן קצרות יותר ומתמקדות ברעיון אחד בכל פעם.</p><div class="stack" id="praclist"></div>`:''}
+  <h2 id="sec-exam">שאלות מהמבחנים</h2><p>השאלות שחוזרות מופיעות ראשונות. בשאלות האמריקאיות סדר התשובות מתערבב בכל טעינה.</p>
+  <div class="stack" id="qlist"></div>
+  <div class="row" style="margin-top:28px;justify-content:space-between">
+    ${i>0?`<a class="btn ghost" href="#t-${TOPICS[i-1].id}">→ ${TOPICS[i-1].name}</a>`:'<span></span>'}
+    ${i<TOPICS.length-1?`<a class="btn" href="#t-${TOPICS[i+1].id}">${TOPICS[i+1].name} ←</a>`:''}
+  </div>`;
+  app.querySelectorAll('[data-to]').forEach(b=>b.onclick=()=>{ const el=document.getElementById(b.dataset.to); if(el){ const y=el.getBoundingClientRect().top+window.scrollY-110; window.scrollTo({top:y,behavior:'smooth'}); }});
+  if(t.tool) TOOLS[t.tool](document.getElementById('toolbox'));
+  const pl=document.getElementById('praclist'); if(pl) pracQs.forEach(q=>pl.appendChild(qCard(q)));
+  const list = document.getElementById('qlist'); examQs.forEach(q=>list.appendChild(qCard(q)));
+}
+
+let drill = {topic:'all', kind:'all', src:'all', filter:'all', idx:0, deck:null};
+function buildDeck(){
+  let qs = Q.filter(q=>(drill.topic==='all'||q.t===drill.topic)&&(drill.kind==='all'||q.k===drill.kind)&&(drill.src==='all'||(drill.src==='exam'?q.x!=='prac':q.x==='prac')));
+  if(drill.filter==='bad') qs = qs.filter(q=>progress[q.id]==='bad');
+  if(drill.filter==='new') qs = qs.filter(q=>!progress[q.id]);
+  drill.deck = shuffle(qs); drill.idx = 0;
+}
+function viewDrill(){
+  if(!drill.deck) buildDeck();
+  const chip = (group,val,label)=>`<button type="button" class="chip ${drill[group]===val?'on':''}" data-g="${group}" data-v="${val}">${label}</button>`;
+  app.innerHTML = `<div class="eyebrow">מצב תרגול</div><h1>תרגול מעורבב</h1>
+  <p class="lead">שאלה אחת בכל פעם, בסדר אקראי. כדאי לחזור לכאן אחרי כל נושא כדי לרענן את הקודמים.</p>
+  <div class="stack" style="margin-top:18px">
+    <div class="chips">${chip('topic','all','כל הנושאים')}${TOPICS.map(t=>chip('topic',t.id,t.name)).join('')}</div>
+    <div class="chips">${chip('src','all','מבחנים + תרגול')}${chip('src','exam','רק מבחנים')}${chip('src','prac','רק תרגול')}<span style="width:10px"></span>${chip('kind','all','כל הסוגים')}${chip('kind','mc','אמריקאיות')}${chip('kind','open','פתוחות')}</div>
+    <div class="chips">${chip('filter','all','הכל')}${chip('filter','new','עוד לא ניסיתי')}${chip('filter','bad','לחזור')}</div>
+  </div>
+  <div class="drillbar"><span class="counter" id="ctr"></span><div class="row"><button type="button" class="btn ghost" id="reshuf">ערבב מחדש</button><button type="button" class="btn" id="next">השאלה הבאה ←</button></div></div>
+  <div id="slot"></div>`;
+  app.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{drill[c.dataset.g]=c.dataset.v; buildDeck(); viewDrill();});
+  document.getElementById('reshuf').onclick=()=>{buildDeck();renderSlot();};
+  document.getElementById('next').onclick=()=>{drill.idx++;renderSlot();};
+  renderSlot();
+}
+function renderSlot(){
+  const slot = document.getElementById('slot'), ctr = document.getElementById('ctr'), next = document.getElementById('next');
+  const d = drill.deck;
+  if(!d.length){ slot.innerHTML = `<div class="box"><p>אין שאלות שמתאימות לסינון הזה.${drill.filter==='bad'?' עוד לא סימנתם אף שאלה כ"לחזור".':''}</p></div>`; ctr.textContent=''; next.disabled=true; return; }
+  if(drill.idx>=d.length){ const ok=d.filter(q=>progress[q.id]==='ok').length; slot.innerHTML = `<div class="box"><h3>סיימתם את הסבב</h3><p>${ok} מתוך ${d.length} מסומנות "ידעתי". לחצו "ערבב מחדש" לסבב נוסף, או עברו לסינון "לחזור".</p></div>`; ctr.textContent=`${d.length} / ${d.length}`; next.disabled=true; return; }
+  next.disabled=false;
+  ctr.textContent = `שאלה ${drill.idx+1} מתוך ${d.length}`;
+  slot.innerHTML=''; slot.appendChild(qCard(d[drill.idx]));
+}
+
+function viewTricks(){
+  const T = [
+    ['«L^+=L^*» ⟺ «ε∈L»','7 שאלות','lang'],
+    ['משפט קלין: בוחרים את התשובה עם "ביטוי רגולרי"','5 שאלות','regex'],
+    ['«#_a mod 2 ≠ #_b mod 2» (או «=») ⟵ 2 מצבים','3 שאלות','nerode'],
+    ['הפרש ברישות בטווח «[−x,y]» ⟵ «x+y+1» מצבים, ועוד מלכודת','3 שאלות','nerode'],
+    ['אוטומט מכפלה: «∩=F_1×F_2», «−=F_1×!{F_2}», «Δ=(F_1×!{F_2})∪(!{F_1}×F_2)»','3 שאלות','fa'],
+    ['היפוך מקבלים באסל״ד ⟵ «L(B)⊇!{L(A)}» (לא שוויון)','2 שאלות','fa'],
+    ['«(a+ba^*b)^*ba^*» = מספר אי-זוגי של b-ים','2 שאלות','regex'],
+    ['7 מחלקות ∩ אינסוף ⟵ אי אפשר לדעת','2 שאלות','nerode'],
+    ['אינסוף שפות לא ח״ה עם איחוד רגולרי: «{a^{n²+k}}», האיחוד «a^*»','2 שאלות פתוחות, זהות','closure'],
+    ['ראשוניים: «{a^p}» אינה ח״ה, אבל «{a^p}^*={a^n|n≠1}» רגולרית (3 מצבים)','3 שאלות','closure'],
+    ['שתי השוואות בו-זמנית ⟵ L אינה ח״ה ו-«!{L}» ח״ה','3 שאלות','cfl'],
+    ['לא-פלינדרום: «S→aSa|bSb|aXb|bXa», «X→aX|bX|ε»','4 שאלות','cfg'],
+    ['שפה סופית: המילה הארוכה ביותר קצרה ממספר המצבים','3 שאלות','fa'],
+    ['הוכחת נרוד: «w_i=a^i», ו-z מתאים לכל שפה','5 שאלות פתוחות','nerode'],
+    ['שפות ח״ה לא סגורות לחיתוך, למשלים ולמיזוג 1-1','3 שאלות','cfl'],
+    ['לינארי ימני ≡ לינארי שמאלי. תלוי הקשר חזק יותר מח״ה','2 שאלות','cfl'],
+    ['בר-הלל: «n=2^k» (k = מספר המשתנים בצורת חומסקי)','2 שאלות','cfl'],
+    ['A רגולרית ו-«AΔB» רגולרית ⟵ B רגולרית (עם «∪», «∩», «−» לא)','1 שאלה','closure'],
+    ['«S·R=S», «S≠∅» ⟵ «ε∈R»','1 שאלה','lang'],
+    ['«{a^{3k+5t}}» ⟵ 9 מחלקות. «(m+k) mod 3» ⟵ 7. «#_a>1, #_b<2» ⟵ 7','3 שאלות','nerode']
+  ];
+  app.innerHTML = `<div class="eyebrow">לקרוא שוב בבוקר המבחן</div><h1>שליפות</h1>
+  <p class="lead">העובדות שהופיעו שוב ושוב. אם משהו כאן לא ברור, הקישור מוביל להסבר המלא.</p>
+  <div class="box" style="margin-top:18px">${T.map((x,i)=>`<div class="trick"><span class="n">${i+1}</span><div><div>${fm(x[0])}</div><div class="s">${x[1]} · <a href="#t-${x[2]}">${topicById(x[2]).name}</a></div></div></div>`).join('')}</div>`;
+}
+
+function viewExams(){
+  app.innerHTML = `<div class="eyebrow">ארכיון</div><h1>לפי מבחן</h1>
+  <p class="lead">כל מבחן בנפרד, לתרגול בתנאי אמת. 2025ב ו-2026א הם הקרובים ביותר למבנה הנוכחי. שאלות שנשענו על ציור שלא ניתן לשחזר מהקובץ הושמטו.</p>
+  <div class="stack" style="margin-top:18px" id="exlist"></div>`;
+  const list = document.getElementById('exlist');
+  EXAMS.filter(e=>e.id!=='prac').reverse().forEach(ex=>{
+    const qs = Q.filter(q=>q.x===ex.id);
+    const d = document.createElement('details'); d.className='exam';
+    d.innerHTML = `<summary>${ex.name}<span>${qs.length} שאלות · ${ex.fmt}</span></summary>`;
+    const st = document.createElement('div'); st.className='stack';
+    d.appendChild(st);
+    d.addEventListener('toggle',()=>{ if(d.open && !st.childElementCount) qs.forEach(q=>st.appendChild(qCard(q))); });
+    list.appendChild(d);
+  });
+}
+
+/* =====================================================================
+   NAV + ROUTER
+   ===================================================================== */
+document.getElementById('tabs').innerHTML =
+  `<a href="#home" data-r="home">סקירה</a><span class="sep"></span>` +
+  TOPICS.map((t,i)=>`<a href="#t-${t.id}" data-r="t-${t.id}"><span class="num">${i+1}</span>${t.name}</a>`).join('') +
+  `<span class="sep"></span><a href="#drill" data-r="drill">תרגול</a><a href="#tricks" data-r="tricks">שליפות</a><a href="#exams" data-r="exams">מבחנים</a>`;
+function route(){
+  const h = (location.hash||'#home').slice(1);
+  let r = h;
+  if(h.startsWith('t-') && topicById(h.slice(2))) viewTopic(h.slice(2));
+  else if(h==='drill') viewDrill();
+  else if(h==='tricks') viewTricks();
+  else if(h==='exams') viewExams();
+  else { r='home'; viewHome(); }
+  document.querySelectorAll('#tabs a').forEach(a=>{ const on=a.dataset.r===r; a.classList.toggle('on',on); if(on) a.scrollIntoView({block:'nearest',inline:'nearest'}); });
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',route);
+route();
+</script>
